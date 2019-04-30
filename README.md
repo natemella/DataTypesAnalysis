@@ -13,9 +13,9 @@ This README.md will discuss this repository's main script, createDockerCommands.
     
   In order to run createDockerCommands.py, you will need to build an Algorithms.txt and a Data_To_Process.txt. These two files should contain all of the algorithms and datatypes that you would like to use in your analysis.
   
-  For an example of an Algorithms.txt file, click here: https://github.com/natemella/DataTypesAnalysis/blob/master/Algorithms.example.txt
+  For an example of an Algorithms.txt file, click here: ![](DataTypesAnalysis/blob/master/Algorithms.example.txt)
   
-  For an example of a Data_To_Process.txt file, click here: https://github.com/natemella/DataTypesAnalysis/edit/master/Data_To_Process.txt
+  For an example of a Data_To_Process.txt file, click here: ![](DataTypesAnalysis/edit/master/Data_To_Process.txt)
   
 - While running createDockerCommands.py, be sure to include the following parameters:
   - jobName 
