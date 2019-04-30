@@ -33,4 +33,4 @@ This README.md will discuss this repository's main script, createDockerCommands.
 In order to run createDockerCommands.py, we recommend buidling a bash script. For an example please click here https://github.com/natemella/DataTypesAnalysis/blob/master/exe_analysis_example
  
 See the flow chart below to understand how this repository expects the data to be stored.
-![](Images/Input_Flow_Chart.png)
+![](images/Input_Flow_Chart.png)
