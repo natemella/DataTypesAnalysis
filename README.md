@@ -26,5 +26,5 @@ This README.md will discuss this repository's main script, createDockerCommands.
   - shinyLearnerVersionNumber
   - datatype_directory_name
   
-In order to run createDockerCommands.py, we recommend buidling a bash script. For an example please click here
+In order to run createDockerCommands.py, we recommend buidling a bash script. For an example please click here https://github.com/natemella/DataTypesAnalysis/blob/master/exe_analysis_example
  
