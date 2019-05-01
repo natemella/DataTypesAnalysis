@@ -14,7 +14,7 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
    See diagram below for visual representation
   ![](Images/DataTypesAnalysisFlowChart.png)
 
-  For an example please click [here](https://github.com/natemella/DataTypesAnalysis/blob/master/Examples/exe_analysis_example)
+  For an example please click of a user written bash script click [here](https://github.com/natemella/DataTypesAnalysis/blob/master/Examples/exe_analysis_example)
   
   In order to run createDockerCommands.py, you will need to build an Algorithms.txt file
   and a Data_To_Process.txt file. These two files should contain all of the algorithms and
