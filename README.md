@@ -24,6 +24,12 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
   
   *For an example of a Data_To_Process.txt file, click [here](https://github.com/natemella/DataTypesAnalysis/blob/master/Examples/Data_To_Process.example.txt)
   
+  The Data_To_Process.txt file should contain in column 1 (Cancer Type) column 2 (Name of Class File that the user would like to predict) columns 3 and on (The names of the files under the data_type that they would like to use)
+  
+   You will also need your data stored on your computer in an organized way so that this repository can grab it. 
+  See the flow chart  below to understand how this repository expects the data to be stored.
+  ![](Images/Input_Flow_Chart.png)
+  
   While running createDockerCommands.py, be sure to include the following parameters:
   
     - analysis_name = sys.argv[1]
@@ -40,9 +46,7 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
     - shinyLearnerVersion = sys.argv[12]
     - datatype_directory = sys.argv[13]
 
-  You will also need your data stored on your computer in an organized way so that this repository can grab it. 
-  See the flow chart  below to understand how this repository expects the data to be stored.
-  ![](Images/Input_Flow_Chart.png)
+ 
 
   *Your InputData directory should be located in your current working directory
   
