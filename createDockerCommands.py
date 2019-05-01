@@ -40,7 +40,7 @@ for c in allDataToProcess:
 
 
   input_data = list()
-  dataset_path = 'Input/' + datasetID + '/'
+  dataset_path =  datasetID + '/'
   # expression_path = dataset_path + datasetID + '.txt.gz'
   class_path = dataset_path + 'Class/' + classVar + '.txt'
 
