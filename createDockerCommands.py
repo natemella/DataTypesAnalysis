@@ -75,7 +75,7 @@ for c in allDataToProcess:
       outDir = currentWorkingDir + "/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/' + algoName + '/'
 
       # Build the bash script for this combination of dataset, algorithm, and iteration
-      out = 'if [ ! -f ' + outDir + outFileToCheck + ' ]\nthen\n  docker run --memory ' + memoryGigs + 'G --memory-swap ' + swapMemoryGigs + 'G --rm -i \\\n\t-v "' + currentWorkingDir + '":"/InputData" \\\n\t-v "' + outDir + '":"/OutputData" \\\n\tsrp33/shinylearner:version' + shinyLearnerVersion + ' \\\n\ttimeout -s 9 ' + hoursMax + 'h \\\n\t"/UserScripts/classification_montecarlo" \\\n\t\t' + data_all + '--description ' + datasetID + '___' + classVar + '___iteration' + str(i) + ' \\\n\t\t--iterations 1 \\\n\t\t--classif-algo "AlgorithmScripts/Classification/' + algo + '*" \\\n\t\t --seed ' + str(i) + ' \\\n\t\t--verbose false \\\n\t\t--num-cores ' + numCores + '\nfi'
+      out = 'if [ ! -f ' + outDir + outFileToCheck + ' ]\nthen\n  docker run --memory ' + memoryGigs + 'G --memory-swap ' + swapMemoryGigs + 'G --rm -i \\\n\t-v "$(pwd)":"/InputData" \\\n\t-v "' + outDir + '":"/OutputData" \\\n\tsrp33/shinylearner:version' + shinyLearnerVersion + ' \\\n\ttimeout -s 9 ' + hoursMax + 'h \\\n\t"/UserScripts/classification_montecarlo" \\\n\t\t' + data_all + '--description ' + datasetID + '___' + classVar + '___iteration' + str(i) + ' \\\n\t\t--iterations 1 \\\n\t\t--classif-algo "AlgorithmScripts/Classification/' + algo + '*" \\\n\t\t --seed ' + str(i) + ' \\\n\t\t--verbose false \\\n\t\t--num-cores ' + numCores + '\nfi'
 
       # This is where the bash script will be stored
       commandFilePath = analysis + '_Commands/{}/{}/iteration{}/{}.sh'.format(datasetID, classVar, i, algoName)
