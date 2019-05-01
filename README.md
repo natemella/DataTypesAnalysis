@@ -17,8 +17,8 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
   and a Data_To_Process.txt file. These two files should contain all of the algorithms and
   datatypes that you would like to use in your analysis.
     
-  *For an example of an Algorithms.txt file, click [here](DataTypesAnalysis/blob/master/Algorithms.example.txt):
-  *For an example of a Data_To_Process.txt file, click [here](DataTypesAnalysis/edit/master/Data_To_Process.txt)
+  *For an example of an Algorithms.txt file, click [here](https://github.com/natemella/DataTypesAnalysis/blob/master/Algorithms.example.txt):
+  *For an example of a Data_To_Process.txt file, click [here](https://github.com/DataTypesAnalysis/edit/master/Data_To_Process.txt)
   
   While running createDockerCommands.py, be sure to include the following parameters:
     - analysis_name = sys.argv[1]
@@ -49,7 +49,6 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
     - 4) Execute the anaylsis for each combination of dataset, algorith and iteration (through building bash scripts)
     - 5) Create a file that indicates the location of all the bash scripts that need to be executed
     
-
   See diagram below for visual representation
   ![](Images/DataTypesAnalysisFlowChart)
 
