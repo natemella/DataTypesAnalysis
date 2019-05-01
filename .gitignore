@@ -1,5 +1,9 @@
-OutputData/
+OutputData*/
 Algorithms.txt
 Data_To_Process.txt
 exe_analysis_1_
 Docker_Commands.sh
+Analysis.job.log
+InputData/
+createDockerCommands.1.py
+piccolo*
