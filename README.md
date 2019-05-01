@@ -22,7 +22,7 @@ This README.md will discuss this 3 things: 1) What this repository does, 2) how 
     
   *For an example of an Algorithms.txt file, click [here](https://github.com/natemella/DataTypesAnalysis/blob/master/Examples/Algorithms.example.txt):
   
-  *For an example of a Data_To_Process.txt file, click [here](https://github.com/DataTypesAnalysis/edit/master/Examples/Data_To_Process.txt)
+  *For an example of a Data_To_Process.txt file, click [here](https://github.com/DataTypesAnalysis/edit/master/Examples/Data_To_Process.example.txt)
   
   While running createDockerCommands.py, be sure to include the following parameters:
   
