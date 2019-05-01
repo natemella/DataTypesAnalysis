@@ -4,7 +4,7 @@ It uses another repository called ShinyLearner as well as docker in order to exe
 
 This README.md will discuss this 3 things: 1) What this repository does, 2) how to use this repository, and 3) how it works
 
-1) This repository allows users to test different machine learning algorithms with different datatypes (and all the different combinations) in order to determine which datatype works best with which machine learning algorithm.
+1) This repository allows users to test different machine learning algorithms with different datatypes (and all the different combinations) in order to determine which datatype works best with which machine learning algorithm. It essentially builds a bash script for every cancertype, datatype, machine learning algorithm, and iteration that the user would like to evaluate. Then it builds a file to run each of those bash scripts.
 
 2) In order to run this repository a user must write a bash script that does three things:
     - 1) Passes in the necessary parameters to a file called createDockerCommands.py
