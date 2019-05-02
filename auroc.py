@@ -108,7 +108,7 @@ for c in allDataToProcess:
                   "#pyplot.show()\n" \
  \
             # This is where the bash script will be stored
-            commandFilePath = analysis + '_AUROC/{}/{}/iteration{}/{}AUROC.py'.format(datasetID, classVar, i, algoName)
+            commandFilePath = '{}/{}/{}/{}/iteration{}/{}AUROC.py'.format(currentWorkingDir, analysis, datasetID, classVar, i, algoName)
 
             # Create the directory, if necessary, where the bash script will be stored
             if not os.path.exists(os.path.dirname(commandFilePath)):
