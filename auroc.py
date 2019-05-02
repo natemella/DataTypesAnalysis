@@ -1,5 +1,6 @@
 
 import glob, gzip, os, shutil, sys
+import pandas as pd
 
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
@@ -76,52 +77,53 @@ for c in allDataToProcess:
             # Where will the output files be stored?
             predictions_file = currentWorkingDir + "/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
                 i) + '/' + algoName + '/Predicitions.tsv'
-
+            df = pd.read_csv(predictions_file, delimiter='\t')
+            print(df)
             # Build the python script for this combination of dataset, algorithm, and iteration
-            out = "# roc curve from sklearn.datasets import make_classification\n" \
-                  "#from sklearn.metrics import roc_curve\n" \
-                  "#from matplotlib import pyplot\n" \
-                  "import pandas as pd\n" \
-                  "df = pd.read_csv(\"" + predictions_file + \
-                  "\", sep='\\t')\n" \
-                  "print(df)\n" \
-                  "# generate 2 class dataset\n" \
-                  "#X, y = make_classification(n_samples=1000, n_classes=2, random_state=1)\n" \
-                  "# split into train/test sets\n" \
-                  "#trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.5, random_state=2)\n" \
-                  "# fit a model\n" \
-                  "#model = LogisticRegression()\n" \
-                  "#model.fit(trainX, trainy)\n" \
-                  "# predict probabilities\n" \
-                  "#probs = model.predict_proba(testX)\n" \
-                  "# keep probabilities for the positive outcome only\n" \
-                  "#probs = probs[:, 1]\n" \
-                  "# calculate roc curve\n" \
-                  "#fpr, tpr, thresholds = roc_curve(testy, probs)\n" \
-                  "# plot no skill\n" \
-                  "#pyplot.plot([0, 1], [0, 1], linestyle='--')\n" \
-                  "# plot the roc curve for the model\n" \
-                  "#pyplot.plot(fpr, tpr)\n" \
-                  "# show the plot\n" \
-                  "#pyplot.show()\n" \
- \
-            # This is where the bash script will be stored
-            commandFilePath = '{}/{}/{}/{}/iteration{}/{}AUROC.py'.format(currentWorkingDir, analysis, datasetID, classVar, i, algoName)
-
-            # Create the directory, if necessary, where the bash script will be stored
-            if not os.path.exists(os.path.dirname(commandFilePath)):
-                os.makedirs(os.path.dirname(commandFilePath))
-
-            # Create the bash script
-            with open(commandFilePath, 'w') as outFile:
-                outFile.write(out + '\n')
-
-            aurocCommandFilePaths.append(commandFilePath)
-
-            # Create a file that indicates the location of all the python scripts that need to be executed
-            with open(dockerOutFilePath, 'w') as dockerOutFile:
-                for command in aurocCommandFilePaths:
-                    dockerOutFile.write("python3 {}\n".format(command))
+ #            out = "# roc curve from sklearn.datasets import make_classification\n" \
+ #                  "#from sklearn.metrics import roc_curve\n" \
+ #                  "#from matplotlib import pyplot\n" \
+ #                  "import pandas as pd\n" \
+ #                  "df = pd.read_csv(\"" + predictions_file + \
+ #                  "\", sep='\\t')\n" \
+ #                  "print(df)\n" \
+ #                  "# generate 2 class dataset\n" \
+ #                  "#X, y = make_classification(n_samples=1000, n_classes=2, random_state=1)\n" \
+ #                  "# split into train/test sets\n" \
+ #                  "#trainX, testX, trainy, testy = train_test_split(X, y, test_size=0.5, random_state=2)\n" \
+ #                  "# fit a model\n" \
+ #                  "#model = LogisticRegression()\n" \
+ #                  "#model.fit(trainX, trainy)\n" \
+ #                  "# predict probabilities\n" \
+ #                  "#probs = model.predict_proba(testX)\n" \
+ #                  "# keep probabilities for the positive outcome only\n" \
+ #                  "#probs = probs[:, 1]\n" \
+ #                  "# calculate roc curve\n" \
+ #                  "#fpr, tpr, thresholds = roc_curve(testy, probs)\n" \
+ #                  "# plot no skill\n" \
+ #                  "#pyplot.plot([0, 1], [0, 1], linestyle='--')\n" \
+ #                  "# plot the roc curve for the model\n" \
+ #                  "#pyplot.plot(fpr, tpr)\n" \
+ #                  "# show the plot\n" \
+ #                  "#pyplot.show()\n" \
+ # \
+ #            # This is where the bash script will be stored
+ #            commandFilePath = '{}/{}/{}/{}/iteration{}/{}AUROC.py'.format(currentWorkingDir, analysis, datasetID, classVar, i, algoName)
+ #
+ #            # Create the directory, if necessary, where the bash script will be stored
+ #            if not os.path.exists(os.path.dirname(commandFilePath)):
+ #                os.makedirs(os.path.dirname(commandFilePath))
+ #
+ #            # Create the bash script
+ #            with open(commandFilePath, 'w') as outFile:
+ #                outFile.write(out + '\n')
+ #
+ #            aurocCommandFilePaths.append(commandFilePath)
+ #
+ #            # Create a file that indicates the location of all the python scripts that need to be executed
+ #            with open(dockerOutFilePath, 'w') as dockerOutFile:
+ #                for command in aurocCommandFilePaths:
+ #                    dockerOutFile.write("python3 {}\n".format(command))
 
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
