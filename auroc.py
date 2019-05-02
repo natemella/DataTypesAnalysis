@@ -34,8 +34,8 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-# if os.path.exists(analysis + '_Commands/'):
-#     shutil.rmtree(analysis + '_Commands/')
+if os.path.exists(analysis + '_Commands/'):
+    shutil.rmtree(analysis + '_Commands/')
 
 
 out = "Evaluation\trooc_auc_score\n"
@@ -92,7 +92,7 @@ for c in allDataToProcess:
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
 
-resultsFilePath = 'Analysis_Results/{}'.format(analysis)
+resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
 
 if not os.path.exists(os.path.dirname(resultsFilePath)):
     os.makedirs(os.path.dirname(resultsFilePath))
