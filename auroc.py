@@ -79,10 +79,8 @@ for c in allDataToProcess:
 
             # Build the python script for this combination of dataset, algorithm, and iteration
             out = "# roc curve from sklearn.datasets import make_classification\n" \
-                  "from sklearn.linear_model import LogisticRegression\n" \
-                  "from sklearn.model_selection import train_test_split\n" \
-                  "from sklearn.metrics import roc_curve\n" \
-                  "from matplotlib import pyplot\n" \
+                  "#from sklearn.metrics import roc_curve\n" \
+                  "#from matplotlib import pyplot\n" \
                   "import pandas as pd\n" \
                   "df = pd.read_csv(\"" + predictions_file + \
                   "\", sep='\\t')\n" \
