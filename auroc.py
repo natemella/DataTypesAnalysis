@@ -75,8 +75,8 @@ for c in allDataToProcess:
                 data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
             # Where will the output files be stored?
-            predictions_file = analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
-                i) + '/' + algoName + '/Predicitions.tsv'
+            predictions_file = currentWorkingDir + "/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
+                i) + '/' + algoName + '/Predictions.tsv'
             df = pd.read_csv(predictions_file, delimiter='\t')
             print(df)
             # Build the python script for this combination of dataset, algorithm, and iteration
