@@ -38,7 +38,7 @@ if os.path.exists(analysis + '_Commands/'):
     shutil.rmtree(analysis + '_Commands/')
 
 
-out = "Evaluation\trooc_auc_score\n"
+out = "Evaluation\troc_auc_score\n"
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
     classVar = c.split('\t')[1]
