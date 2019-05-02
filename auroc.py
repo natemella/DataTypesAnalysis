@@ -84,8 +84,8 @@ for c in allDataToProcess:
                   "from sklearn.metrics import roc_curve\n" \
                   "from matplotlib import pyplot\n" \
                   "import pandas as pd\n" \
-                  "df = pd.read_tsv(\"" + predictions_file + \
-                  "\")\n" \
+                  "df = pd.read_csv(\"" + predictions_file + \
+                  "\", sep='\\t')\n" \
                   "print(df)\n" \
                   "# generate 2 class dataset\n" \
                   "#X, y = make_classification(n_samples=1000, n_classes=2, random_state=1)\n" \
