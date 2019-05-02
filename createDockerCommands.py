@@ -30,8 +30,8 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-if os.path.exists(analysis + '_Commands/'):
-  shutil.rmtree(analysis + '_Commands/')
+# if os.path.exists(analysis + '_Commands/'):
+#   shutil.rmtree(analysis + '_Commands/')
 
 for c in allDataToProcess:
   datasetID = c.split('\t')[0]
