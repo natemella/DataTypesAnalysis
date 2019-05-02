@@ -37,9 +37,8 @@ with open(dataToProcessFilePath, 'r') as g:
 # if os.path.exists(analysis + '_Commands/'):
 #     shutil.rmtree(analysis + '_Commands/')
 
-# if os.path.exists(analysis + '_AUROC/'):
-#     shutil.rmtree(analysis + '_AUROC/')
 
+out = "Evaluation\trooc_auc_score\n"
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
     classVar = c.split('\t')[1]
@@ -83,26 +82,21 @@ for c in allDataToProcess:
             y_true = df["ActualClass"]
             y_score = df["LTS"]
             pos_label = "LTS"
-            print(roc_curve(y_true=df["ActualClass"], y_score=df["LTS"], pos_label="LTS"))
-            out = ""
+            # roc_curve(y_true=df["ActualClass"], y_score=df["LTS"], pos_label="LTS")
+            data = roc_auc_score(y_true=df["ActualClass"], y_score=df["LTS"])
 
-            resultsFilePath = '{}/{}_Results/{}/{}/iteration{}/{}AUROC.tsv'.format(currentWorkingDir, analysis, datasetID, classVar, i, algoName)
- #
-            # Create the directory, if necessary, where the bash script will be stored
-            if not os.path.exists(os.path.dirname(resultsFilePath)):
-                os.makedirs(os.path.dirname(resultsFilePath))
 
-            # Create the bash script
-            with open(resultsFilePath, 'w') as outFile:
-                outFile.write(out + '\n')
- #
- #            aurocCommandFilePaths.append(resultsFilePath)
- #
- #            # Create a file that indicates the location of all the python scripts that need to be executed
- #            with open(dockerOutFilePath, 'w') as dockerOutFile:
- #                for command in aurocCommandFilePaths:
- #                    dockerOutFile.write("python3 {}\n".format(command))
+            out += '{}_Results/{}/{}/iteration{}/{}'.format( analysis, datasetID, classVar, i, algoName)
+            out += '\t' + str(data) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
 
+resultsFilePath = 'Analysis_Results/{}'.format(analysis)
+
+if not os.path.exists(os.path.dirname(resultsFilePath)):
+    os.makedirs(os.path.dirname(resultsFilePath))
+
+    # Create the bash script
+with open(resultsFilePath, 'w') as outFile:
+    outFile.write(out + '\n')
