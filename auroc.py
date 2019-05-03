@@ -77,9 +77,9 @@ for c in allDataToProcess:
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
                 AUROC_line = metrics_data.readline()
+                AUROC_line = AUROC_line.strip('\n')
                 metrics = AUROC_line.split('\t')
-                AUROC = AUROC_line[-2]
-                print(AUROC)
+                AUROC = metrics[-1]
 
 
             out += '{}__{}__{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
