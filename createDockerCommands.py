@@ -33,8 +33,9 @@ if os.path.exists(analysis + '_Commands/'):
   shutil.rmtree(analysis + '_Commands/')
 
 for c in allDataToProcess:
-  print(c)
   datasetID = c.split('\t')[0]
+  print("\n\nline")
+  print(c)
   print("list")
   print(c.split('\t'))
   classVar = c.split('\t')[1]
