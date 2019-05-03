@@ -1,5 +1,6 @@
 import glob, gzip, os, shutil, sys
 
+print(sys.argv[1:])
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
 stopIteration = int(sys.argv[3])

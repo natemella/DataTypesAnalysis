@@ -1,5 +1,6 @@
 
 import glob, gzip, os, shutil, sys
+print(sys.argv[1:])
 
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
@@ -11,8 +12,6 @@ shinyLearnerVersion = sys.argv[7]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
-
-print(sys.argv[1:])
 
 # Parse the algorithms file to find all possible algorithms
 with open(algorithmsFilePath, 'r') as f:
