@@ -32,10 +32,6 @@ if os.path.exists(analysis + '_Commands/'):
 out = "Description\tIteration\tAlgorithm\tAUROC\n"
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
-    print("\n\nline")
-    print(c)
-    print("list")
-    print(c.split('\t'))
     classVar = c.split('\t')[1]
     data_files = c.split('\t')[2].split(',')
 

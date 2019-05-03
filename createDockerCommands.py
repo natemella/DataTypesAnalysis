@@ -34,10 +34,6 @@ if os.path.exists(analysis + '_Commands/'):
 
 for c in allDataToProcess:
   datasetID = c.split('\t')[0]
-  print("\n\nline")
-  print(c)
-  print("list")
-  print(c.split('\t'))
   classVar = c.split('\t')[1]
 
   input_data = list()
