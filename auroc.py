@@ -80,6 +80,7 @@ for c in allDataToProcess:
                 AUROC_line = metrics_data.readline()
                 metrics = AUROC_line.split('\t')
                 AUROC = AUROC_line[-1]
+                print(AUROC)
 
 
             out += '{}__{}__{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
