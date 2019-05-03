@@ -73,7 +73,6 @@ for c in allDataToProcess:
             # Where will the output files be stored?
             metrics_file = currentWorkingDir + '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
                 i) + '/' + algoName + '/Metrics.tsv'
-            print(metrics_file)
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
                 AUROC_line = metrics_data.readline()
