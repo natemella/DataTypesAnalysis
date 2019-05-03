@@ -40,7 +40,7 @@ for c in allDataToProcess:
   dataset_path =  datasetID + '/'
   class_path = dataset_path + 'Class/' + classVar + '.txt'
   # grab the data types
-  datatype_directory = c.split('\t')[2].split(',')
+  datatype_directory = c.split('\t')[1].split(',')
   number_of_datatypes = len(datatype_directory)
   # grab the data files for each data type
   print("datasetID")
@@ -56,7 +56,7 @@ for c in allDataToProcess:
   print(test_files)
   test_files = c.split('\t')[4]
   print("test_files2")
-  print(test_files) 
+  print(test_files)
   for i in range(0, number_of_datatypes):
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
