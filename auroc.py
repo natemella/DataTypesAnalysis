@@ -11,9 +11,8 @@ numCores = sys.argv[7]
 algorithmsFilePath = sys.argv[8]
 dataToProcessFilePath = sys.argv[9]
 outFileToCheck = sys.argv[10]
-dockerOutFilePath = sys.argv[11]
-shinyLearnerVersion = sys.argv[12]
-datatype_directory = sys.argv[13]
+shinyLearnerVersion = sys.argv[11]
+datatype_directory = sys.argv[12]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
