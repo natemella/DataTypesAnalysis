@@ -1,6 +1,5 @@
 import glob, gzip, os, shutil, sys
 
-print(sys.argv[1:])
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
 stopIteration = int(sys.argv[3])
@@ -34,6 +33,7 @@ if os.path.exists(analysis + '_Commands/'):
   shutil.rmtree(analysis + '_Commands/')
 
 for c in allDataToProcess:
+  print(c)
   datasetID = c.split('\t')[0]
   classVar = c.split('\t')[1]
 
