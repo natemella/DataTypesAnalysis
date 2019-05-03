@@ -12,7 +12,6 @@ dataToProcessFilePath = sys.argv[9]
 outFileToCheck = sys.argv[10]
 dockerOutFilePath = sys.argv[11]
 shinyLearnerVersion = sys.argv[12]
-datatype_directory = sys.argv[13]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 dockerCommandFilePaths = []
@@ -30,23 +29,28 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-# if os.path.exists(analysis + '_Commands/'):
-#   shutil.rmtree(analysis + '_Commands/')
+if os.path.exists(analysis + '_Commands/'):
+  shutil.rmtree(analysis + '_Commands/')
 
 for c in allDataToProcess:
   datasetID = c.split('\t')[0]
   classVar = c.split('\t')[1]
-  covariate = c.split('\t')[2].split(',')
-
 
   input_data = list()
   dataset_path =  datasetID + '/'
-  # expression_path = dataset_path + datasetID + '.txt.gz'
   class_path = dataset_path + 'Class/' + classVar + '.txt'
-
-  # input_data.append(expression_path)
-  for x in covariate:
-    input_data.append(dataset_path + datatype_directory + '/' + x + ".txt")
+  # grab the data types
+  datatype_directory = c.split('\t')[2].split(',')
+  number_of_datatypes = len(datatype_directory)
+  # grab the data files for each data type
+  for i in range(0, number_of_datatypes):
+    datatype = datatype_directory[i]
+    input_files = c.split('\t')[3 + i].split(',')
+    for x in input_files:
+      if datatype == "Expression":
+        input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
+      else:
+        input_data.append(dataset_path + datatype + '/' + x + '.txt')
 
 
   input_data.append(class_path)
@@ -58,7 +62,7 @@ for c in allDataToProcess:
     path = '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
 
     executed_algos = glob.glob(path)
-    executed_algos = [x.split('/')[4].replace('__','/',3) for x in executed_algos]
+    executed_algos = [x.split('/')[5].replace('__','/',3) for x in executed_algos]
     executed_algos = set(executed_algos)
 
     not_executed_algos = allAlgorithms - executed_algos
