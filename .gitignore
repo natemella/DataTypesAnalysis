@@ -1,5 +1,5 @@
 Algorithms.txt
-Data_To_Process.txt
+Data_To_Process*.txt
 exe*
 Docker_Commands.sh
 Analysis.job.log

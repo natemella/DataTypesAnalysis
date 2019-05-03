@@ -8,7 +8,6 @@ algorithmsFilePath = sys.argv[4]
 dataToProcessFilePath = sys.argv[5]
 outFileToCheck = sys.argv[6]
 shinyLearnerVersion = sys.argv[7]
-datatype_directory = sys.argv[8]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
