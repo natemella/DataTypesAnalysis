@@ -56,7 +56,7 @@ for c in allDataToProcess:
   print(test_files)
   test_files = c.split('\t')[4]
   print("test_files2")
-  print(test_files)
+  print(test_files) 
   for i in range(0, number_of_datatypes):
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
