@@ -78,7 +78,7 @@ for c in allDataToProcess:
                 title_line = metrics_data.readline()
                 AUROC_line = metrics_data.readline()
                 metrics = AUROC_line.split('\t')
-                AUROC = AUROC_line[-1]
+                AUROC = AUROC_line[-2]
                 print(AUROC)
 
 
