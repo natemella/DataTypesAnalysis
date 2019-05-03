@@ -4,15 +4,11 @@ import glob, gzip, os, shutil, sys
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
 stopIteration = int(sys.argv[3])
-memoryGigs = sys.argv[4]
-swapMemoryGigs = sys.argv[5]
-hoursMax = sys.argv[6]
-numCores = sys.argv[7]
-algorithmsFilePath = sys.argv[8]
-dataToProcessFilePath = sys.argv[9]
-outFileToCheck = sys.argv[10]
-shinyLearnerVersion = sys.argv[11]
-datatype_directory = sys.argv[12]
+algorithmsFilePath = sys.argv[4]
+dataToProcessFilePath = sys.argv[5]
+outFileToCheck = sys.argv[6]
+shinyLearnerVersion = sys.argv[7]
+datatype_directory = sys.argv[8]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
