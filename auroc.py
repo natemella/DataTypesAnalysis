@@ -38,7 +38,7 @@ if os.path.exists(analysis + '_Commands/'):
     shutil.rmtree(analysis + '_Commands/')
 
 
-out = "Evaluation\troc_auc_score\n"
+out = "Description\tIteration\tAlgorithm\tAUROC\n"
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
     classVar = c.split('\t')[1]
@@ -59,7 +59,7 @@ for c in allDataToProcess:
 
     for i in range(startIteration, 1 + stopIteration):
         print("Evaluating " + analysis + ' ' + datasetID + ' ' + classVar + ' ' + 'iteration' + str(i))
-        path = analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
+        path = '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
 
         executed_algos = glob.glob(path)
         executed_algos = [x.split('/')[4].replace('__', '/', 3) for x in executed_algos]
@@ -76,18 +76,14 @@ for c in allDataToProcess:
                 data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
             # Where will the output files be stored?
-            predictions_file = currentWorkingDir + "/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
-                i) + '/' + algoName + '/Predictions.tsv'
+            predictions_file = currentWorkingDir + '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
+                i) + '/' + algoName + '/Metrics.tsv'
             df = pd.read_csv(predictions_file, delimiter='\t')
-            y_true = df["ActualClass"]
-            y_score = df["LTS"]
-            pos_label = "LTS"
-            # roc_curve(y_true=df["ActualClass"], y_score=df["LTS"], pos_label="LTS")
-            data = roc_auc_score(y_true=df["ActualClass"], y_score=df["LTS"])
+            AUROC =  df.iloc[0]['Value']
 
 
-            out += '{}_Results/{}/{}/iteration{}/{}'.format( analysis, datasetID, classVar, i, algoName)
-            out += '\t' + str(data) + '\n'
+            out += '{}__{}__{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
+            out += '\t' + str(AUROC) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
