@@ -67,7 +67,7 @@ for c in allDataToProcess:
         for i in range(0, number_of_datatypes):
             print('i = ' + str(i))
             datatype = datatype_directory[i]
-            input_files = c.split('\t')[3 + i].split(',')
+            input_files = c.split('\t')[3].split(',')
             for x in input_files:
                 if datatype == "Expression":
                     input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
