@@ -1,7 +1,5 @@
 
 import glob, gzip, os, shutil, sys
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import roc_curve
 
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
