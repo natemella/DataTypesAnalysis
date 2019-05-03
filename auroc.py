@@ -1,6 +1,5 @@
 
 import glob, gzip, os, shutil, sys
-import pandas as pd
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 
@@ -76,10 +75,13 @@ for c in allDataToProcess:
                 data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
             # Where will the output files be stored?
-            predictions_file = currentWorkingDir + '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
+            metrics_file = currentWorkingDir + '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(
                 i) + '/' + algoName + '/Metrics.tsv'
-            df = pd.read_csv(predictions_file, delimiter='\t')
-            AUROC =  df.iloc[0]['Value']
+            with open(metrics_file) as metrics_data:
+                title_line = metrics_data.readline()
+                AUROC_line = metrics_data.readline()
+                metrics = AUROC_line.split('\t')
+                AUROC = AUROC_line[-1]
 
 
             out += '{}__{}__{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
