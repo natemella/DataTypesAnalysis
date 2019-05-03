@@ -40,7 +40,7 @@ for c in allDataToProcess:
   dataset_path =  datasetID + '/'
   class_path = dataset_path + 'Class/' + classVar + '.txt'
   # grab the data types
-  datatype_directory = c.split('\t')[1].split(',')
+  datatype_directory = c.split('\t')[2].split(',')
   number_of_datatypes = len(datatype_directory)
   # grab the data files for each data type
   print("datasetID")
