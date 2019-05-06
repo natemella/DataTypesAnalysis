@@ -28,7 +28,7 @@ if os.path.exists(analysis + '_Commands/'):
     shutil.rmtree(analysis + '_Commands/')
 
 
-out = "Description\tCancerType\tClassType\tIteration\tAlgorithm\tAUROC\n"
+out = "Description\tCancerType\tClassType\tIteration\tAlgorithm\tDefaultParameters\tAUROC\n"
 
 input_data = []
 class_path = ''
@@ -66,6 +66,9 @@ for c in allDataToProcess:
 
         for algo in executed_algos:
             rootAlgo = algo.split('/')
+            default_bool = 0
+            if rootAlgo[-1].startswith("default"):
+                default_bool = 1
             rootAlgo = rootAlgo[-2]
             algoName = algo.replace('/', '__')
 
@@ -84,7 +87,7 @@ for c in allDataToProcess:
                 metrics = AUROC_line.split('\t')
                 AUROC = metrics[-1]
 
-            out += '{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, rootAlgo)
+            out += '{}\t{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, rootAlgo, default_bool)
             out += '\t' + str(AUROC) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
