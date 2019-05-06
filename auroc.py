@@ -28,36 +28,30 @@ if os.path.exists(analysis + '_Commands/'):
     shutil.rmtree(analysis + '_Commands/')
 
 
-out = "Description\tIteration\tAlgorithm\tAUROC\n"
+out = "Description\tCancerType\tClassType\tIteration\tAlgorithm\tAUROC\n"
+
+input_data = []
+class_path = ''
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
     classVar = c.split('\t')[1]
-    data_files = c.split('\t')[2].split(',')
 
     input_data = list()
     dataset_path = datasetID + '/'
     class_path = dataset_path + 'Class/' + classVar + '.txt'
+    # grab the data types
+    datatype_directory = c.split('\t')[2].split(',')
+    number_of_datatypes = len(datatype_directory)
 
-    for c in allDataToProcess:
-        datasetID = c.split('\t')[0]
-        classVar = c.split('\t')[1]
-
-        input_data = list()
-        dataset_path = datasetID + '/'
-        class_path = dataset_path + 'Class/' + classVar + '.txt'
-        # grab the data types
-        datatype_directory = c.split('\t')[2].split(',')
-        number_of_datatypes = len(datatype_directory)
-
-        # grab the data files for each data type
-        for i in range(0, number_of_datatypes):
-            datatype = datatype_directory[i]
-            input_files = c.split('\t')[3 + i].split(',')
-            for x in input_files:
-                if datatype == "Expression":
-                    input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
-                else:
-                    input_data.append(dataset_path + datatype + '/' + x + '.txt')
+    # grab the data files for each data type
+    for i in range(0, number_of_datatypes):
+        datatype = datatype_directory[i]
+        input_files = c.split('\t')[3 + i].split(',')
+        for x in input_files:
+            if datatype == "Expression":
+                input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
+            else:
+                input_data.append(dataset_path + datatype + '/' + x + '.txt')
 
     input_data.append(class_path)
 
@@ -89,7 +83,7 @@ for c in allDataToProcess:
                 AUROC = metrics[-1]
 
 
-            out += '{}__{}__{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
+            out += '{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
             out += '\t' + str(AUROC) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
