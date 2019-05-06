@@ -1,4 +1,3 @@
-
 import glob, gzip, os, shutil, sys
 
 analysis = sys.argv[1]
