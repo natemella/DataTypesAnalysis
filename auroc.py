@@ -82,8 +82,9 @@ for c in allDataToProcess:
                 metrics = AUROC_line.split('\t')
                 AUROC = metrics[-1]
 
-
-            out += '{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, algoName)
+            rootAlgo = algoName.replace("tsv__sklearn__","")
+            rootAlgo = rootAlgo.replace("__default","")
+            out += '{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, rootAlgo)
             out += '\t' + str(AUROC) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
