@@ -65,6 +65,8 @@ for c in allDataToProcess:
 
 
         for algo in executed_algos:
+            rootAlgo = algo.split('/')
+            rootAlgo = rootAlgo[-2]
             algoName = algo.replace('/', '__')
 
             # Build the part of the command that tells ShinyLearner which data files to parse
@@ -82,8 +84,6 @@ for c in allDataToProcess:
                 metrics = AUROC_line.split('\t')
                 AUROC = metrics[-1]
 
-            rootAlgo = algoName.replace("tsv__sklearn__","")
-            rootAlgo = rootAlgo.replace("__default","")
             out += '{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, rootAlgo)
             out += '\t' + str(AUROC) + '\n'
 
