@@ -4,7 +4,10 @@ import sys
 RelevantTypes = ("Glioblastoma multiforme","Ovarian serous cystadenocarcinoma", "Lung squamous cell carcinoma",
                  "Breast invasive carcinoma","Lung adenocarcinoma", "Prostate adenocarcinoma",
                  "Skin Cutaneous Melanoma", "Colon adenocarcinoma", "Bladder Urothelial Carcinoma", "Sarcoma", "Kidney renal clear cell carcinoma")
+#to get a map for all of the TSS codes to each cancer type
 TSSDictionary = {}
+
+#to make a data frame for each cancer type
 CancerDict = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" : [], "Lung squamous cell carcinoma":[],
                  "Breast invasive carcinoma":[],"Lung adenocarcinoma": [], "Prostate adenocarcinoma" : [],
                  "Skin Cutaneous Melanoma": [], "Colon adenocarcinoma": [], "Bladder Urothelial Carcinoma": [], "Sarcoma": [],
@@ -95,4 +98,4 @@ for x in Duplicate_Indexes:
     df = pd.concat([df,temp_df], axis=1) # concate the average of the duplicate columns
 
 for x in CancerDict:
-    df[CancerDict[x]].to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t')
+    df[CancerDict[x]].to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', index=False)
