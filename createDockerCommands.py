@@ -50,8 +50,10 @@ for c in allDataToProcess:
     for x in input_files:
       if datatype == "Expression":
         input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
-      else:
+      elif datatype == "Covariate":
         input_data.append(dataset_path + datatype + '/' + x + '.txt')
+      else:
+        input_data.append(dataset_path + datatype + '/' + x + '.ttsv')
 
 
   input_data.append(class_path)
