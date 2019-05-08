@@ -18,14 +18,14 @@ else
     bash RPPA.sh
 fi
 rm $fileName
-mv *.tsv ../
+mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
 then
-    mv *.tsv InputData/
+    mv TCGA*.tsv InputData/
 else
     mkdir InputData
-    mv *.tsv InputData/
+    mv TCGA*.tsv InputData/
 fi
 
 cd InputData/
