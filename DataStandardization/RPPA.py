@@ -15,6 +15,8 @@ CancerDict = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" 
 
 RelevantCodes = set()
 
+
+
 GM = "Glioblastoma multiforme"
 OSC = "Ovarian serous cystadenocarcinoma"
 LS = "Lung squamous cell carcinoma"
@@ -51,6 +53,7 @@ CancerPatientIDs = []
 Duplicate_Indexes = {}
 
 with open(sys.argv[1]) as input:
+    Header = input.readline().split('\t')
     AllPatients = [x.split('\t')[0] for x in input]
     CancerIndex = 0
     for x in AllPatients:
@@ -83,22 +86,21 @@ with open(sys.argv[1]) as input:
                 CancerDict[S].append(x)
             CancerIndex +=1
 
-df = pd.read_csv(sys.argv[1], delimiter='\t', index_col="SampleID")
-df = df.transpose()
+df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
+df = df.groupby(['SampleID']).mean()
 
-#take out repeats
-for x in Duplicate_Indexes:
-    val1 = x
-    val2 = Duplicate_Indexes[x]
-    print("First duplicate = " + CancerPatientIDs[val1] + " occured at index " + str(val1))
-    print("Second duplicate = " + CancerPatientIDs[val2] + " occured at index " + str(val2))
-    duplicate_df = df[CancerPatientIDs[x]] # grab the columns that repeat
-    series = duplicate_df.mean(axis=1) # average the duplicate values together
-    temp_df = pd.DataFrame({CancerPatientIDs[x]:series.values}) #turn the series into a DataFrame
-    df = df.drop(labels=[CancerPatientIDs[x]], axis=1) # take out all of the duplicate columns
-    df = pd.concat([df,temp_df], axis=1) # concate the average of the duplicate columns
-
+#
 for x in CancerDict:
-    y = df[CancerDict[x]]
-    y = y.transpose()
-    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t', index=False)
+    y = df.loc[CancerDict[x]]
+    i = 0
+    #truncate the IDs to twelve characters
+    for ID in CancerDict[x]:
+        if ID == 'SampleID':
+            i += 1
+            continue
+        truncatedID = ID[0:12]
+        CancerDict[x][i] = truncatedID
+        i +=1
+
+    y.index = CancerDict[x]
+    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t')

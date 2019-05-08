@@ -15,6 +15,10 @@ CancerDict = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" 
 
 RelevantCodes = set()
 
+#include the index column in each list
+for x in CancerDict:
+    CancerDict[x].append('sample')
+
 GM = "Glioblastoma multiforme"
 OSC = "Ovarian serous cystadenocarcinoma"
 LS = "Lung squamous cell carcinoma"
@@ -97,5 +101,18 @@ for x in Duplicate_Indexes:
     df = df.drop(labels=[CancerPatientIDs[x]], axis=1) # take out all of the duplicate columns
     df = pd.concat([df,temp_df], axis=1) # concate the average of the duplicate columns
 
+df_index = pd.read_csv(sys.argv[1], delimiter='\t', usecols=['sample'])
+df = pd.concat([df_index,df], axis=1)
 for x in CancerDict:
-    df[CancerDict[x]].to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', index=False)
+    y = df[CancerDict[x]]
+    i = 0
+    #truncate the IDs to twelve characters
+    for ID in CancerDict[x]:
+        if ID == 'sample':
+            i += 1
+            continue
+        truncatedID = ID[0:12]
+        CancerDict[x][i] = truncatedID
+        i +=1
+    y.columns = CancerDict[x]
+    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', index=False)

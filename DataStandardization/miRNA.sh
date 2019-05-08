@@ -20,10 +20,10 @@ mv *.ttsv ../
 cd ../
 if [ -d "InputData" ]
 then
-    mv *.ttsv InputData/ 
+    mv *.ttsv InputData/
 else
-    mkdir InputData 
-    mv *.ttsv InputData/ 
+    mkdir InputData
+    mv *.ttsv InputData/
 fi
 
 cd InputData/
