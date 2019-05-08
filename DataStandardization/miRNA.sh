@@ -8,7 +8,7 @@ if [ -e $fileName* ]
 then
     gunzip $unzippedFile
     echo IT WORKED!!!
-    python miRNA.py $fileName
+    python3 miRNA.py $fileName
 #    cat $fileName
 else
     echo $unzippedFile has not yest been downloaded

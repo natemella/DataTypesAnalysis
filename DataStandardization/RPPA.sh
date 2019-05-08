@@ -10,7 +10,7 @@ if [ -e $fileName* ]
 then
     gunzip $unzippedFile
     echo IT WORKED!!!
-    python RPPA.py $fileName
+    python3 RPPA.py $fileName
 #    cat $fileName
 else
     echo $unzippedFile has not yest been downloaded
