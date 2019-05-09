@@ -53,7 +53,7 @@ for c in allDataToProcess:
       elif datatype == "Covariate":
         input_data.append(dataset_path + datatype + '/' + x + '.txt')
       elif datatype == "RPPA":
-        input_data.append(dataset_path + dataset_path + '/' + x + ".tsv")
+        input_data.append(dataset_path + datatype+ '/' + x + ".tsv")
       else:
         input_data.append(dataset_path + datatype + '/' + x + '.ttsv')
 
