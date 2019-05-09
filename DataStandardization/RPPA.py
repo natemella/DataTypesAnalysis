@@ -89,7 +89,26 @@ with open(sys.argv[1]) as input:
 df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
 df = df.groupby(['SampleID']).mean()
 
-#
+info = df.describe()
+columns = info.columns.values.tolist()
+indexes_to_drop = []
+indexes_to_keep = []
+for i in columns:
+    Na_count = len(df.index) - info[i][0]
+    percent_missing = Na_count/len(df.index)
+    if percent_missing > 0.2:
+        indexes_to_drop.append(i)
+    else:
+        indexes_to_keep.append(i)
+
+
+# df.drop(labels=indexes_to_drop, axis=1)
+df = df[indexes_to_keep]
+
+a = df.columns.values.tolist()
+for x in indexes_to_drop:
+    if x in a:
+        print("fail")
 for x in CancerDict:
     y = df.loc[CancerDict[x]]
     i = 0
