@@ -61,52 +61,72 @@ with open(sys.argv[1]) as input:
             first_duplicate = CancerPatientIDs.index(x)
             second_duplicate = CancerIndex
             Duplicate_Indexes[first_duplicate] = second_duplicate
-        if x.endswith("01") and x.split('-')[1] in RelevantCodes:
+        if x.endswith("01"):
             CancerPatientIDs.append(x)
-            tss = x.split('-')[1]
-            if TSSDictionary[tss] == GM:
-                CancerDict[GM].append(x)
-            elif TSSDictionary[tss] == OSC:
-                CancerDict[OSC].append(x)
-            elif TSSDictionary[tss] == BC:
-                CancerDict[BC].append(x)
-            elif TSSDictionary[tss] == LA:
-                CancerDict[LA].append(x)
-            elif TSSDictionary[tss] == PA:
-                CancerDict[PA].append(x)
-            elif TSSDictionary[tss] == SC:
-                CancerDict[SC].append(x)
-            elif TSSDictionary[tss] == CA:
-                CancerDict[CA].append(x)
-            elif TSSDictionary[tss] == BUC:
-                CancerDict[BUC].append(x)
-            elif TSSDictionary[tss] == S:
-                CancerDict[S].append(x)
-            elif TSSDictionary[tss] == KIRC:
-                CancerDict[S].append(x)
+            if x.split('-')[1] in RelevantCodes:
+                tss = x.split('-')[1]
+                if TSSDictionary[tss] == GM:
+                    CancerDict[GM].append(x)
+                elif TSSDictionary[tss] == OSC:
+                    CancerDict[OSC].append(x)
+                elif TSSDictionary[tss] == BC:
+                    CancerDict[BC].append(x)
+                elif TSSDictionary[tss] == LA:
+                    CancerDict[LA].append(x)
+                elif TSSDictionary[tss] == PA:
+                    CancerDict[PA].append(x)
+                elif TSSDictionary[tss] == SC:
+                    CancerDict[SC].append(x)
+                elif TSSDictionary[tss] == CA:
+                    CancerDict[CA].append(x)
+                elif TSSDictionary[tss] == BUC:
+                    CancerDict[BUC].append(x)
+                elif TSSDictionary[tss] == S:
+                    CancerDict[S].append(x)
+                elif TSSDictionary[tss] == KIRC:
+                    CancerDict[S].append(x)
             CancerIndex +=1
 
 df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
+df = df.loc[CancerPatientIDs]
 df = df.groupby(['SampleID']).mean()
 
-info = df.describe()
-columns = info.columns.values.tolist()
-indexes_to_drop = []
-indexes_to_keep = []
+Protein_NA_info = df.describe()
+columns = Protein_NA_info.columns.values.tolist()
+proteins_to_drop = []
+proteins_to_keep = []
+Tumors_to_drop = []
+Tumors_to_keep = []
+
+# filter out proteins if less than 20%
 for i in columns:
-    Na_count = len(df.index) - info[i][0]
+    Na_count = len(df.index) - Protein_NA_info[i][0]
     percent_missing = Na_count/len(df.index)
     if percent_missing > 0.2:
-        indexes_to_drop.append(i)
+        proteins_to_drop.append(i)
     else:
-        indexes_to_keep.append(i)
+        proteins_to_keep.append(i)
 
+print("Proteins removed = " + str(len(proteins_to_drop)))
 
+info = df.count(axis=1)
+for key, value in info.iteritems():
+    count = len(df.columns.values) - value
+    percent_missing = count/len(df.columns.values)
+    if percent_missing > 0.2:
+        Tumors_to_drop.append(key)
+    else:
+        Tumors_to_keep.append(key)
+
+print("Tumors removed = " + str(len(Tumors_to_drop)))
 # df.drop(labels=indexes_to_drop, axis=1)
-df = df[indexes_to_keep]
+df = df[proteins_to_keep]
+df = df.loc[Tumors_to_keep]
+
+# convert NaN to NA
 
 a = df.columns.values.tolist()
-for x in indexes_to_drop:
+for x in proteins_to_drop:
     if x in a:
         print("fail")
 for x in CancerDict:
@@ -122,4 +142,4 @@ for x in CancerDict:
         i +=1
 
     y.index = CancerDict[x]
-    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t')
+    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t', na_rep='NA')
