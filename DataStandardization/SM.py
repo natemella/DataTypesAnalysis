@@ -1,16 +1,22 @@
 import pandas as pd
 import numpy as np
 
-RelevantTypes = ("Glioblastoma multiforme","Ovarian serous cystadenocarcinoma", "Lung squamous cell carcinoma",
-                 "Breast invasive carcinoma","Lung adenocarcinoma", "Prostate adenocarcinoma",
-                 "Skin Cutaneous Melanoma", "Colon adenocarcinoma", "Bladder Urothelial Carcinoma", "Sarcoma", "Kidney renal clear cell carcinoma")
-#to get a map for all of the TSS codes to each cancer type
-TSSDictionary = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" : [], "Lung squamous cell carcinoma":[],
-                 "Breast invasive carcinoma":[],"Lung adenocarcinoma": [], "Prostate adenocarcinoma" : [],
-                 "Skin Cutaneous Melanoma": [], "Colon adenocarcinoma": [], "Bladder Urothelial Carcinoma": [], "Sarcoma": [],
-              "Kidney renal clear cell carcinoma": []}
+with open("CancerTypes.txt") as file:
+    with open("abreviations.tsv") as abr:
+        abreviations = [x.strip('\n') for x in file]
+        RelevantTypes = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
+
+CancerDict = {}
+for x in RelevantTypes:
+    CancerDict[x] = []
+
+TSSDictionary = {}
 
 RelevantCodes = set()
+
+#include the index column in each list
+for x in CancerDict:
+    CancerDict[x].append('sample')
 
 
 with open("TSS_CODES.tsv") as codes:
