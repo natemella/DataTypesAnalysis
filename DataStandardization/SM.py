@@ -115,4 +115,5 @@ for Ctype in TSSDictionary:
     final_df = final_df.fillna(value=0)
     print('\n' + Ctype + " = " + Abbreviations_Dict[Ctype])
     print(final_df.columns.values)
+    final_df = final_df.T
     final_df.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[Ctype] + '.tsv'), sep='\t')
