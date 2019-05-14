@@ -6,17 +6,15 @@ with open("CancerTypes.txt") as file:
         abreviations = [x.strip('\n') for x in file]
         RelevantTypes = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
 
-CancerDict = {}
-for x in RelevantTypes:
-    CancerDict[x] = []
-
 TSSDictionary = {}
+for x in RelevantTypes:
+    TSSDictionary[x] = []
+
+
 
 RelevantCodes = set()
 
 #include the index column in each list
-for x in CancerDict:
-    CancerDict[x].append('sample')
 
 
 with open("TSS_CODES.tsv") as codes:

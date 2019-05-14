@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 fileName="1c8cfe5f-e52d-41ba-94da-f15ea1337efc"
 extention=".gz"
 unzippedFile=${fileName}${extention}
@@ -11,13 +12,15 @@ then
     mv $unzippedFile $fileName
     echo IT WORKED!!!
     python3 SM.py
-#    cat $fileName
 else
     echo $fileName has not yest been downloaded
     wget https://api.gdc.cancer.gov/data/${fileName}
     bash SM.sh
 fi
-rm $fileName
+if [ -e TCGA*.tsv ]
+then
+    rm $fileName
+fi
 mv TCGA*.tsv ../
 cd ../
 
@@ -48,4 +51,3 @@ for file in `ls `; do
         fi
     fi
 done
-
