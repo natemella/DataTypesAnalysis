@@ -1,35 +1,22 @@
 import pandas as pd
 import sys
 
-RelevantTypes = ("Glioblastoma multiforme","Ovarian serous cystadenocarcinoma", "Lung squamous cell carcinoma",
-                 "Breast invasive carcinoma","Lung adenocarcinoma", "Prostate adenocarcinoma",
-                 "Skin Cutaneous Melanoma", "Colon adenocarcinoma", "Bladder Urothelial Carcinoma", "Sarcoma", "Kidney renal clear cell carcinoma")
-#to get a map for all of the TSS codes to each cancer type
-TSSDictionary = {}
+with open("CancerTypes.txt") as file:
+    with open("abreviations.tsv") as abr:
+        abreviations = [x.strip('\n') for x in file]
+        RelevantTypes = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
 
-#to make a data frame for each cancer type
-CancerDict = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" : [], "Lung squamous cell carcinoma":[],
-                 "Breast invasive carcinoma":[],"Lung adenocarcinoma": [], "Prostate adenocarcinoma" : [],
-                 "Skin Cutaneous Melanoma": [], "Colon adenocarcinoma": [], "Bladder Urothelial Carcinoma": [], "Sarcoma": [],
-              "Kidney renal clear cell carcinoma": []}
+CancerDict = {}
+for x in RelevantTypes:
+    CancerDict[x] = []
+
+TSSDictionary = {}
 
 RelevantCodes = set()
 
 #include the index column in each list
 for x in CancerDict:
     CancerDict[x].append('sample')
-
-GM = "Glioblastoma multiforme"
-OSC = "Ovarian serous cystadenocarcinoma"
-LS = "Lung squamous cell carcinoma"
-BC = "Breast invasive carcinoma"
-LA = "Lung adenocarcinoma"
-PA = "Prostate adenocarcinoma"
-SC = "Skin Cutaneous Melanoma"
-CA = "Colon adenocarcinoma"
-BUC = "Bladder Urothelial Carcinoma"
-S = "Sarcoma"
-KIRC = "Kidney renal clear cell carcinoma"
 
 
 with open("TSS_CODES.tsv") as codes:
@@ -65,27 +52,10 @@ with open(sys.argv[1]) as input:
         if x.endswith("01") and x.split('-')[1] in RelevantCodes:
             CancerPatientIDs.append(x)
             tss = x.split('-')[1]
-            if TSSDictionary[tss] == GM:
-                CancerDict[GM].append(x)
-            elif TSSDictionary[tss] == OSC:
-                CancerDict[OSC].append(x)
-            elif TSSDictionary[tss] == BC:
-                CancerDict[BC].append(x)
-            elif TSSDictionary[tss] == LA:
-                CancerDict[LA].append(x)
-            elif TSSDictionary[tss] == PA:
-                CancerDict[PA].append(x)
-            elif TSSDictionary[tss] == SC:
-                CancerDict[SC].append(x)
-            elif TSSDictionary[tss] == CA:
-                CancerDict[CA].append(x)
-            elif TSSDictionary[tss] == BUC:
-                CancerDict[BUC].append(x)
-            elif TSSDictionary[tss] == S:
-                CancerDict[S].append(x)
-            elif TSSDictionary[tss] == KIRC:
-                CancerDict[S].append(x)
-            CancerIndex +=1
+            for Cancer in RelevantTypes:
+                if TSSDictionary[tss] == Cancer:
+                    CancerDict[Cancer].append(x)
+
 
 df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerPatientIDs)[CancerPatientIDs]
 
