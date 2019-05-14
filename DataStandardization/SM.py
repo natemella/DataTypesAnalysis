@@ -1,21 +1,57 @@
 import pandas as pd
+import numpy as np
+
+RelevantTypes = ("Glioblastoma multiforme","Ovarian serous cystadenocarcinoma", "Lung squamous cell carcinoma",
+                 "Breast invasive carcinoma","Lung adenocarcinoma", "Prostate adenocarcinoma",
+                 "Skin Cutaneous Melanoma", "Colon adenocarcinoma", "Bladder Urothelial Carcinoma", "Sarcoma", "Kidney renal clear cell carcinoma")
+#to get a map for all of the TSS codes to each cancer type
+TSSDictionary = {"Glioblastoma multiforme": [],"Ovarian serous cystadenocarcinoma" : [], "Lung squamous cell carcinoma":[],
+                 "Breast invasive carcinoma":[],"Lung adenocarcinoma": [], "Prostate adenocarcinoma" : [],
+                 "Skin Cutaneous Melanoma": [], "Colon adenocarcinoma": [], "Bladder Urothelial Carcinoma": [], "Sarcoma": [],
+              "Kidney renal clear cell carcinoma": []}
+
+RelevantCodes = set()
+
+
+with open("TSS_CODES.tsv") as codes:
+    first_line = codes.readline()
+    for x in codes:
+        line = x.strip('\n').split('\t')
+        if line[2] in RelevantTypes:
+            RelevantCodes.add(line[0])
+            TSSDictionary[line[2]].append(line[0])
+
+# So that the outputfile will have the correct names
+Abbreviations_Dict = {}
+with open("abreviations.tsv") as abr:
+    first_line = abr.readline()
+    for x in abr:
+        list = x.strip('\n').split('\t')
+        if list[1] in RelevantTypes:
+            Abbreviations_Dict[list[1]] = list[0]
 
 # read in data frame
-df = pd.read_csv("sm.tsv", sep='\t')
+df = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False)
+print("Completed Step 1")
 # only keep rows where Filter equals pass and Impact equals moderate or high
 df = df.loc[(df["FILTER"] == "PASS") & (df["NCALLERS"] >= 3) & (df["IMPACT"].isin(["MODERATE", "HIGH"]))]
-
+print("Completed Step 2")
 # SIFT and PolyPhen columns have numbers in their values that we don't want to look at. (i.e. deleterious(1.03))
 # so we'll split the value
 
 def split(row, col):
     return row[col].split("(")[0]
 
+def makedict(row,col):
+    return row[col]
 # All of the conditions upon which we will keep a row.
 
 def filter_on_stuff(row):
     sift = split(row, "SIFT")
     poly = split(row, "PolyPhen")
+    tumor = makedict(row, "Tumor_Sample_Barcode")
+    if tumor.split('-')[1] not in RelevantCodes:
+        return False
     if sift == "deleterious":
         return True
     if sift == "deleterious_low_confidence" and (poly != "benign" or poly == "."):
@@ -29,54 +65,54 @@ def filter_on_stuff(row):
  # apply conditions
 df = df.loc[df.apply(filter_on_stuff, axis="columns")]
 
-dict = {}
+print("Completed Step 3")
 
-def makedict(row,col):
-    return row[col]
 
 # Make a dictionary where a Tumor_Sample_Barcode is the key to a list of genes. These are the genes where this tumor has a mutation
-def full_dict(row):
-    key = makedict(row, "Tumor_Sample_Barcode")
-    value = makedict(row, "Hugo_Symbol")
-    if key not in dict:
-        dict[key] = [value]
-    else:
-        dict[key].append(value)
-    return
 
 
-df.apply(full_dict, axis="columns")
+for Ctype in TSSDictionary:
 
-my_columns=[]
+    dict = {}
 
-# check to see if there are at least two mutations in each Tumor Sample Barcode
+    def full_dict(row):
+        key = makedict(row, "Tumor_Sample_Barcode")
+        key = key[0:12]
+        value = makedict(row, "Hugo_Symbol")
+        if key.split('-')[1] not in TSSDictionary[Ctype]:
+            return
+        if key not in dict:
+            dict[key] = [value]
+        else:
+            dict[key].append(value)
+        return
 
-for x in dict.keys():
-    if len(dict[x]) > 2:
-        my_columns.append(x)
+    df.apply(full_dict, axis="columns")
 
-# the genes will become indexes and the Tumor_Sample_Barcodes will become columns
-final_df = pd.DataFrame(index=df.Hugo_Symbol, columns=my_columns)
+    my_columns=[]
 
-# if a gene is in our list (from our dictionary) then we will assign it 1. Otherwise we will assign it a NaN for now.
-for gene in final_df.index.values:
-    for patient in final_df.columns.values:
-        if gene in dict[patient]:
-            final_df.at[gene, patient] = 1
 
-final_df.reset_index()
+    # the genes will become indexes and the Tumor_Sample_Barcodes will become columns
+    final_df = pd.DataFrame(index=df.Hugo_Symbol.unique(), columns=dict.keys())
 
-# get rid of duplicate genes in data frame
-final_df = final_df.groupby(["Hugo_Symbol"], sort=False).max()
+    # if a gene is in our list (from our dictionary) then we will assign it 1. Otherwise we will assign it a NaN for now.
 
-# count how many mutations per gene
-info = final_df.count(axis=1)
+    for x in dict:
+        a = pd.Series(dict[x], name=x)
+        b = final_df.index.isin(a)
+        final_df[x] = np.where(b, 1, np.nan)
 
-# filter out the genes where they are mutated in fewer than two samples
-final_df = final_df.loc[info >= 2]
+    final_df.reset_index()
 
-# change NaN to 0
-final_df = final_df.fillna(value=0)
+    # count how many mutations per gene
+    info = final_df.count(axis=1)
 
-print(final_df)
+    # filter out the genes where they are mutated in fewer than two samples
+    final_df = final_df.loc[info >= 2]
 
+    # change NaN to 0for gene in final_df.index.values:
+
+    final_df = final_df.fillna(value=0)
+    print('\n' + Ctype + " = " + Abbreviations_Dict[Ctype])
+    print(final_df.columns.values)
+    final_df.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[Ctype] + '.tsv'), sep='\t')
