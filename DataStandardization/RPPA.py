@@ -14,9 +14,6 @@ TSSDictionary = {}
 
 RelevantCodes = set()
 
-#include the index column in each list
-for x in CancerDict:
-    CancerDict[x].append('sample')
 
 
 with open("TSS_CODES.tsv") as codes:
@@ -39,17 +36,11 @@ with open("abreviations.tsv") as abr:
 
 file_name = sys.argv[1]
 CancerPatientIDs = []
-Duplicate_Indexes = {}
 
 with open(sys.argv[1]) as input:
     Header = input.readline().split('\t')
     AllPatients = [x.split('\t')[0] for x in input]
-    CancerIndex = 0
     for x in AllPatients:
-        if x in CancerPatientIDs:
-            first_duplicate = CancerPatientIDs.index(x)
-            second_duplicate = CancerIndex
-            Duplicate_Indexes[first_duplicate] = second_duplicate
         if x.endswith("01"):
             CancerPatientIDs.append(x)
             if x.split('-')[1] in RelevantCodes:
@@ -57,7 +48,6 @@ with open(sys.argv[1]) as input:
                 for Cancer in RelevantTypes:
                     if TSSDictionary[tss] == Cancer:
                         CancerDict[Cancer].append(x)
-            CancerIndex +=1
 
 df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
 df = df.loc[CancerPatientIDs]
