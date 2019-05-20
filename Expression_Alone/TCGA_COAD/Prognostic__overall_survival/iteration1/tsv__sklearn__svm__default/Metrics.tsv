@@ -1,0 +1,16 @@
+Description	Iteration	Algorithm	Metric	Value
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	AUROC	0.452380952380952
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	Accuracy	0.6
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	BalancedAccuracy	0.5
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	Brier	0.241198732273604
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	F1	0.75
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	FDR	0.4
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	FNR	0
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	FPR	1
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	MCC	0
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	MMCE	0.4
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	NPV	NA
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	PPV	0.6
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	Recall	1
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TNR	0
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TPR	1

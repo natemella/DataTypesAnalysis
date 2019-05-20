@@ -1,0 +1,18 @@
+***********************************************************************
+Command that was executed for analysis on Fri May  3 17:26:38 MDT 2019:
+
+/UserScripts/classification_montecarlo --data TCGA_KIRC/Covariate/Stage__ajcc_metastasis_pathologic_pm.txt --data TCGA_KIRC/Covariate/Stage__ajcc_nodes_pathologic_pn.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__white_cell_count.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__gender.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__race.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__history_neoadjuvant_treatment.txt --data TCGA_KIRC/Covariate/Histological__tumor_grade.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__hemoglobin_level.txt --data TCGA_KIRC/Covariate/Stage__ajcc_pathologic_tumor_stage.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__platelet_count.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__age_at_initial_pathologic_diagnosis.txt --data TCGA_KIRC/Covariate/Histological__laterality.txt --data TCGA_KIRC/Covariate/Stage__ajcc_tumor_pathologic_pt.txt --data TCGA_KIRC/Covariate/PatientCharacteristic__history_other_malignancy.txt --data TCGA_KIRC/Class/Prognostic__overall_survival.txt --description TCGA_KIRC___Prognostic__overall_survival___iteration1 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/resnet/default* --seed 1 --verbose false --num-cores 1
+ShinyLearner version: 507
+***********************************************************************
+[2019-05-03 17:26:38] Parsing data...
+[2019-05-03 17:26:39] After filtering, data were available for 111 instances and 16 data points.
+[2019-05-03 17:26:39] One-hot encoding categorical data (where applicable)...
+***********************************************************************
+Command that was executed for analysis on Fri May  3 17:44:32 MDT 2019:
+
+/UserScripts/classification_montecarlo --data TCGA_KIRC/Expression/TCGA_KIRC.txt.gz --data TCGA_KIRC/Class/Prognostic__overall_survival.txt --description TCGA_KIRC___Prognostic__overall_survival___iteration1 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/resnet/default* --seed 1 --verbose false --num-cores 1
+ShinyLearner version: 507
+***********************************************************************
+[2019-05-03 17:44:32] Parsing data...
+[2019-05-03 17:44:55] After filtering, data were available for 250 instances and 22824 data points.
+[2019-05-03 17:44:55] One-hot encoding categorical data (where applicable)...

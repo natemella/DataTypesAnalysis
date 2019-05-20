@@ -1,0 +1,15 @@
+Description	Iteration	Algorithm	InstanceID	ActualClass	PredictedClass	LTS	STS
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-A6-2682	STS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-3666	STS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A01P	LTS	STS	0.000000000	1.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A024	LTS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A029	LTS	STS	0.000000000	1.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A02E	STS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A02R	STS	STS	0.000000000	1.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A03F	STS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AA-A03J	LTS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-AY-4070	STS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-G4-6303	LTS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-G4-6304	LTS	STS	0.000000000	1.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-G4-6309	LTS	LTS	1.000000000	0.000000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/knn/default__n_neighbors=1_p=1_weights=uniform	TCGA-G4-6310	LTS	LTS	1.000000000	0.000000000

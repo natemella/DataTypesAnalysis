@@ -1,0 +1,18 @@
+***********************************************************************
+Command that was executed for analysis on Fri May  3 17:26:15 MDT 2019:
+
+/UserScripts/classification_montecarlo --data TCGA_COAD/Covariate/PatientCharacteristic__gender.txt --data TCGA_COAD/Covariate/PatientCharacteristic__history_other_malignancy.txt --data TCGA_COAD/Covariate/PatientCharacteristic__history_other_malignancy.1.txt --data TCGA_COAD/Covariate/PatientCharacteristic__age_at_initial_pathologic_diagnosis.txt --data TCGA_COAD/Covariate/PatientCharacteristic__history_colon_polyps.txt --data TCGA_COAD/Covariate/PatientCharacteristic__family_history_colorectal_cancer.txt --data TCGA_COAD/Covariate/Histological__anatomic_neoplasm_subdivision.txt --data TCGA_COAD/Covariate/Histological__residual_tumor.txt --data TCGA_COAD/Class/Prognostic__lymphovascular_invasion_indicator.txt --description TCGA_COAD___Prognostic__lymphovascular_invasion_indicator___iteration2 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/dnn/default* --seed 2 --verbose false --num-cores 1
+ShinyLearner version: 507
+***********************************************************************
+[2019-05-03 17:26:15] Parsing data...
+[2019-05-03 17:26:16] After filtering, data were available for 261 instances and 15 data points.
+[2019-05-03 17:26:16] One-hot encoding categorical data (where applicable)...
+***********************************************************************
+Command that was executed for analysis on Fri May  3 17:43:42 MDT 2019:
+
+/UserScripts/classification_montecarlo --data TCGA_COAD/Expression/TCGA_COAD.txt.gz --data TCGA_COAD/Class/Prognostic__lymphovascular_invasion_indicator.txt --description TCGA_COAD___Prognostic__lymphovascular_invasion_indicator___iteration2 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/dnn/default* --seed 2 --verbose false --num-cores 1
+ShinyLearner version: 507
+***********************************************************************
+[2019-05-03 17:43:42] Parsing data...
+[2019-05-03 17:44:13] After filtering, data were available for 394 instances and 22800 data points.
+[2019-05-03 17:44:13] One-hot encoding categorical data (where applicable)...

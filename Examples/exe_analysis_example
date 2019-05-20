@@ -1,0 +1,26 @@
+#!/bin/bash
+
+currentDir=$(pwd)
+analysis=Covariate_Alone
+dockerCommandsFile=Docker_Commands.sh
+startIteration=1
+stopIteration=2
+delay=1
+numJobs=2
+memoryGigs=100
+swapMemoryGigs=100
+hoursMax=1
+numCores=1
+outFileToCheck=Predictions.tsv
+version=507
+datatype=Covariate
+
+python3 createDockerCommands.py $analysis $startIteration $stopIteration $memoryGigs $swapMemoryGigs $hoursMax $numCores Algorithms.txt Data_To_Process.txt $outFileToCheck $dockerCommandsFile $version $datatype
+jobLogFile=Analysis.job.log
+rm -f $jobLogFile
+parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+python3 auroc.py $analysis $startIteration $stopIteration Algorithms.txt Data_To_Process.txt $outFileToCheck $version $datatype
+#clean up extra files
+rm $dockerCommandsFile
+docker run -i -t --rm -v $(pwd)'/Analysis_Results':/MyDir \
+srp33/shinylearner:version$version rm -rf /MyDir/$analysis \

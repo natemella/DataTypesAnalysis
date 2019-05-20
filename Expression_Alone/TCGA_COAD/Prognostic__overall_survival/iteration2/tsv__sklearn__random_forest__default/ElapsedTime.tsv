@@ -1,0 +1,2 @@
+Description	Iteration	Algorithm	ElapsedSeconds
+TCGA_COAD___Prognostic__overall_survival___iteration2	1	AlgorithmScripts/Classification/tsv/sklearn/random_forest/default__bootstrap=True_class_weight=None_criterion=gini_n_estimators=50_oob_score=False	5.136111104

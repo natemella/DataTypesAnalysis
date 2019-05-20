@@ -47,3 +47,7 @@ for file in `ls `; do
         fi
     fi
 done
+
+cd ../
+cd DataStandardization/
+python Class.py

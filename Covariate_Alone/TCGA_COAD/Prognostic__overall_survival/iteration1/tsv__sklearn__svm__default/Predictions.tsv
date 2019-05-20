@@ -1,0 +1,15 @@
+Description	Iteration	Algorithm	InstanceID	ActualClass	PredictedClass	LTS	STS
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-A6-2682	STS	LTS	0.560204286	0.439795714
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-3666	STS	LTS	0.514590811	0.485409189
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A01P	LTS	LTS	0.550768623	0.449231377
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A024	LTS	LTS	0.515222086	0.484777914
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A029	LTS	STS	0.500000000	0.500000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A02E	STS	LTS	0.598287445	0.401712555
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A02R	STS	LTS	0.505571927	0.494428073
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A03F	STS	LTS	0.574046650	0.425953350
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AA-A03J	LTS	STS	0.476524650	0.523475350
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-AY-4070	STS	LTS	0.533760932	0.466239068
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-G4-6303	LTS	LTS	0.552840615	0.447159385
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-G4-6304	LTS	LTS	0.500000000	0.500000000
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-G4-6309	LTS	STS	0.489002884	0.510997116
+TCGA_COAD___Prognostic__overall_survival___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	TCGA-G4-6310	LTS	LTS	0.524835633	0.475164367
