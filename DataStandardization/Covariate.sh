@@ -14,6 +14,7 @@ else
     bash Covariate.sh
 fi
 rm $fileName
+rm $fileName$extension
 mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
