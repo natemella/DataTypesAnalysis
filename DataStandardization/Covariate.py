@@ -47,13 +47,38 @@ with open("mmc1.xlsx.CSV") as input:
 df = pd.read_csv("mmc1.xlsx.CSV", sep=",", index_col="bcr_patient_barcode")
 df = df.drop(labels="Unnamed: 0", axis=1)
 
-print(len(df.index.values))
-
 df = df.loc[CancerPatientIDs]
 
-print(len(df.index.values))
+endpoints = ("DFI","DSS","OS","PFI")
+
+output = open("Covariate_log.out",'w')
 
 for x in CancerDict:
+    output.write(f"Generating File for {x}\n")
     y = df.loc[CancerDict[x]]
 
+    info = y.describe(include="all")
+    columns = info.columns.values
+    variables_to_keep = []
+    variables_to_drop = []
+
+    output.write(f'\nTotal columns:\n{columns}\n\n')
+    for i in columns:
+        if i.startswith(endpoints):
+            variables_to_keep.append(i)
+            continue
+        Na_count = len(y.index) - info[i][0]
+        percent_missing = Na_count / len(y.index)
+        if percent_missing > 0.2:
+            variables_to_drop.append(i)
+        else:
+            variables_to_keep.append(i)
+
+
+
+
+    output.write(f'variables to keep for {x}: {variables_to_keep}\n')
+    output.write(f'variables to drop to drop for {x}: {variables_to_drop}\n\n')
+    y = y[variables_to_keep]
     y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t', na_rep='NA')
+output.close()

@@ -60,7 +60,7 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
                         # give labels
                         df2 = one_class.apply(give_labels, args=(one_class.columns.values,upper_cutoff), axis="columns").map({'True': f'LT_{val}', 'False': f'ST_{val}'})
                         df2.to_csv(path_or_buf=f"{Class_dir}{val}.txt", sep="\t", header=True, na_rep="NA")
-
+                    output.close()
 
 
                     for var in variables:

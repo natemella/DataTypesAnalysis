@@ -53,7 +53,7 @@ df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
 df = df.loc[CancerPatientIDs]
 df = df.groupby(['SampleID']).mean()
 
-Protein_NA_info = df.describe()
+Protein_NA_info = df.describe(include='all')
 columns = Protein_NA_info.columns.values.tolist()
 proteins_to_drop = []
 proteins_to_keep = []
