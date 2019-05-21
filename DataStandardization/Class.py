@@ -7,7 +7,7 @@ currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 RelevantTypes = ()
 
-summary_df = pd.read_csv(filepath_or_buffer="summary.tsv", sep='\t', index_col="CancerType")
+summary_df = pd.read_csv(filepath_or_buffer="summary.txt", sep='\t', index_col="CancerType")
 
 list = currentWorkingDir.split('/')
 parent_directory = '/'.join(list[:-1])

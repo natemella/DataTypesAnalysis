@@ -55,7 +55,7 @@ df = df.loc[CancerPatientIDs]
 
 endpoints = ("DFI","DSS","OS","PFI")
 
-file = open("summary.tsv",'w')
+file = open("summary.txt",'w+')
 file.write(f'CancerType\tRemoved Variables\tKept Variables\n')
 for x in CancerDict:
     print(f"Generating File for {x}\n")
