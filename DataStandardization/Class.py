@@ -29,10 +29,12 @@ def filter_on_stuff(row, list, x, y):
     #              f'Time = {Time}\n')
     return False
 
-def give_labels(row, list, y):
+def give_labels(row, list, y, l, s):
     Time = oneval(row, list[1])
     if Time >= y:
+        l.append(row.name)
         return 'True'
+    s.append(row.name)
     return 'False'
 
 endpoints = ("DFI","DSS","OS","PFI")
@@ -40,8 +42,11 @@ endpoints = ("DFI","DSS","OS","PFI")
 csvfile = StringIO()
 header = ["CancerType"]
 for x in endpoints:
-    header.append(f'Patients_Removed_{x}')
+    if x == "PFI":
+        header.append(f'Patients_Removed_{x}')
 
+header.append("SPFI")
+header.append("LPFI")
 writer = csv.writer(csvfile)
 writer.writerow(header)
 
@@ -76,9 +81,15 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
                         one_class = one_class.loc[one_class.apply(filter_on_stuff, args=(one_class.columns.values, lower_cutoff,upper_cutoff), axis="columns")]
                         b = one_class.size
                         # output.write(f'\nThe final DataFrame size is {one_class.size}\n\n')
-                        row.append(str(a-b))
+
                         # give labels
-                        df2 = one_class.apply(give_labels, args=(one_class.columns.values,upper_cutoff), axis="columns").map({'True': f'LT_{val}', 'False': f'ST_{val}'})
+                        LT = []
+                        ST = []
+                        df2 = one_class.apply(give_labels, args=(one_class.columns.values,upper_cutoff,LT,ST), axis="columns").replace(f'True',f'LT_{val}').replace('False',f'ST_{val}')
+                        if val == "PFI":
+                            row.append(str(a-b))
+                            row.append(str(len(ST)))
+                            row.append(str(len(LT)))
                         df2.to_csv(path_or_buf=f"{Class_dir}{val}.txt", sep="\t", header=True, na_rep="NA")
                     # output.close()
                     writer.writerow(row)
@@ -99,6 +110,7 @@ summary_df2 = summary_df2.apply(pd.to_numeric, errors="ignore")
 
 frames = [summary_df, summary_df2]
 
-result = pd.concat(frames, axis=1)
+result = pd.concat(frames, axis=1, sort='False')
+result.to_csv(path_or_buf=f'result.tsv', sep='\t')
 print(result)
 
