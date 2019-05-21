@@ -52,3 +52,4 @@ done
 cd ../
 cd DataStandardization/
 python Class.py
+rm summary.tsv
