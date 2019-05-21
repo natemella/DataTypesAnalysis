@@ -15,8 +15,7 @@ TSSDictionary = {}
 RelevantCodes = set()
 
 #include the index column in each list
-for x in CancerDict:
-    CancerDict[x].append('sample')
+
 
 
 with open("TSS_CODES.tsv") as codes:
@@ -38,17 +37,13 @@ with open("abreviations.tsv") as abr:
 
 
 file_name = sys.argv[1]
-CancerPatientIDs = []
-Duplicate_Indexes = {}
+CancerPatientIDs = ['sample']
+
 
 with open(sys.argv[1]) as input:
     AllPatients= input.readline().strip('\n').split('\t')
     CancerIndex = 0
     for x in AllPatients:
-        if x in CancerPatientIDs:
-            first_duplicate = CancerPatientIDs.index(x)
-            second_duplicate = CancerIndex
-            Duplicate_Indexes[first_duplicate] = second_duplicate
         if x.endswith("01") and x.split('-')[1] in RelevantCodes:
             CancerPatientIDs.append(x)
             tss = x.split('-')[1]
@@ -58,31 +53,15 @@ with open(sys.argv[1]) as input:
 
 
 df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerPatientIDs)[CancerPatientIDs]
-
-#take out repeats
-for x in Duplicate_Indexes:
-    val1 = x
-    val2 = Duplicate_Indexes[x]
-    print("First duplicate = " + CancerPatientIDs[val1] + " occured at index " + str(val1))
-    print("Second duplicate = " + CancerPatientIDs[val2] + " occured at index " + str(val2))
-    duplicate_df = df[CancerPatientIDs[x]] # grab the columns that repeat
-    series = duplicate_df.mean(axis=1) # average the duplicate values together
-    temp_df = pd.DataFrame({CancerPatientIDs[x]:series.values}) #turn the series into a DataFrame
-    df = df.drop(labels=[CancerPatientIDs[x]], axis=1) # take out all of the duplicate columns
-    df = pd.concat([df,temp_df], axis=1) # concate the average of the duplicate columns
-
-df_index = pd.read_csv(sys.argv[1], delimiter='\t', usecols=['sample'])
-df = pd.concat([df_index,df], axis=1)
+df = df.set_index("sample")
 for x in CancerDict:
-    y = df[CancerDict[x]]
-    i = 0
+    y = df[CancerDict[x]].astype(int)
+    y = y.groupby(level=0, axis=1).mean()
+    # y = y.loc[:, ~y.columns.duplicated()]
+    new_columns = []
     #truncate the IDs to twelve characters
-    for ID in CancerDict[x]:
-        if ID == 'sample':
-            i += 1
-            continue
+    for ID in y.columns.values:
         truncatedID = ID[0:12]
-        CancerDict[x][i] = truncatedID
-        i +=1
-    y.columns = CancerDict[x]
-    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', index=False)
+        new_columns.append(truncatedID)
+    y.columns = new_columns
+    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', na_rep="NA")

@@ -8,14 +8,14 @@ if [ -e $fileName* ]
 then
     gunzip $unzippedFile
     echo IT WORKED!!!
-    python3 CNV.py $fileName
+    python3 miRNA.py $fileName
 #    cat $fileName
 else
     echo $unzippedFile has not yest been downloaded
     wget https://pancanatlas.xenahubs.net/download/${unzippedFile}
     bash CNV.sh
 fi
-rm $fileName
+#rm $fileName
 mv *.ttsv ../
 cd ../
 if [ -d "InputData" ]

@@ -15,7 +15,11 @@ then
 else
     echo $fileName has not yest been downloaded
     wget https://api.gdc.cancer.gov/data/${fileName}
-    bash SM.sh
+    mv $fileName $unzippedFile
+    gunzip $unzippedFile
+    mv $unzippedFile $fileName
+    echo IT WORKED!!!
+    python3 SM.py
 fi
 if [ -e TCGA*.tsv ]
 then
