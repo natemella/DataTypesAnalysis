@@ -13,9 +13,11 @@ then
 else
     echo $unzippedFile has not yest been downloaded
     wget https://pancanatlas.xenahubs.net/download/${unzippedFile}
-    bash CNV.sh
+    gunzip $unzippedFile
+    echo IT WORKED!!!
+    python3 miRNA.py $fileName
 fi
-#rm $fileName
+rm $fileName
 mv *.ttsv ../
 cd ../
 if [ -d "InputData" ]

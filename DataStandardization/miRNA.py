@@ -8,7 +8,7 @@ with open("CancerTypes.txt") as file:
 
 CancerDict = {}
 for x in RelevantTypes:
-    CancerDict[x] = []
+    CancerDict[x] = ['sample']
 
 TSSDictionary = {}
 
@@ -50,18 +50,29 @@ with open(sys.argv[1]) as input:
             for Cancer in RelevantTypes:
                 if TSSDictionary[tss] == Cancer:
                     CancerDict[Cancer].append(x)
+print("Finished Step 1")
 
-
-df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerPatientIDs)[CancerPatientIDs]
-df = df.set_index("sample")
+# df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerPatientIDs)[CancerPatientIDs]
+# df = df.set_index("sample")
+i = 0
 for x in CancerDict:
-    y = df[CancerDict[x]].astype(int)
-    y = y.groupby(level=0, axis=1).mean()
+    df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerDict[x], engine='c')[CancerDict[x]]
+    df = df.set_index("sample")
+    print(f'Finished Step 2.{i}')
+    i+=1
     # y = y.loc[:, ~y.columns.duplicated()]
+    if True in df.columns.duplicated():
+        df = df.astype(float)
+        print("\nFound Duplicates!!!\n")
+        print([df.columns.values[i] for i in range(0, len(df.columns.duplicated())) if df.columns.duplicated()[i] == True])
+        df = df.groupby(level=0, axis=1).mean()
+
     new_columns = []
     #truncate the IDs to twelve characters
-    for ID in y.columns.values:
+    for ID in df.columns.values:
         truncatedID = ID[0:12]
         new_columns.append(truncatedID)
-    y.columns = new_columns
-    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', na_rep="NA")
+    df.columns = new_columns
+    print(f'Beginning to write DataFrame to file')
+    df.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.ttsv'), sep='\t', na_rep="NA")
+    print(f'Finished Evaluating TCGA_{Abbreviations_Dict[x]}')
