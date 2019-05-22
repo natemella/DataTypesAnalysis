@@ -15,7 +15,7 @@ else
     wget https://pancanatlas.xenahubs.net/download/${unzippedFile}
     bash miRNA.sh
 fi
-rm $fileName
+#rm $fileName
 mv *.ttsv ../
 cd ../
 if [ -d "InputData" ]

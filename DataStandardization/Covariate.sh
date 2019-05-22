@@ -11,9 +11,11 @@ else
     echo $fileName has not yest been downloaded
     wget https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/${fileName}
     expressionable $fileName $fileName$extension -i Excel -o CSV
-    bash Covariate.sh
+    echo IT WORKED!!!
+    python3 Covariate.py $fileName
 fi
 rm $fileName
+rm $fileName$extension
 mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
@@ -51,3 +53,4 @@ done
 cd ../
 cd DataStandardization/
 python Class.py
+rm summary.txt
