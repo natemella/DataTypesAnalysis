@@ -13,7 +13,11 @@ else
     rm DNA_MethylationFiles.sh
 fi
 rm $file
-mv *.tsv ../
+
+cd output_Data
+mv *.* ../../
+cd ../
+rmdir output_Data
 cd ../
 if [ -d "InputData" ]
 then
