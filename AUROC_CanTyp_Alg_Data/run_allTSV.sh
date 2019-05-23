@@ -1,3 +1,0 @@
-Rscript AUROC_CanType_Alg_BarGraphMkr.R Expression_Alone.tsv
-Rscript AUROC_CanType_Alg_BarGraphMkr.R Covariate_Alone.tsv
-Rscript AUROC_CanType_Alg_BarGraphMkr.R Covariate_and_Expression.tsv

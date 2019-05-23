@@ -1,9 +1,0 @@
-***********************************************************************
-Command that was executed for analysis on Fri May  3 18:01:54 MDT 2019:
-
-/UserScripts/classification_montecarlo --data TCGA_PRAD/Expression/TCGA_PRAD.txt.gz --data TCGA_PRAD/Class/Prognostic__biochemical_recurrence_indicator.txt --description TCGA_PRAD___Prognostic__biochemical_recurrence_indicator___iteration1 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/dnn/default* --seed 1 --verbose false --num-cores 1
-ShinyLearner version: 507
-***********************************************************************
-[2019-05-03 18:01:54] Parsing data...
-[2019-05-03 18:02:20] After filtering, data were available for 420 instances and 22801 data points.
-[2019-05-03 18:02:20] One-hot encoding categorical data (where applicable)...

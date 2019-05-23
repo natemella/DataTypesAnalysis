@@ -1,2 +1,0 @@
-Description	Iteration	Algorithm	ElapsedSeconds
-TCGA_KIRC___Prognostic__overall_survival___iteration2	1	AlgorithmScripts/Classification/tsv/sklearn/gradient_boosting/default__criterion=friedman_mse_n_estimators=50	9.694838784

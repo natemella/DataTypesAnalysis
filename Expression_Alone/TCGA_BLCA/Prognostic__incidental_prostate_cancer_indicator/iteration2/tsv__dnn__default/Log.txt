@@ -1,9 +1,0 @@
-***********************************************************************
-Command that was executed for analysis on Fri May  3 18:17:04 MDT 2019:
-
-/UserScripts/classification_montecarlo --data TCGA_BLCA/Expression/TCGA_BLCA.txt.gz --data TCGA_BLCA/Class/Prognostic__incidental_prostate_cancer_indicator.txt --description TCGA_BLCA___Prognostic__incidental_prostate_cancer_indicator___iteration2 --iterations 1 --classif-algo AlgorithmScripts/Classification/tsv/dnn/default* --seed 2 --verbose false --num-cores 1
-ShinyLearner version: 507
-***********************************************************************
-[2019-05-03 18:17:04] Parsing data...
-[2019-05-03 18:17:25] After filtering, data were available for 319 instances and 22804 data points.
-[2019-05-03 18:17:25] One-hot encoding categorical data (where applicable)...

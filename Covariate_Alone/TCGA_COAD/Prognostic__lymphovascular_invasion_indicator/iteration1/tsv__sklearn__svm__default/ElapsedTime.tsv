@@ -1,2 +1,0 @@
-Description	Iteration	Algorithm	ElapsedSeconds
-TCGA_COAD___Prognostic__lymphovascular_invasion_indicator___iteration1	1	AlgorithmScripts/Classification/tsv/sklearn/svm/default__C=1.0_class_weight=None_kernel=rbf	0.70598464
