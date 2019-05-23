@@ -12,7 +12,7 @@ else
     bash DNA_MethylationFiles.sh
     rm DNA_MethylationFiles.sh
 fi
-rm $file
+#rm $file
 
 cd output_Data
 mv *.* ../../
