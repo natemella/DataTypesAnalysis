@@ -45,5 +45,5 @@ filteredData <- group_by(filteredData, Patient_ID, Gene) %>%
 filteredData <- spread(filteredData, Gene, Value)
 
 ## Save data to an output file
-outPutFile <- paste("Methylation_Data_", args[2], ".txt", sep = "")
+outPutFile <- paste("TCGA_", args[2], ".tsv", sep = "")
 write_tsv(filteredData, outPutFile)
