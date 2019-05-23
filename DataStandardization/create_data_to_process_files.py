@@ -23,7 +23,13 @@ def checkfunction(dtype):
         return [File1]
 
 
-
+def pop_back(file):
+    file.close()
+    with open(file.name, 'rb+') as filehandle:
+        filehandle.seek(-1, os.SEEK_END)
+        filehandle.truncate()
+    file = open(file.name, 'a')
+    return file
 
 endpoints = sys.argv[1:]
 
@@ -50,22 +56,34 @@ for CancerType in next(os.walk(parent_directory + "/InputData"))[1]:
                     if DataType == "Covariate":
                         # combined = False
                         for x in endpoints:
-                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}')
+                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
                                 if input_file.endswith('.tsv'):
                                     continue
-                                myFiles[0].write(f'\t{input_file}')
+                                myFiles[0].write(f'{input_file},')
+                            myFiles[0] = pop_back(myFiles[0])
                             myFiles[0].write('\n')
                         myFiles[0].close()
                     else:
                         # combined = True
                         for x in endpoints:
-                            myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate')
+                            myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate\t')
                             for input_file in os.listdir(d_type_directory):
-                                myFiles[1].write(f'\t{input_file}')
+                                myFiles[1].write(f'{input_file},')
+                            myFiles[1] = pop_back(myFiles[1])
+                            myFiles[1].write('\t')
                             for input_file in os.listdir(Covariate_dir):
-                                myFiles[1].write(f'\t{input_file}')
+                                if input_file.endswith('.tsv'):
+                                    continue
+                                myFiles[1].write(f'{input_file},')
+                            myFiles[1] = pop_back(myFiles[1])
                             myFiles[1].write('\n')
+                        for x in endpoints:
+                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
+                            for input_file in os.listdir(d_type_directory):
+                                myFiles[0].write(f'{input_file},')
+                            myFiles[0] = pop_back(myFiles[0])
+                            myFiles[0].write('\n')
                         myFiles[0].close()
                         myFiles[1].close()
 

@@ -49,14 +49,8 @@ for c in allDataToProcess:
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
     for x in input_files:
-      if datatype == "Expression":
-        input_data.append(dataset_path + datatype + '/' + x + '.txt.gz')
-      elif datatype == "Covariate":
-        input_data.append(dataset_path + datatype + '/' + x + '.txt')
-      elif datatype == "RPPA" or "SM":
-        input_data.append(dataset_path + datatype+ '/' + x + ".tsv")
-      else:
-        input_data.append(dataset_path + datatype + '/' + x + '.ttsv')
+        input_data.append(f'{dataset_path}{datatype}/{x}')
+
 
 
   input_data.append(class_path)
@@ -107,6 +101,6 @@ if len(dockerCommandFilePaths) == 0:
     print('All commands have been executed!')
 else:
     # Create a file that indicates the location of all the bash scripts that need to be executed
-    with open(dockerOutFilePath, 'w') as dockerOutFile:
+    with open(dockerOutFilePath, 'a') as dockerOutFile:
         for command in dockerCommandFilePaths:
             dockerOutFile.write("bash {}\n".format(command))
