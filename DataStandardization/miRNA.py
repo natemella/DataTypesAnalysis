@@ -56,7 +56,7 @@ print("Finished Step 1")
 # df = df.set_index("sample")
 i = 0
 for x in CancerDict:
-    df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerDict[x], engine='c')[CancerDict[x]]
+    df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerDict[x], engine='c', na_values='NA')[CancerDict[x]].astype(float)
     df = df.set_index("sample")
     print(f'Finished Step 2.{i}')
     i+=1

@@ -10,7 +10,51 @@ TSSDictionary = {}
 for x in RelevantTypes:
     TSSDictionary[x] = []
 
+def split(row, col):
+    return row[col].split("(")[0]
 
+def makedict(row,col):
+    return row[col]
+# All of the conditions upon which we will keep a row.
+
+def filter_on_stuff(row):
+    sift = split(row, "SIFT")
+    poly = split(row, "PolyPhen")
+    tumor = makedict(row, "Tumor_Sample_Barcode")
+    if tumor.split('-')[1] not in RelevantCodes:
+        return False
+    if sift == "deleterious":
+        return True
+    if sift == "deleterious_low_confidence" and (poly != "benign" or poly == "."):
+        return True
+    if poly == "possibly_damaging" and sift == ("." or not "tolerated" or "tolerated_low_confidence"):
+        return True
+    if poly == "." and sift == ".":
+        return True
+    return False
+
+def chunk_preprocessing(df_chunk, i):
+    df_chunk = df_chunk.loc[(df_chunk["FILTER"] == "PASS") & (df_chunk["NCALLERS"] >= 3) & (df_chunk["IMPACT"].isin(["MODERATE", "HIGH"]))]
+    print(f"Completed Step 2.{i}")
+
+    # apply conditions
+    df_chunk = df_chunk.loc[df_chunk.apply(filter_on_stuff, axis="columns")]
+    return df_chunk
+
+def build_df(df_chunk):
+    chunk_list = []  # append each chunk df here
+    i = 0
+    # Each chunk is in df format
+    for chunk in df_chunk:
+        # perform data filtering
+        chunk_filter = chunk_preprocessing(chunk, i)
+        i += 1
+        # Once the data filtering is done, append the chunk to list
+        chunk_list.append(chunk_filter)
+
+    # concat the list into dataframe
+    df_concat = pd.concat(chunk_list)
+    return df_concat
 
 RelevantCodes = set()
 
@@ -35,43 +79,21 @@ with open("abreviations.tsv") as abr:
             Abbreviations_Dict[list[1]] = list[0]
 
 # read in data frame
-df = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False)
+# df = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False)
+# print("Completed Step 1")
+#
+# # only keep rows where Filter equals pass and Impact equals moderate or high
+# df = df.loc[(df["FILTER"] == "PASS") & (df["NCALLERS"] >= 3) & (df["IMPACT"].isin(["MODERATE", "HIGH"]))]
+# print("Completed Step 2")
+#
+#  # apply conditions
+# df = df.loc[df.apply(filter_on_stuff, axis="columns")]
+#
+# print("Completed Step 3")
+
+one_chunk = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False, chunksize=500000)
 print("Completed Step 1")
-# only keep rows where Filter equals pass and Impact equals moderate or high
-df = df.loc[(df["FILTER"] == "PASS") & (df["NCALLERS"] >= 3) & (df["IMPACT"].isin(["MODERATE", "HIGH"]))]
-print("Completed Step 2")
-# SIFT and PolyPhen columns have numbers in their values that we don't want to look at. (i.e. deleterious(1.03))
-# so we'll split the value
-
-def split(row, col):
-    return row[col].split("(")[0]
-
-def makedict(row,col):
-    return row[col]
-# All of the conditions upon which we will keep a row.
-
-def filter_on_stuff(row):
-    sift = split(row, "SIFT")
-    poly = split(row, "PolyPhen")
-    tumor = makedict(row, "Tumor_Sample_Barcode")
-    if tumor.split('-')[1] not in RelevantCodes:
-        return False
-    if sift == "deleterious":
-        return True
-    if sift == "deleterious_low_confidence" and (poly != "benign" or poly == "."):
-        return True
-    if poly == "possibly_damaging" and sift == ("." or not "tolerated" or "tolerated_low_confidence"):
-        return True
-    if poly == "." and sift == ".":
-        return True
-    return False
-
- # apply conditions
-df = df.loc[df.apply(filter_on_stuff, axis="columns")]
-
-print("Completed Step 3")
-
-
+df = build_df(one_chunk)
 # Make a dictionary where a Tumor_Sample_Barcode is the key to a list of genes. These are the genes where this tumor has a mutation
 
 
