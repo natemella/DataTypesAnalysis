@@ -1,73 +1,78 @@
 import os
-import pandas as pd
-
+import sys
+import shutil
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 RelevantTypes = ()
 
-DataTypes = ("SM, RPPA, miRNA, Covariate, CNV")
 
-endpoints = ("DFI, PFI, DSS, OS")
-
-def write_dir(InputData, endpoint):
-    for x in DataTypes:
-        with open(f'{x}.txt', 'w+') as newFile:
-            write_file(InputData, newFile, combined=False, endpoint=endpoint)
-        if x != "Covariate":
-            with open(f'{x}_and_Covariate.txt', 'w+') as newFile:
-                write_file(InputData, newFile, combined=True, endpoint=endpoint)
-
-
-def write_file(InputData, File, combined, endpoint):
-
-    if not combined:
-        dataType = File.name.split('.')[0]
-        File.write(f'#Cancer_Type\tClass\tDataTypes\tFiles_For_{dataType}\n')
-        for cancerType in InputData:
-            for x in endpoints:
-                if x != endpoint:
-                    File.write('#')
-                File.write(f'{cancerType}\t{x}\t{dataType}')
-                for input_file in cancerType:
-                    File.write(f'\t{input_file}')
-                File.write('\n')
-        return
+def checkfunction(dtype):
+    # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
+    if not os.path.exists(os.path.dirname(f'{output_directory}/{dtype}.txt')):
+        File1 = open(f'{output_directory}/{dtype}.txt', 'w+')
     else:
-        dataTypes = File.name.split('.')[0]
-        dataType_1 = dataTypes.split('_')[0]
-        dataType_2 = dataTypes.split('_')[2]
-        File.write(f'#Cancer_Type\tClass\tDataTypes\tFiles_For_{dataType_1}\tFiles_For_{dataType_2}\n')
-        for cancerType in InputData:
-            for x in endpoints:
-                if x != endpoint:
-                    File.write('#')
-                File.write(f'{cancerType}\t{x}\t{dataType_1},{dataType_2}')
-                for input_file in cancerType:
-                    File.write(f'\t{input_file}')
-                File.write('\n')
+        File1 = open(f'{output_directory}/{dtype}.txt', 'a')
+
+    if dtype != "Covariate":
+        if not os.path.exists(os.path.dirname(f'{output_directory}/{dtype}_and_Covariate.txt')):
+            File2 = open(f'{output_directory}/{dtype}_and_Covariate.txt', 'w+')
+        else:
+            File2 = open(f'{output_directory}/{dtype}_and_Covariate.txt', 'a')
+        return [File1, File2]
+    else:
+        return [File1]
 
 
 
-list = currentWorkingDir.split('/')
-parent_directory = '/'.join(list[:-1])
+
+endpoints = sys.argv[1:]
 
 
-endpoints = ("DFI","DSS","OS","PFI")
+my_list = currentWorkingDir.split('/')
+parent_directory = '/'.join(my_list[:-1])
+output_directory = f'{parent_directory}/Data_To_Process_Files/'
+if not os.path.exists(os.path.dirname(output_directory)):
+    os.makedirs(os.path.dirname(output_directory))
+else:
+    shutil.rmtree(os.path.dirname(output_directory))
+    os.makedirs(os.path.dirname(output_directory))
+
+INPUT_DATA = next(os.walk(parent_directory + "/InputData"))[1]
+
+for CancerType in next(os.walk(parent_directory + "/InputData"))[1]:
+    for list_of_dTypes in next(os.walk(parent_directory + "/InputData/" + CancerType)):
+        if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
+            for DataType in list_of_dTypes:
+                d_type_directory = f"{parent_directory}/InputData/{CancerType}/{DataType}"
+                Covariate_dir = f"{parent_directory}/InputData/{CancerType}/Covariate/"
+                if DataType != "Class":
+                    myFiles = checkfunction(DataType)
+                    if DataType == "Covariate":
+                        # combined = False
+                        for x in endpoints:
+                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}')
+                            for input_file in os.listdir(d_type_directory):
+                                if input_file.endswith('.tsv'):
+                                    continue
+                                myFiles[0].write(f'\t{input_file}')
+                            myFiles[0].write('\n')
+                        myFiles[0].close()
+                    else:
+                        # combined = True
+                        for x in endpoints:
+                            myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate')
+                            for input_file in os.listdir(d_type_directory):
+                                myFiles[1].write(f'\t{input_file}')
+                            for input_file in os.listdir(Covariate_dir):
+                                myFiles[1].write(f'\t{input_file}')
+                            myFiles[1].write('\n')
+                        myFiles[0].close()
+                        myFiles[1].close()
 
 
-for x in next(os.walk(parent_directory + "/InputData"))[1]:
-    for subdir in next(os.walk(parent_directory + "/InputData/" + x)):
-        if "Covariate" in subdir:
-            directory = f"{parent_directory}/InputData/{x}/Covariate"
-            for filename in os.listdir(directory):
-                if filename.endswith(".tsv"):
-                    Class_dir = f"{parent_directory}/InputData/{x}/Class/"
-                    if not os.path.exists(os.path.dirname(Class_dir)):
-                        os.makedirs(os.path.dirname(Class_dir))
-                    #separate endpoints. Build df of just endpoint + endpoint.time
 
-                else:
-                    continue
+
+
 
 
 
