@@ -13,7 +13,7 @@ else
     rm DNA_MethylationFiles.sh
 fi
 rm $file
-mv *.ttsv ../
+mv *.tsv ../
 cd ../
 if [ -d "InputData" ]
 then
@@ -22,7 +22,7 @@ else
     mkdir InputData
     mv TCGA*.tsv InputData/
 fi
-
+cd InputData
 for file in `ls `; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
