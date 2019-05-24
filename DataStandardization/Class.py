@@ -39,7 +39,7 @@ csvfile = StringIO()
 header = ["CancerType"]
 for x in endpoints:
     if x == "PFI":
-        header.append(f'Patients_Removed_{x}')
+        header.append(f'Num_of_Patients_Kept{x}')
 
 header.append("SPFI")
 header.append("LPFI")
@@ -92,7 +92,7 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
                         ST = []
                         df2 = one_class.apply(give_labels, args=(one_class.columns.values,upper_cutoff,LT,ST), axis="columns").replace(f'True',f'LT_{val}').replace('False',f'ST_{val}')
                         if val == "PFI":
-                            row.append(str(a-b))
+                            row.append(str(len(LT) + len(ST)))
                             row.append(str(len(ST)))
                             row.append(str(len(LT)))
 
@@ -118,7 +118,7 @@ summary_df2 = pd.read_csv(csvfile, index_col="CancerType")
 summary_df2 = summary_df2.apply(pd.to_numeric, errors="ignore")
 
 
-frames = [summary_df, summary_df2]
+frames = [summary_df2, summary_df]
 
 result = pd.concat(frames, axis=1, sort='False')
 result.to_csv(path_or_buf=f'result.tsv', sep='\t')

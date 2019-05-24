@@ -5,17 +5,20 @@ extension=".CSV"
 if [ -e $fileName$extension ]
 then
     echo IT WORKED!!!
+    pip install expressionable-cli
+    expressionable $fileName $fileName$extension -i Excel -o CSV
     python3 Covariate.py $fileName
 #    cat $fileName
 else
     echo $fileName has not yest been downloaded
     wget https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/${fileName}
+    pip install expressionable-cli
     expressionable $fileName $fileName$extension -i Excel -o CSV
     echo IT WORKED!!!
     python3 Covariate.py $fileName
 fi
 rm $fileName
-rm $fileName$extension
+#rm $fileName$extension
 mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
@@ -54,5 +57,5 @@ cd ../
 cd DataStandardization/
 python Class.py
 rm summary.txt
-rm result.tsv
-rm cancer_test.csv
+#rm result.tsv
+#rm cancer_test.csv
