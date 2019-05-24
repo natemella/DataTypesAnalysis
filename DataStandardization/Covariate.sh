@@ -55,7 +55,7 @@ done
 
 cd ../
 cd DataStandardization/
-python Class.py
+python3 Class.py
 rm summary.txt
 #rm result.tsv
 #rm cancer_test.csv
