@@ -110,7 +110,7 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
 Final_Graph = pd.concat(DataFrames)
 Final_Graph.columns = ["CancerType", "Value", "Time"]
 
-Final_Graph.to_csv("cancer_test.csv", index=False)
+Final_Graph.to_csv("results_for_graphing.csv", index=False)
 
 csvfile.seek(0)
 

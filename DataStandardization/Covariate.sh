@@ -18,7 +18,7 @@ else
     python3 Covariate.py $fileName
 fi
 rm $fileName
-#rm $fileName$extension
+rm $fileName$extension
 mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
