@@ -37,18 +37,18 @@ with open("abreviations.tsv") as abr:
 
 CancerPatientIDs = []
 
-with open("mmc1.xlsx.CSV") as input:
-    Header = input.readline().split(',')
-    AllPatients = [x.split(',')[1] for x in input]
-    for x in AllPatients:
-        if x.split('-')[1] in RelevantCodes:
-            CancerPatientIDs.append(x)
-            tss = x.split('-')[1]
-            for Cancer in RelevantTypes:
-                if TSSDictionary[tss] == Cancer:
-                    CancerDict[Cancer].append(x)
+input = pd.read_excel("mmc1.xlsx", index_col="bcr_patient_barcode")
+Header = input.columns.values
+AllPatients = input.index
+for x in AllPatients:
+    if x.split('-')[1] in RelevantCodes:
+        CancerPatientIDs.append(x)
+        tss = x.split('-')[1]
+        for Cancer in RelevantTypes:
+            if TSSDictionary[tss] == Cancer:
+                CancerDict[Cancer].append(x)
 
-df = pd.read_csv("mmc1.xlsx.CSV", sep=",", index_col="bcr_patient_barcode")
+df = pd.read_excel("mmc1.xlsx", sep="\t", index_col="bcr_patient_barcode")
 df = df.drop(labels="Unnamed: 0", axis=1)
 
 df = df.loc[CancerPatientIDs]
