@@ -6,7 +6,8 @@ if [ -e $fileName* ]
 then
     echo IT WORKED!!!
     mv $fileName mmc1.xls
-    docker run -v `pwd`:/`pwd` -it mrooding/docker-ssconvert-xls2csv
+    mv mmc1.xls /src/xls/
+    docker run -v `pwd`xls:/src -it mrooding/docker-ssconvert-xls2csv
     echo IT WORKED!!!
 #    python3 Covariate.py $fileName
 #    cat $fileName
@@ -14,7 +15,8 @@ else
     echo $fileName has not yest been downloaded
     wget https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/${fileName}
     mv $fileName mmc1.xls
-    docker run -v `pwd`:`pwd` -it mrooding/docker-ssconvert-xls2csv
+    mv mmc1.xls /src/xls/
+    docker run -v `pwd`xls:/src -it mrooding/docker-ssconvert-xls2csv
     echo IT WORKED!!!
 #    python3 Covariate.py $fileName
 fi
