@@ -9,7 +9,7 @@ else
     wget https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/${fileName}
     python3 Covariate.py $fileName
 fi
-#rm $fileName
+rm $fileName
 mv TCGA*.tsv ../
 cd ../
 if [ -d "InputData" ]
@@ -48,5 +48,5 @@ cd ../
 cd DataStandardization/
 python3 Class.py
 rm summary.txt
-#rm result.tsv
-#rm cancer_test.csv
+rm result.tsv
+rm results_for_graphing.csv
