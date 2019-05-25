@@ -5,9 +5,12 @@ extension=".CSV"
 if [ -e $fileName* ]
 then
     echo IT WORKED!!!
-    mkdir xls/
+    mkdir /sir
+    cd /sir/
+    mkdir /xls
+    cd ..
     mv mmc1.xlsx mmc1.xls
-    mv $fileName xls/
+    mv mmc1.xls /sir/xls/
     mkdir csv/
     docker run -v `pwd`xls:/src -it mrooding/docker-ssconvert-xls2csv
     echo IT WORKED!!!
@@ -17,8 +20,11 @@ else
     echo $fileName has not yest been downloaded
     wget https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/${fileName}
     mv $fileName mmc1.xls
-    mkdir /sir/xls/
-    mv $fileName /sir/xls/
+    mkdir /sir/
+    cd sir/
+    mkdir xlsx/
+    cd ..
+    mv mmc1.xls /sir/xls/
     mkdir csv/
     docker run -v `pwd`xls:/src -it mrooding/docker-ssconvert-xls2csv
     echo IT WORKED!!!
