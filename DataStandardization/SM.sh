@@ -37,21 +37,21 @@ else
 fi
 
 cd InputData/
-for file in `ls `; do
+for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
     if [ -d $mydir"/SM/" ]
     then
-        mv $mydir".tsv" $mydir/SM/
+        mv $file $mydir/SM/
     else
         if [ -d $mydir ]
         then
             mkdir $mydir/SM
-            mv $mydir".tsv" $mydir/SM/
+            mv $file $mydir/SM/
         else
             mkdir $mydir
             mkdir $mydir/SM
-            mv $mydir".tsv" $mydir/SM/
+            mv $file $mydir/SM/
         fi
     fi
 done

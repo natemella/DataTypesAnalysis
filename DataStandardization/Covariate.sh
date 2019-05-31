@@ -25,21 +25,21 @@ cd InputData/
 Path=$(pwd)
 Files=${Path}/*
 
-for file in `ls `; do
+for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
     if [ -d $mydir"/Covariate/" ]
     then
-        mv $mydir".tsv" $mydir/Covariate/
+        mv $file $mydir/Covariate/
     else
         if [ -d $mydir ]
         then
             mkdir $mydir/Covariate
-            mv $mydir".tsv" $mydir/Covariate/
+            mv $file $mydir/Covariate/
         else
             mkdir $mydir
             mkdir $mydir/Covariate
-            mv $mydir".tsv" $mydir/Covariate/
+            mv $file $mydir/Covariate/
         fi
     fi
 done

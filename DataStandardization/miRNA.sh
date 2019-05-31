@@ -32,21 +32,21 @@ Path=$(pwd)
 Files=${Path}/*
 
 
-for file in `ls `; do
+for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
     if [ -d $mydir"/miRNA/" ]
     then
-        mv $mydir".ttsv" $mydir/miRNA/
+        mv $file $mydir/miRNA/
     else
         if [ -d $mydir ]
         then
             mkdir $mydir/miRNA
-            mv $mydir".ttsv" $mydir/miRNA/
+            mv $file $mydir/miRNA/
         else
             mkdir $mydir
             mkdir $mydir/miRNA
-            mv $mydir".ttsv" $mydir/miRNA/
+            mv $file $mydir/miRNA/
         fi
     fi
 done

@@ -33,21 +33,21 @@ cd InputData/
 Path=$(pwd)
 Files=${Path}/*
 
-for file in `ls `; do
+for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
     if [ -d $mydir"/RPPA/" ]
     then
-        mv $mydir".tsv" $mydir/RPPA/
+        mv $file $mydir/RPPA/
     else
         if [ -d $mydir ]
         then
             mkdir $mydir/RPPA
-            mv $mydir".tsv" $mydir/RPPA/
+            mv $file $mydir/RPPA/
         else
             mkdir $mydir
             mkdir $mydir/RPPA
-            mv $mydir".tsv" $mydir/RPPA/
+            mv $file $mydir/RPPA/
         fi
     fi
 done

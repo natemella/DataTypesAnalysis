@@ -29,24 +29,21 @@ else
     mv TCGA*.tsv InputData/
 fi
 cd InputData
-for file in `ls `; do
+for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
-    if [[ ${cancertype[0]} == "tsv" ]]
+    if [ -d $mydir"/DNA_Methylation/" ]
     then
-        if [ -d $mydir"/DNA_Methylation/" ]
+            mv $file $mydir/DNA_Methylation/
+    else
+        if [ -d $mydir ]
         then
-                mv $file $mydir/DNA_Methylation/
+            mkdir $mydir/DNA_Methylation
+            mv $file $mydir/DNA_Methylation/
         else
-            if [ -d $mydir ]
-            then
-                mkdir $mydir/DNA_Methylation
-                mv $file $mydir/DNA_Methylation/
-            else
-                mkdir $mydir
-                mkdir $mydir/DNA_Methylation
-                mv $file $mydir/DNA_Methylation/
-            fi
+            mkdir $mydir
+            mkdir $mydir/DNA_Methylation
+            mv $file $mydir/DNA_Methylation/
         fi
     fi
 done
