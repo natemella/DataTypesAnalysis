@@ -32,18 +32,21 @@ cd InputData
 for file in `ls `; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
-    if [ -d $mydir"/DNA_Methylation/" ]
+    if [[ ${cancertype[0]} == "tsv" ]]
     then
-        mv $file $mydir/DNA_Methylation/
-    else
-        if [ -d $mydir ]
+        if [ -d $mydir"/DNA_Methylation/" ]
         then
-            mkdir $mydir/DNA_Methylation
-            mv $file $mydir/DNA_Methylation/
+                mv $file $mydir/DNA_Methylation/
         else
-            mkdir $mydir
-            mkdir $mydir/DNA_Methylation
-            mv $file $mydir/DNA_Methylation/
+            if [ -d $mydir ]
+            then
+                mkdir $mydir/DNA_Methylation
+                mv $file $mydir/DNA_Methylation/
+            else
+                mkdir $mydir
+                mkdir $mydir/DNA_Methylation
+                mv $file $mydir/DNA_Methylation/
+            fi
         fi
     fi
 done
