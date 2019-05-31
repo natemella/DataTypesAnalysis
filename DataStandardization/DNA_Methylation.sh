@@ -19,7 +19,7 @@
 cd output_Data
 mv *.* ../../
 cd ../
-rmdir output_Data
+#rmdir output_Data
 cd ../
 if [ -d "InputData" ]
 then
