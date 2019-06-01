@@ -64,8 +64,11 @@ for c in allDataToProcess:
     executed_algos = glob.glob(path)
     executed_algos = [x.split('/')[5].replace('__','/',3) for x in executed_algos]
     executed_algos = set(executed_algos)
+    print(f"executed algorithms = {executed_algos}")
 
     not_executed_algos = allAlgorithms - executed_algos
+
+    print(f'not executed algoritms = {not_executed_algos}')
 
     for algo in not_executed_algos:
       algoName = algo.replace('/','__')
