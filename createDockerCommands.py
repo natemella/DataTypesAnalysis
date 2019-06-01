@@ -24,10 +24,12 @@ allAlgorithms = [x.replace('AlgorithmScripts/Classification/', '') for x in allA
 allAlgorithms = [x.split("__")[0] for x in allAlgorithms]
 allAlgorithms = set(allAlgorithms)
 
+print("finished step 1")
 # Find all possible data combinations to process
 with open(dataToProcessFilePath, 'r') as g:
   allDataToProcess = [x for x in g.read().splitlines() if not x.startswith("#")]
 
+print("finished step 2")
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
 if os.path.exists(analysis + '_Commands/'):
@@ -44,6 +46,7 @@ for c in allDataToProcess:
   datatype_directory = c.split('\t')[2].split(',')
   number_of_datatypes = len(datatype_directory)
   # grab the data files for each data type
+  print("finished step 3")
 
   for i in range(0, number_of_datatypes):
     datatype = datatype_directory[i]
