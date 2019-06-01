@@ -63,6 +63,7 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
             for filename in os.listdir(directory):
                 if filename.endswith(".tsv"):
                     df = pd.read_csv(filepath_or_buffer=f"{directory}/{filename}", sep="\t", index_col="bcr_patient_barcode")
+                    df = df.rename_axis("SampleID")
 
                     variables = df.columns.values
                     class_df = df[[value for value in variables if value.startswith(endpoints)]]
@@ -95,6 +96,8 @@ for x in next(os.walk(parent_directory + "/InputData"))[1]:
                             row.append(str(len(LT) + len(ST)))
                             row.append(str(len(ST)))
                             row.append(str(len(LT)))
+
+                        df2.name = "Class"
 
                         df2.to_csv(path_or_buf=f"{Class_dir}{val}.txt", sep="\t", header=True, na_rep="NA")
                     writer.writerow(row)
