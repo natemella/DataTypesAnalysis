@@ -102,9 +102,12 @@ for c in allDataToProcess:
       data_all = ''
       for d in input_data:
         data_all = data_all + '--data "' + d + '" \\\n\t\t'
-
+      if sep_maker() == '\'':
+        _ = '\\'
+      else:
+        _ = sep_maker()
       # Where will the output files be stored?
-      outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + sep_maker()
+      outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
 
       out = f'if [ ! -f {outDir}{outFileToCheck} ]\nthen\n' \
         f'  docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\\n\t' \
