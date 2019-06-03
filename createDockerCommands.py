@@ -102,8 +102,8 @@ for c in allDataToProcess:
       data_all = ''
       for d in input_data:
         data_all = data_all + '--data "' + d + '" \\\n\t\t'
-      if sep_maker() == '\'':
-        _ = '\\'
+      if sep_maker() == '\\':
+        _ = '\\' + '\\'
       else:
         _ = sep_maker()
       # Where will the output files be stored?
