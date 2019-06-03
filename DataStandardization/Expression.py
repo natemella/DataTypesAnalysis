@@ -17,6 +17,7 @@ RelevantCodes = set()
 #include the index column in each list
 
 RelevantTypes = set(RelevantTypes)
+print(RelevantTypes)
 RelevantTypes.remove("SARC")
 with open("TSS_CODES.tsv") as codes:
     first_line = codes.readline()
