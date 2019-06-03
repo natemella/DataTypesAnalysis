@@ -94,15 +94,14 @@ for c in allDataToProcess:
     print(f'not executed algoritms = {not_executed_algos}')
 
     for algo in not_executed_algos:
-      algoName = algo.replace(sep_maker(),'__')
-      # so that windows computers don't crash
-      if sep_maker() in algoName:
-        algoName = os.path.join(*path_to_list(algoName))
+      algoName = algo.replace('/','__')
 
       # Build the part of the command that tells ShinyLearner which data files to parse
       data_all = ''
       for d in input_data:
         data_all = data_all + '--data "' + d + '" \\\n\t\t'
+
+      # so that windows computers don't crash
       if sep_maker() == '\\':
         _ = '\\' + '\\'
       else:
