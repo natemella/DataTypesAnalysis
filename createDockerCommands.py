@@ -12,7 +12,9 @@ dataToProcessFilePath = sys.argv[9]
 outFileToCheck = sys.argv[10]
 dockerOutFilePath = sys.argv[11]
 shinyLearnerVersion = sys.argv[12]
-imput_mode = sys.argv[13]
+scale_mode = sys.argv[13]
+outer_folds = sys.argv[14]
+inner_folds = sys.argv[15]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 dockerCommandFilePaths = []
@@ -80,13 +82,29 @@ for c in allDataToProcess:
 
       # Where will the output files be stored?
       outDir = currentWorkingDir + "/Analysis_Results/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/' + algoName + '/'
-
+      out = f'if [ ! -f {outDir}{outFileToCheck} ]\nthen\n' \
+        f'  docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\\n\t' \
+        f'-v "{currentWorkingDir}/InputData":"/InputData" \\\n\t' \
+        f'-v "{outDir}":"/OutputData" \\\n\t' \
+        f'srp33/shinylearner:version{shinyLearnerVersion} \\\n\t' \
+        f'timeout -s 9 {hoursMax}h \\\n\t' \
+        f'"/UserScripts/nestedclassification_crossvalidation" \\\n\t\t' \
+        f'{data_all}' \
+        f'--description {datasetID}___{classVar}___iteration{str(i)} \\\n\t\t' \
+        f'--outer-folds {outer_folds} \\\n\t\t' \
+        f'--inner-folds {inner_folds} \\\n\t\t' \
+        f'--iterations 1 \\\n\t\t' \
+        f'--classif-algo "AlgorithmScripts/Classification/{algo}*" \\\n\t\t ' \
+        f'--verbose false \\\n\t\t' \
+        f'--seed {str(i)} \\\n\t\t' \
+        f'--ohe true \\\n\t\t' \
+        f'--scale robust \\\n\t\t' \
+        f'--impute true \\\n\t\t' \
+        f'--num-cores {numCores}\n' \
+        f'fi'
       # Build the bash script for this combination of dataset, algorithm, and iteration
-      if imput_mode != "True":
-        out = 'if [ ! -f ' + outDir + outFileToCheck + ' ]\nthen\n  docker run --memory ' + memoryGigs + 'G --memory-swap ' + swapMemoryGigs + 'G --rm -i \\\n\t-v "' + currentWorkingDir + '/InputData":"/InputData" \\\n\t-v "' + outDir + '":"/OutputData" \\\n\tsrp33/shinylearner:version' + shinyLearnerVersion + ' \\\n\ttimeout -s 9 ' + hoursMax + 'h \\\n\t"/UserScripts/classification_montecarlo" \\\n\t\t' + data_all + '--description ' + datasetID + '___' + classVar + '___iteration' + str(i) + ' \\\n\t\t--iterations 1 \\\n\t\t--classif-algo "AlgorithmScripts/Classification/' + algo + '*" \\\n\t\t --seed ' + str(i) + ' \\\n\t\t--verbose false \\\n\t\t--num-cores ' + numCores + '\nfi'
-      else:
-        out = 'if [ ! -f ' + outDir + outFileToCheck + ' ]\nthen\n  docker run --memory ' + memoryGigs + 'G --memory-swap ' + swapMemoryGigs + 'G --rm -i \\\n\t-v "' + currentWorkingDir + '/InputData":"/InputData" \\\n\t-v "' + outDir + '":"/OutputData" \\\n\tsrp33/shinylearner:version' + shinyLearnerVersion + ' \\\n\ttimeout -s 9 ' + hoursMax + 'h \\\n\t"/UserScripts/classification_montecarlo" \\\n\t\t' + data_all + '--impute true \\\n\t\t' + '--description ' + datasetID + '___' + classVar + '___iteration' + str(i) + ' \\\n\t\t--iterations 1 \\\n\t\t--classif-algo "AlgorithmScripts/Classification/' + algo + '*" \\\n\t\t --seed ' + str(i) + ' \\\n\t\t--verbose false \\\n\t\t--num-cores ' + numCores + '\nfi'
-
+      if scale_mode != "True":
+        out = out.replace(f'--scale robust \\\n\t\t','')
       # This is where the bash script will be stored
       commandFilePath = analysis + '_Commands/{}/{}/iteration{}/{}.sh'.format(datasetID, classVar, i, algoName)
 
