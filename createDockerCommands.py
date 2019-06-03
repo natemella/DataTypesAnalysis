@@ -96,7 +96,8 @@ for c in allDataToProcess:
     for algo in not_executed_algos:
       algoName = algo.replace(sep_maker(),'__')
       # so that windows computers don't crash
-      algoName = os.path.join(*path_to_list(algoName))
+      if sep_maker() in algoName:
+        algoName = os.path.join(*path_to_list(algoName))
 
       # Build the part of the command that tells ShinyLearner which data files to parse
       data_all = ''
