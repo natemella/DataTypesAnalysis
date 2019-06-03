@@ -4,6 +4,9 @@ import sys
 with open("CancerTypes.txt") as file:
     with open("abreviations.tsv") as abr:
         abreviations = [x.strip('\n') for x in file]
+        abreviations = set(abreviations)
+        print(abreviations)
+        abreviations.remove("SARC")
         RelevantTypes = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
 
 CancerDict = {}
@@ -16,9 +19,6 @@ RelevantCodes = set()
 
 #include the index column in each list
 
-RelevantTypes = set(RelevantTypes)
-print(RelevantTypes)
-RelevantTypes.remove("SARC")
 with open("TSS_CODES.tsv") as codes:
     first_line = codes.readline()
     for x in codes:
