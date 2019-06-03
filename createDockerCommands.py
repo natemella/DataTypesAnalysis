@@ -72,7 +72,7 @@ for c in allDataToProcess:
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
     for x in input_files:
-        input_data.append(f'{dataset_path}{datatype}/{x}')
+        input_data.append(f'{dataset_path}{datatype}{sep_maker()}{x}')
 
 
 
@@ -81,7 +81,7 @@ for c in allDataToProcess:
   not_executed_algos = set()
 
   for i in range(startIteration, 1+stopIteration):
-    print(analysis + ' ' + datasetID + ' ' + classVar + ' ' + 'iteration' + str(i))
+    print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
     path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
     path = os.path.join(*path)
     executed_algos = glob.glob(path)
@@ -137,7 +137,7 @@ for c in allDataToProcess:
 
       # Create the bash script
       with open(commandFilePath, 'w') as outFile:
-        outFile.write(out + '\n')
+        outFile.write(f'{out}\n')
 
       dockerCommandFilePaths.append(commandFilePath)
 
@@ -147,4 +147,4 @@ else:
     # Create a file that indicates the location of all the bash scripts that need to be executed
     with open(dockerOutFilePath, 'a') as dockerOutFile:
         for command in dockerCommandFilePaths:
-            dockerOutFile.write("bash {}\n".format(command))
+            dockerOutFile.write(f"bash {command}\n")
