@@ -17,15 +17,31 @@ with open("abreviations.tsv") as abr:
         if list[1] in RelevantTypes:
             Abbreviations_Dict["TCGA_" + list[0]] = list[1]
 
+def path_to_list(path):
+  folders = []
+  while True:
+    path, folder = os.path.split(path)
+    if folder:
+      folders.append(folder)
+    else:
+      if path:
+        folders.append(path)
+      break
+  folders.reverse()
+  return folders
 
+def sep_maker():
+  list = ['a','b']
+  x = os.path.join(*list)
+  return x[1]
 
-list = currentWorkingDir.split('/')
-parent_directory = '/'.join(list[:-1])
+list = path_to_list(currentWorkingDir)
+parent_directory = sep_maker().join(list[:-1])
 
 # for CancerType, DataType, File in os.walk(parent_directory + '/InputData'):
 #     print(CancerType)
-
-for x in next(os.walk(parent_directory + "/InputData"))[1]:
+_=sep_maker()
+for x in next(os.walk(f'{parent_directory}{_}InputData'))[1]:
     if x not in Abbreviations_Dict:
-        shutil.rmtree(parent_directory + "/InputData/" + x)
+        shutil.rmtree(f'{parent_directory}{_}InputData{_}{x}')
         print(x)
