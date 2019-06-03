@@ -6,6 +6,24 @@ extension2=".gz"
 extention=".tar"
 compressedFile=${tarFile}${extention}
 
+for file in `ls `; do
+    if [[ $file == GSM* ]]
+    then
+        if [ $file == $fileName$extension2 ]
+        then
+            echo kept $file
+        else
+            if [ $file == $fileName ]
+            then
+                echo kept $file
+            else
+                echo removed $file
+                rm $file
+            fi
+        fi
+    fi
+done
+
 if [ -f $fileName ]
 then
     python3 Expression.py $fileName
