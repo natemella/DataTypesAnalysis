@@ -17,6 +17,25 @@ outer_folds = sys.argv[14]
 inner_folds = sys.argv[15]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
+
+def path_to_list(path):
+  folders = []
+  while True:
+    path, folder = os.path.split(path)
+    if folder:
+      folders.append(folder)
+    else:
+      if path:
+        folders.append(path)
+      break
+  folders.reverse()
+  return folders
+
+def sep_maker():
+  list = ['a','b']
+  x = os.path.join(*list)
+  return x[1]
+
 dockerCommandFilePaths = []
 
 # Parse the algorithms file to find all possible algorithms
@@ -32,16 +51,18 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-if os.path.exists(analysis + '_Commands/'):
-  shutil.rmtree(analysis + '_Commands/')
+if os.path.exists(f'{analysis}_Commands{sep_maker()}'):
+  shutil.rmtree(f'{analysis}_Commands{sep_maker()}')
 
 for c in allDataToProcess:
   datasetID = c.split('\t')[0]
   classVar = c.split('\t')[1]
 
   input_data = list()
-  dataset_path =  datasetID + '/'
-  class_path = dataset_path + 'Class/' + classVar + '.txt'
+  dataset_path =  f'{datasetID}{sep_maker()}'
+  class_path = [dataset_path,'Class',f'{classVar}.txt']
+  class_path = os.path.join(*class_path)
+
   # grab the data types
   datatype_directory = c.split('\t')[2].split(',')
   number_of_datatypes = len(datatype_directory)
@@ -51,7 +72,7 @@ for c in allDataToProcess:
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
     for x in input_files:
-        input_data.append(f'{dataset_path}{datatype}/{x}')
+        input_data.append(f'{dataset_path}{datatype}{sep_maker()}{x}')
 
 
 
@@ -60,11 +81,11 @@ for c in allDataToProcess:
   not_executed_algos = set()
 
   for i in range(startIteration, 1+stopIteration):
-    print(analysis + ' ' + datasetID + ' ' + classVar + ' ' + 'iteration' + str(i))
-    path = '/Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
-
+    print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
+    path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
+    path = os.path.join(*path)
     executed_algos = glob.glob(path)
-    executed_algos = [x.split('/')[5].replace('__','/',3) for x in executed_algos]
+    executed_algos = [path_to_list(x)[5].replace('__',sep_maker(),3) for x in executed_algos]
     executed_algos = set(executed_algos)
     print(f"executed algorithms = {executed_algos}")
 
@@ -80,8 +101,14 @@ for c in allDataToProcess:
       for d in input_data:
         data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
+      # so that windows computers don't crash
+      if sep_maker() == '\\':
+        _ = '\\' + '\\'
+      else:
+        _ = sep_maker()
       # Where will the output files be stored?
-      outDir = currentWorkingDir + "/Analysis_Results/" + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/' + algoName + '/'
+      outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
+
       out = f'if [ ! -f {outDir}{outFileToCheck} ]\nthen\n' \
         f'  docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\\n\t' \
         f'-v "{currentWorkingDir}/InputData":"/InputData" \\\n\t' \
@@ -105,16 +132,17 @@ for c in allDataToProcess:
       # Build the bash script for this combination of dataset, algorithm, and iteration
       if scale_mode != "True":
         out = out.replace(f'--scale robust \\\n\t\t','')
-      # This is where the bash script will be stored
-      commandFilePath = analysis + '_Commands/{}/{}/iteration{}/{}.sh'.format(datasetID, classVar, i, algoName)
 
+      # This is where the bash script will be stored
+      commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
+      commandFilePath = os.path.join(*commandFilePath)
       # Create the directory, if necessary, where the bash script will be stored
       if not os.path.exists(os.path.dirname(commandFilePath)):
         os.makedirs(os.path.dirname(commandFilePath))
 
       # Create the bash script
       with open(commandFilePath, 'w') as outFile:
-        outFile.write(out + '\n')
+        outFile.write(f'{out}\n')
 
       dockerCommandFilePaths.append(commandFilePath)
 
@@ -124,4 +152,4 @@ else:
     # Create a file that indicates the location of all the bash scripts that need to be executed
     with open(dockerOutFilePath, 'a') as dockerOutFile:
         for command in dockerCommandFilePaths:
-            dockerOutFile.write("bash {}\n".format(command))
+            dockerOutFile.write(f"bash {command}\n")
