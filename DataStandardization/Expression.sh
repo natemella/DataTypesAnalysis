@@ -108,4 +108,4 @@ for file in `ls -p | grep -v /`; do
             mv $file $mydir/Expression/
         fi
     fi
-#done
+done
