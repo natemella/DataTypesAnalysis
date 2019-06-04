@@ -73,5 +73,5 @@ for CancerType in INPUT_DATA:
                                 patients_with_all.intersection((set(patients_per_data)))
                 else:
                     patients_with_all.update(line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt'))
-    sample_summary.write(f'{len(total_patients)}\t{len(patients_with_all)}\n')
+    sample_summary.write(f'\t{len(total_patients)}\t{len(patients_with_all)}\n')
 sample_summary.close()
