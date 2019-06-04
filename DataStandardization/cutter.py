@@ -56,7 +56,7 @@ for CancerType in INPUT_DATA:
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
                 if DataType != "Class":
                     for input_file in os.listdir(d_type_directory):
-                        if already_seen:
+                        if already_seen and DataType == "Covariate":
                             continue
                         input_file = f'{d_type_directory}{_}{input_file}'
                         if input_file.endswith(('.tsv','.txt')):
