@@ -50,11 +50,11 @@ for CancerType in INPUT_DATA:
                         if input_file.endswith(('.tsv','.txt')):
                             num_Patients = sum(1 for line in open(input_file))
                         else:
-                            with open(input_file) as myfile:
-                                if myfile.readline() != "":
+                            if os.stat(input_file).st_size != 0:
+                                with open(input_file) as myfile:
                                     num_Patients = len(myfile.readline().split('\t'))
-                                else:
-                                    num_Patients = 0
+                            else:
+                                num_Patients = 0
                         if num_Patients < 100:
                             print(f'{CancerType} {DataType} Number of Patients == {num_Patients}')
 
