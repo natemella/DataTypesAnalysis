@@ -61,7 +61,7 @@ for CancerType in INPUT_DATA:
                         input_file = f'{d_type_directory}{_}{input_file}'
                         if input_file.endswith(('.tsv','.txt')):
                             patients_per_data = [line.split('\t')[0] for line in open(input_file)]
-                            patients_per_data = patients_per_data.pop(0)
+                            patients_per_data.pop(0)
                             sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
                             total_patients.update(patients_per_data)
                             patients_with_all.intersection(set(patients_per_data))
@@ -70,7 +70,7 @@ for CancerType in INPUT_DATA:
                             with codecs.open(input_file, 'r') as myfile:
                                 firstline = myfile.readline()
                                 patients_per_data = firstline.split('\t')
-                                patients_per_data = patients_per_data.pop(0)
+                                patients_per_data.pop(0)
                                 sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
                                 total_patients.update(patients_per_data)
                                 patients_with_all.intersection((set(patients_per_data)))
