@@ -49,9 +49,10 @@ for CancerType in INPUT_DATA:
                         input_file = f'{d_type_directory}{_}{input_file}'
                         if input_file.endswith(('.tsv','.txt')):
                             num_Patients = sum(1 for line in open(input_file)) - 1
+                            print(f'{CancerType} {DataType} Number of Patients = {num_Patients}')
                         else:
                             with codecs.open(input_file, 'r', encoding="utf-8", errors="ignore") as myfile:
                                 firstline = myfile.readline()
                                 num_Patients = len(firstline.split('\t')) - 1
-                        print(f'{CancerType} {DataType} Number of Patients == {num_Patients}')
+                                print(f'{CancerType} {DataType} Number of Patients = {num_Patients}')
 
