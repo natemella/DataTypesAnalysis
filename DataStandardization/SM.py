@@ -142,4 +142,5 @@ for Ctype in TSSDictionary:
     print('\n' + Ctype + " = " + Abbreviations_Dict[Ctype])
     print(final_df.columns.values)
     final_df = final_df.T
+    final_df = final_df.rename_axis("SampleID")
     final_df.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[Ctype] + '.tsv'), sep='\t')

@@ -104,4 +104,5 @@ for x in CancerDict:
         i +=1
 
     y.index = CancerDict[x]
+    y = y.rename_axis("SampleID")
     y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t', na_rep='NA')

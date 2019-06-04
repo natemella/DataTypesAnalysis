@@ -58,6 +58,7 @@ i = 0
 for x in CancerDict:
     df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerDict[x], engine='c', na_values='NA')[CancerDict[x]]
     df = df.set_index("sample")
+    df = df.rename_axis("SampleID")
     print(f'Finished Step 2.{i}')
     i+=1
     # y = y.loc[:, ~y.columns.duplicated()]

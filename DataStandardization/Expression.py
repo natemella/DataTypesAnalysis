@@ -59,7 +59,7 @@ i = 0
 for x in CancerDict:
     df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=CancerDict[x], engine='c', na_values='NA')[CancerDict[x]].astype(float)
     s = pd.Series(index_col)
-    s.name = ""
+    s.name = "SampleID"
     df = pd.concat([s,df], axis=1)
     print(f'Finished Step 2.{i}')
     i+=1
