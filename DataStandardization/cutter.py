@@ -62,7 +62,7 @@ for CancerType in INPUT_DATA:
                         if input_file.endswith(('.tsv','.txt')):
                             patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                             patients_per_data.pop(0)
-                            sample_summary.write(f'{DataType}:{len(patients_per_data)}|')
+                            sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
                             total_patients.update(patients_per_data)
                             patients_with_all.intersection(set(patients_per_data))
                         else:
@@ -70,7 +70,7 @@ for CancerType in INPUT_DATA:
                                 firstline = myfile.readline()
                                 patients_per_data = firstline.split('\t')
                                 patients_per_data.pop(0)
-                                sample_summary.write(f'{DataType}:{len(patients_per_data)}|')
+                                sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
                                 total_patients.update(patients_per_data)
                                 patients_with_all.intersection((set(patients_per_data)))
                         if DataType == "Covariate":
