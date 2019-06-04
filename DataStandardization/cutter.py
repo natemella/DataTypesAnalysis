@@ -38,8 +38,16 @@ INPUT_DATA = next(os.walk(parent_directory + f"{sep_maker()}InputData"))[1]
 # for unix it would be '{_}' for windows it would be '\'
 _=sep_maker()
 
+sample_summary = open("sample_summary.txt",'w+')
+sample_summary.write("CancerType\tNumber of Patients per type of Data\t"
+                     "Total Number of Patients\t"
+                     "Patients with all 7 types of data\n")
+total_patients = set()
+patients_with_all = set()
+patients_per_data = []
 
 for CancerType in INPUT_DATA:
+    sample_summary.write(f'{CancerType}\t')
     for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
@@ -48,11 +56,17 @@ for CancerType in INPUT_DATA:
                     for input_file in os.listdir(d_type_directory):
                         input_file = f'{d_type_directory}{_}{input_file}'
                         if input_file.endswith(('.tsv','.txt')):
-                            num_Patients = sum(1 for line in open(input_file)) - 1
-                            print(f'{CancerType} {DataType} Number of Patients = {num_Patients}')
+                            patients_per_data = [line.split('\t')[0] for line in open(input_file)].pop(0)
+                            total_patients.update(patients_per_data)
+                            patients_with_all.intersection(set(patients_per_data))
+                            sample_summary.write(f'{DataType}:{len(patients_per_data)}|')
                         else:
                             with codecs.open(input_file, 'r', encoding="utf-8", errors="ignore") as myfile:
                                 firstline = myfile.readline()
-                                num_Patients = len(firstline.split('\t')) - 1
-                                print(f'{CancerType} {DataType} Number of Patients = {num_Patients}')
-
+                                patients_per_data = firstline.split('\t').pop(0)
+                                total_patients.update(patients_per_data)
+                                patients_with_all.intersection((set(patients_per_data)))
+                else:
+                    patients_with_all.update(line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt'))
+    sample_summary.write(f'{len(total_patients)}\t{len(patients_with_all)}\n')
+sample_summary.close()
