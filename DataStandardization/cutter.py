@@ -27,8 +27,6 @@ def sep_maker():
 
 
 
-endpoints = sys.argv[1:]
-
 
 my_list = path_to_list(currentWorkingDir)
 parent_directory = sep_maker().join(my_list[:-1])
@@ -46,17 +44,17 @@ sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\t
 end_points = ["LT_PFI", "ST_PFI"]
 
 for CancerType in INPUT_DATA:
-    sample_summary.write(f'{CancerType}\t')
-    total_patients = set()
-    patients_with_all = set()
-    patients_per_data = []
-    for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
-        already_seen = False
-        if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
-            for DataType in list_of_dTypes:
-                d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                for outcome in end_points:
-                    sample_summary.write(f'{outcome.replace("T_","")}\t')
+    for outcome in end_points:
+        sample_summary.write(f'{CancerType}\t')
+        sample_summary.write(f'{outcome.replace("T_","")}\t')
+        total_patients = set()
+        patients_with_all = set()
+        patients_per_data = []
+        for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
+            already_seen = False
+            if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
+                for DataType in list_of_dTypes:
+                    d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
                     if DataType != "Class":
                         for input_file in os.listdir(d_type_directory):
                             if already_seen and DataType == "Covariate":
@@ -83,5 +81,5 @@ for CancerType in INPUT_DATA:
                         patients_per_data.pop(0)
                         patients_with_all.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}|')
-    sample_summary.write(f'\t{len(total_patients)}\t{len(patients_with_all)}\n')
+        sample_summary.write(f'\t{len(total_patients)}\t{len(patients_with_all)}\n')
 sample_summary.close()
