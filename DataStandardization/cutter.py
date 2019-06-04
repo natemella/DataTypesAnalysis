@@ -51,7 +51,10 @@ for CancerType in INPUT_DATA:
                             num_Patients = sum(1 for line in open(input_file))
                         else:
                             with open(input_file) as myfile:
-                                num_Patients = len(myfile.readline().split('\t'))
+                                if myfile.readline() != "":
+                                    num_Patients = len(myfile.readline().split('\t'))
+                                else:
+                                    num_Patients = 0
                         if num_Patients < 100:
                             print(f'{CancerType} {DataType} Number of Patients == {num_Patients}')
 
