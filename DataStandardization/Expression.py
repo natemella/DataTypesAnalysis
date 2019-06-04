@@ -61,7 +61,6 @@ for x in CancerDict:
     s = pd.Series(index_col)
     s.name = ""
     df = pd.concat([s,df], axis=1)
-    print(df.index)
     print(f'Finished Step 2.{i}')
     i+=1
     # y = y.loc[:, ~y.columns.duplicated()]
