@@ -39,10 +39,11 @@ INPUT_DATA = next(os.walk(parent_directory + f"{sep_maker()}InputData"))[1]
 _=sep_maker()
 
 sample_summary = open("sample_summary.tsv",'w+')
-sample_summary.write("CancerType\tNumber of Patients per type of Data\t"
+sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\t"
                      "Total Number of Patients\t"
                      "Patients with all 7 types of data\n")
 
+EndPoints = ["LT_PFI", "ST_PFI"]
 
 for CancerType in INPUT_DATA:
     sample_summary.write(f'{CancerType}\t')
@@ -54,33 +55,35 @@ for CancerType in INPUT_DATA:
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                if DataType != "Class":
-                    for input_file in os.listdir(d_type_directory):
-                        if already_seen and DataType == "Covariate":
-                            continue
-                        input_file = f'{d_type_directory}{_}{input_file}'
-                        if input_file.endswith(('.tsv','.txt')):
-                            patients_per_data = [line.split('\t')[0] for line in open(input_file)]
-                            patients_per_data.pop(0)
-                            sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
-                            total_patients.update(patients_per_data)
-                            patients_with_all.intersection(set(patients_per_data))
-                            print(patients_with_all)
-                        else:
-                            with codecs.open(input_file, 'r') as myfile:
-                                firstline = myfile.readline()
-                                patients_per_data = firstline.split('\t')
+                for outcome in endpoints:
+                    sample_summary.write(f'{outcome.replace("T_","")}\t')
+                    if DataType != "Class":
+                        for input_file in os.listdir(d_type_directory):
+                            if already_seen and DataType == "Covariate":
+                                continue
+                            input_file = f'{d_type_directory}{_}{input_file}'
+                            if input_file.endswith(('.tsv','.txt')):
+                                patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 patients_per_data.pop(0)
                                 sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
                                 total_patients.update(patients_per_data)
-                                patients_with_all.intersection((set(patients_per_data)))
+                                patients_with_all.intersection(set(patients_per_data))
                                 print(patients_with_all)
-                        if DataType == "Covariate":
-                            already_seen = True
-                else:
-                    patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt')]
-                    patients_per_data.pop(0)
-                    patients_with_all.update(patients_per_data)
-                    sample_summary.write(f'{DataType}:{len(patients_with_all)}|')
+                            else:
+                                with codecs.open(input_file, 'r') as myfile:
+                                    firstline = myfile.readline()
+                                    patients_per_data = firstline.split('\t')
+                                    patients_per_data.pop(0)
+                                    sample_summary.write(f'{DataType}:{len(set(patients_per_data))}|')
+                                    total_patients.update(patients_per_data)
+                                    patients_with_all.intersection((set(patients_per_data)))
+                                    print(patients_with_all)
+                            if DataType == "Covariate":
+                                already_seen = True
+                    else:
+                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.split('\t')[0] == outcome]
+                        patients_per_data.pop(0)
+                        patients_with_all.update(patients_per_data)
+                        sample_summary.write(f'{DataType}:{len(patients_with_all)}|')
     sample_summary.write(f'\t{len(total_patients)}\t{len(patients_with_all)}\n')
 sample_summary.close()
