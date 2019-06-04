@@ -38,7 +38,7 @@ INPUT_DATA = next(os.walk(parent_directory + f"{sep_maker()}InputData"))[1]
 # for unix it would be '{_}' for windows it would be '\'
 _=sep_maker()
 
-sample_summary = open("sample_summary.txt",'w+')
+sample_summary = open("sample_summary.tsv",'w+')
 sample_summary.write("CancerType\tNumber of Patients per type of Data\t"
                      "Total Number of Patients\t"
                      "Patients with all 7 types of data\n")
