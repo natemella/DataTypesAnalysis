@@ -43,7 +43,7 @@ sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\t
                      "Total Number of Patients\t"
                      "Patients with all 7 types of data\n")
 
-EndPoints = ["LT_PFI", "ST_PFI"]
+end_points = ["LT_PFI", "ST_PFI"]
 
 for CancerType in INPUT_DATA:
     sample_summary.write(f'{CancerType}\t')
@@ -55,7 +55,7 @@ for CancerType in INPUT_DATA:
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                for outcome in endpoints:
+                for outcome in end_points:
                     sample_summary.write(f'{outcome.replace("T_","")}\t')
                     if DataType != "Class":
                         for input_file in os.listdir(d_type_directory):
