@@ -1,40 +1,19 @@
 import os
-import sys
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 import codecs
+from .util import *
 
 RelevantTypes = ()
-
-def path_to_list(path):
-  folders = []
-  while True:
-    path, folder = os.path.split(path)
-    if folder:
-      folders.append(folder)
-    else:
-      if path:
-        folders.append(path)
-      break
-  folders.reverse()
-  return folders
-
-def sep_maker():
-  list = ['a','b']
-  x = os.path.join(*list)
-  return x[1]
-
-
-
 
 
 
 my_list = path_to_list(currentWorkingDir)
-parent_directory = sep_maker().join(my_list[:-1])
+parent_directory = path_delimiter().join(my_list[:-1])
 
-INPUT_DATA = next(os.walk(parent_directory + f"{sep_maker()}InputData"))[1]
+INPUT_DATA = next(os.walk(parent_directory + f"{path_delimiter()}InputData"))[1]
 
 # for unix it would be '{_}' for windows it would be '\'
-_=sep_maker()
+delimiter=path_delimiter()
 
 sample_summary = open("sample_summary.tsv",'w+')
 sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\t"
@@ -54,12 +33,12 @@ for CancerType in INPUT_DATA:
             already_seen = False
             if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
                 for DataType in list_of_dTypes:
-                    d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
+                    d_type_directory = f"{parent_directory}{delimiter}InputData{delimiter}{CancerType}{delimiter}{DataType}"
                     if DataType != "Class":
                         for input_file in os.listdir(d_type_directory):
                             if already_seen and DataType == "Covariate":
                                 continue
-                            input_file = f'{d_type_directory}{_}{input_file}'
+                            input_file = f'{d_type_directory}{delimiter}{input_file}'
                             if input_file.endswith(('.tsv','.txt')):
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 patients_per_data.pop(0)
@@ -77,7 +56,7 @@ for CancerType in INPUT_DATA:
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
-                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
+                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{delimiter}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
                         patients_per_data.pop(0)
                         patients_with_all.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}|')

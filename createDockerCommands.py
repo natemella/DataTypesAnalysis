@@ -1,4 +1,5 @@
 import glob, gzip, os, shutil, sys
+from .DataStandardization.util import *
 
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
@@ -17,25 +18,6 @@ outer_folds = sys.argv[14]
 inner_folds = sys.argv[15]
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
-
-def path_to_list(path):
-  folders = []
-  while True:
-    path, folder = os.path.split(path)
-    if folder:
-      folders.append(folder)
-    else:
-      if path:
-        folders.append(path)
-      break
-  folders.reverse()
-  return folders
-
-def sep_maker():
-  list = ['a','b']
-  x = os.path.join(*list)
-  return x[1]
-
 dockerCommandFilePaths = []
 
 # Parse the algorithms file to find all possible algorithms
@@ -51,15 +33,15 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-if os.path.exists(f'{analysis}_Commands{sep_maker()}'):
-  shutil.rmtree(f'{analysis}_Commands{sep_maker()}')
+if os.path.exists(f'{analysis}_Commands{path_delimiter()}'):
+  shutil.rmtree(f'{analysis}_Commands{path_delimiter()}')
 
 for c in allDataToProcess:
   datasetID = c.split('\t')[0]
   classVar = c.split('\t')[1]
 
   input_data = list()
-  dataset_path =  f'{datasetID}{sep_maker()}'
+  dataset_path =  f'{datasetID}{path_delimiter()}'
   class_path = [dataset_path,'Class',f'{classVar}.txt']
   class_path = os.path.join(*class_path)
 
@@ -72,7 +54,7 @@ for c in allDataToProcess:
     datatype = datatype_directory[i]
     input_files = c.split('\t')[3 + i].split(',')
     for x in input_files:
-        input_data.append(f'{dataset_path}{datatype}{sep_maker()}{x}')
+        input_data.append(f'{dataset_path}{datatype}{path_delimiter()}{x}')
 
 
 
@@ -85,7 +67,7 @@ for c in allDataToProcess:
     path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
     path = os.path.join(*path)
     executed_algos = glob.glob(path)
-    executed_algos = [path_to_list(x)[5].replace('__',sep_maker(),3) for x in executed_algos]
+    executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
     executed_algos = set(executed_algos)
 
     not_executed_algos = allAlgorithms - executed_algos
@@ -100,10 +82,10 @@ for c in allDataToProcess:
         data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
       # so that windows computers don't crash
-      if sep_maker() == '\\':
+      if path_delimiter() == '\\':
         _ = '\\' + '\\'
       else:
-        _ = sep_maker()
+        _ = path_delimiter()
       # Where will the output files be stored?
       outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
 

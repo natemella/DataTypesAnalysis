@@ -1,27 +1,12 @@
 import os
 import sys
 import shutil
+from .util import *
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 RelevantTypes = ()
 
-def path_to_list(path):
-  folders = []
-  while True:
-    path, folder = os.path.split(path)
-    if folder:
-      folders.append(folder)
-    else:
-      if path:
-        folders.append(path)
-      break
-  folders.reverse()
-  return folders
 
-def sep_maker():
-  list = ['a','b']
-  x = os.path.join(*list)
-  return x[1]
 
 
 def checkfunction(dtype):
@@ -53,18 +38,18 @@ endpoints = sys.argv[1:]
 
 
 my_list = path_to_list(currentWorkingDir)
-parent_directory = sep_maker().join(my_list[:-1])
-output_directory = os.path.join(*[parent_directory,f'Data_To_Process_Files{sep_maker()}'])
+parent_directory = path_delimiter().join(my_list[:-1])
+output_directory = os.path.join(*[parent_directory, f'Data_To_Process_Files{path_delimiter()}'])
 if not os.path.exists(os.path.dirname(output_directory)):
     os.makedirs(os.path.dirname(output_directory))
 else:
     shutil.rmtree(os.path.dirname(output_directory))
     os.makedirs(os.path.dirname(output_directory))
 
-INPUT_DATA = next(os.walk(parent_directory + f"{sep_maker()}InputData"))[1]
+INPUT_DATA = next(os.walk(parent_directory + f"{path_delimiter()}InputData"))[1]
 
 # for unix it would be '{_}' for windows it would be '\'
-_=sep_maker()
+_=path_delimiter()
 
 
 for CancerType in INPUT_DATA:
