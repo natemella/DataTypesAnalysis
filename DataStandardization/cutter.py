@@ -79,7 +79,7 @@ for CancerType in INPUT_DATA:
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
-                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.split('\t')[1] == outcome]
+                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
                         patients_per_data.pop(0)
                         patients_with_all.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}|')
