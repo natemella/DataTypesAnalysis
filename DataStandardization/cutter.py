@@ -1,7 +1,7 @@
 import os
 import sys
-import shutil
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
+import codecs
 
 RelevantTypes = ()
 
@@ -50,11 +50,9 @@ for CancerType in INPUT_DATA:
                         if input_file.endswith(('.tsv','.txt')):
                             num_Patients = sum(1 for line in open(input_file))
                         else:
-                            if os.stat(input_file).st_size != 0:
-                                with open(input_file) as myfile:
-                                    num_Patients = len(myfile.readline().split('\t'))
-                            else:
-                                num_Patients = 0
+                            with codecs.open(input_file, 'r', encoding="utf-8", errors="ignore") as myfile:
+                                firstline = myfile.readline()
+                                num_Patients = len(firstline.split('\t'))
                         if num_Patients < 100:
                             print(f'{CancerType} {DataType} Number of Patients == {num_Patients}')
 
