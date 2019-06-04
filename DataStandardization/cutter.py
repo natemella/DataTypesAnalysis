@@ -42,12 +42,13 @@ sample_summary = open("sample_summary.tsv",'w+')
 sample_summary.write("CancerType\tNumber of Patients per type of Data\t"
                      "Total Number of Patients\t"
                      "Patients with all 7 types of data\n")
-total_patients = set()
-patients_with_all = set()
-patients_per_data = []
+
 
 for CancerType in INPUT_DATA:
     sample_summary.write(f'{CancerType}\t')
+    total_patients = set()
+    patients_with_all = set()
+    patients_per_data = []
     for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
