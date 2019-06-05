@@ -1,77 +1,39 @@
 import pandas as pd
 import numpy as np
+from util import *
 
-with open("CancerTypes.txt") as file:
-    with open("abreviations.tsv") as abr:
-        abreviations = [x.strip('\n') for x in file]
-        RelevantTypes = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
-
-CancerDict = {}
-for x in RelevantTypes:
-    CancerDict[x] = []
-
-TSSDictionary = {}
-
-RelevantCodes = set()
-
-with open("Clinical_Variables.csv") as Data:
-    variable_list = Data.readline().strip('\n').split(',')
-
-
-with open("TSS_CODES.tsv") as codes:
-    first_line = codes.readline()
-    for x in codes:
-        line = x.strip('\n').split('\t')
-        if line[2] in RelevantTypes:
-            RelevantCodes.add(line[0])
-            TSSDictionary[line[0]] = line[2]
-
-# So that the outputfile will have the correct names
-Abbreviations_Dict = {}
-with open("abreviations.tsv") as abr:
-    first_line = abr.readline()
-    for x in abr:
-        list = x.strip('\n').split('\t')
-        if list[1] in RelevantTypes:
-            Abbreviations_Dict[list[1]] = list[0]
-
-CancerPatientIDs = []
+with open("Clinical_Variables.csv") as data:
+    variable_list = data.readline().strip('\n').split(',')
 
 input = pd.read_excel("mmc1.xlsx", index_col="bcr_patient_barcode")
-Header = input.columns.values
-AllPatients = input.index
-for x in AllPatients:
-    if x.split('-')[1] in RelevantCodes:
-        CancerPatientIDs.append(x)
-        tss = x.split('-')[1]
-        for Cancer in RelevantTypes:
-            if TSSDictionary[tss] == Cancer:
-                CancerDict[Cancer].append(x)
+header = input.columns.values
+all_patients = input.index
+
+list_of_dictionaries = dictionary_makers(all_patients)
+
+# [relevant_types, relevant_codes, tss_dictionary, abbreviations_dict, cancer_dict, cancer_patient_ids]
+
+relevant_types = list_of_dictionaries[0]
+relevant_codes = list_of_dictionaries[1]
+tss_dictionary = list_of_dictionaries[2]
+abbreviations_dict = list_of_dictionaries[3]
+cancer_dict = list_of_dictionaries[4]
+cancer_patient_ids = list_of_dictionaries[5]
 
 df = pd.read_excel("mmc1.xlsx", sep="\t", index_col="bcr_patient_barcode")
 df = df.drop(labels="Unnamed: 0", axis=1)
 
-df = df.loc[CancerPatientIDs]
+df = df.loc[cancer_patient_ids]
 
 endpoints = ("DFI","DSS","OS","PFI")
 
-file = open("summary.txt",'w+')
-file.write(f'CancerType\t')
-for x in df.columns.values:
-    if not x.startswith(endpoints) and x in variable_list:
-        file.write(f'{x} percent missing\t')
-file.write('Removed Variables\tKept Variables\n')
-for x in CancerDict:
-    print(f"Generating File for {x}\n")
-    y = df.loc[CancerDict[x]]
-    y = y.replace("[Not Applicable]",np.nan).replace("[Not Available]",np.nan)
-    info = y.describe(include="all")
-    columns = info.columns.values
+for sample_id in cancer_dict:
+    one_cancer_df = df.loc[cancer_dict[sample_id]]
+    one_cancer_df = one_cancer_df.replace("[Not Applicable]", np.nan).replace("[Not Available]", np.nan)
+    df_info = one_cancer_df.describe(include="all")
+    columns = df_info.columns.values
     variables_to_keep = []
     variables_to_drop = []
-    print(f'\n----------------------------------------------------\n'
-                 f'Total Variables:\n{columns}\n')
-    file.write(f'TCGA_{Abbreviations_Dict[x]}\t')
     for i in columns:
         if i not in variable_list:
             variables_to_drop.append(i)
@@ -81,19 +43,12 @@ for x in CancerDict:
             variables_to_keep.append(i)
             continue
 
-        Na_count = len(y.index) - info[i][0]
-        percent_missing = Na_count / len(y.index)
-        file.write(f'{(percent_missing * 100)} %\t')
+        Na_count = len(one_cancer_df.index) - df_info[i][0]
+        percent_missing = Na_count / len(one_cancer_df.index)
         if percent_missing > 0.2:
             variables_to_drop.append(i)
         else:
             variables_to_keep.append(i)
-    file.write(f'{len(variables_to_drop)}\t{len(variables_to_keep)}\n')
-    print(f'----------------------------------------------------\n'
-                 f'Variables that were KEPT:\n {np.asarray(variables_to_keep)}\n'
-                 f'----------------------------------------------------\n')
-    print(f'Variables that were REMOVED:\n {np.asarray(variables_to_drop)}\n'
-                 f'----------------------------------------------------\n\n')
-    y = y[variables_to_keep]
-    y.to_csv(path_or_buf=('TCGA_' + Abbreviations_Dict[x] + '.tsv'), sep='\t', na_rep='NA')
-file.close()
+
+    one_cancer_df = one_cancer_df[variables_to_keep]
+    one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')

@@ -47,6 +47,3 @@ done
 cd ../
 cd DataStandardization/
 python3 Class.py
-rm summary.txt
-rm result.tsv
-rm results_for_graphing.csv

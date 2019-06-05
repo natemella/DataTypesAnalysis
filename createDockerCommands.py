@@ -1,5 +1,5 @@
 import glob, gzip, os, shutil, sys
-from .DataStandardization.util import *
+from DataStandardization.util import *
 
 analysis = sys.argv[1]
 startIteration = int(sys.argv[2])
@@ -20,116 +20,146 @@ currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 dockerCommandFilePaths = []
 
+def line_end(num_of_tabs=0):
+    my_string = "\\\n"
+    for x in range(num_of_tabs):
+        my_string += ' '*4
+    return my_string
+
 # Parse the algorithms file to find all possible algorithms
 with open(algorithmsFilePath, 'r') as f:
-  allAlgorithms = f.read().splitlines()
+    allAlgorithms = f.read().splitlines()
 allAlgorithms = [x.replace('AlgorithmScripts/Classification/', '') for x in allAlgorithms if not x.startswith("#")]
 allAlgorithms = [x.split("__")[0] for x in allAlgorithms]
 allAlgorithms = set(allAlgorithms)
 
 # Find all possible data combinations to process
 with open(dataToProcessFilePath, 'r') as g:
-  allDataToProcess = [x for x in g.read().splitlines() if not x.startswith("#")]
+    allDataToProcess = [x for x in g.read().splitlines() if not x.startswith("#")]
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
 if os.path.exists(f'{analysis}_Commands{path_delimiter()}'):
-  shutil.rmtree(f'{analysis}_Commands{path_delimiter()}')
+    shutil.rmtree(f'{analysis}_Commands{path_delimiter()}')
 
 for c in allDataToProcess:
-  datasetID = c.split('\t')[0]
-  classVar = c.split('\t')[1]
+    datasetID = c.split('\t')[0]
+    classVar = c.split('\t')[1]
 
-  input_data = list()
-  dataset_path =  f'{datasetID}{path_delimiter()}'
-  class_path = [dataset_path,'Class',f'{classVar}.txt']
-  class_path = os.path.join(*class_path)
+    input_data = list()
+    dataset_path =  f'{datasetID}{path_delimiter()}'
+    class_path = [dataset_path,'Class',f'{classVar}.txt']
+    class_path = os.path.join(*class_path)
 
-  # grab the data types
-  datatype_directory = c.split('\t')[2].split(',')
-  number_of_datatypes = len(datatype_directory)
-  # grab the data files for each data type
+    # grab the data types
+    datatype_directory = c.split('\t')[2].split(',')
+    number_of_datatypes = len(datatype_directory)
+    # grab the data files for each data type
 
-  for i in range(0, number_of_datatypes):
-    datatype = datatype_directory[i]
-    input_files = c.split('\t')[3 + i].split(',')
-    for x in input_files:
-        input_data.append(f'{dataset_path}{datatype}{path_delimiter()}{x}')
-
-
-
-  input_data.append(class_path)
-
-  not_executed_algos = set()
-
-  for i in range(startIteration, 1+stopIteration):
-    print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
-    path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
-    path = os.path.join(*path)
-    executed_algos = glob.glob(path)
-    executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
-    executed_algos = set(executed_algos)
-
-    not_executed_algos = allAlgorithms - executed_algos
+    for i in range(0, number_of_datatypes):
+        datatype = datatype_directory[i]
+        input_files = c.split('\t')[3 + i].split(',')
+        for x in input_files:
+                input_data.append(f'{dataset_path}{datatype}{path_delimiter()}{x}')
 
 
-    for algo in not_executed_algos:
-      algoName = algo.replace('/','__')
 
-      # Build the part of the command that tells ShinyLearner which data files to parse
-      data_all = ''
-      for d in input_data:
-        data_all = data_all + '--data "' + d + '" \\\n\t\t'
+    input_data.append(class_path)
 
-      # so that windows computers don't crash
-      if path_delimiter() == '\\':
-        _ = '\\' + '\\'
-      else:
-        _ = path_delimiter()
-      # Where will the output files be stored?
-      outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
+    not_executed_algos = set()
 
-      out = f'if [ ! -f {outDir}{outFileToCheck} ]\nthen\n' \
-        f'  docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\\n\t' \
-        f'-v "{currentWorkingDir}/InputData":"/InputData" \\\n\t' \
-        f'-v "{outDir}":"/OutputData" \\\n\t' \
-        f'srp33/shinylearner:version{shinyLearnerVersion} \\\n\t' \
-        f'timeout -s 9 {hoursMax}h \\\n\t' \
-        f'"/UserScripts/nestedclassification_crossvalidation" \\\n\t\t' \
-        f'{data_all}' \
-        f'--description {datasetID}___{classVar}___iteration{str(i)} \\\n\t\t' \
-        f'--outer-folds {outer_folds} \\\n\t\t' \
-        f'--inner-folds {inner_folds} \\\n\t\t' \
-        f'--iterations 1 \\\n\t\t' \
-        f'--classif-algo "AlgorithmScripts/Classification/{algo}*" \\\n\t\t ' \
-        f'--verbose false \\\n\t\t' \
-        f'--seed {str(i)} \\\n\t\t' \
-        f'--ohe true \\\n\t\t' \
-        f'--scale robust \\\n\t\t' \
-        f'--impute true \\\n\t\t' \
-        f'--num-cores {numCores}\n' \
-        f'fi'
-      # Build the bash script for this combination of dataset, algorithm, and iteration
-      if scale_mode != "True":
-        out = out.replace(f'--scale robust \\\n\t\t','')
+    for i in range(startIteration, 1+stopIteration):
+        print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
+        path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
+        path = os.path.join(*path)
+        executed_algos = glob.glob(path)
+        executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
+        executed_algos = set(executed_algos)
 
-      # This is where the bash script will be stored
-      commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
-      commandFilePath = os.path.join(*commandFilePath)
-      # Create the directory, if necessary, where the bash script will be stored
-      if not os.path.exists(os.path.dirname(commandFilePath)):
-        os.makedirs(os.path.dirname(commandFilePath))
+        not_executed_algos = allAlgorithms - executed_algos
 
-      # Create the bash script
-      with open(commandFilePath, 'w') as outFile:
-        outFile.write(f'{out}\n')
 
-      dockerCommandFilePaths.append(commandFilePath)
+        for algo in not_executed_algos:
+            algoName = algo.replace('/','__')
+
+            # Build the part of the command that tells ShinyLearner which data files to parse
+            data_all = ''
+            for d in input_data:
+                data_all = data_all + f'--data "{d}" {line_end(3)}'
+
+            # so that windows computers don't crash
+            if path_delimiter() == '\\':
+                _ = '\\' + '\\'
+            else:
+                _ = path_delimiter()
+            # Where will the output files be stored?
+
+
+            outDir = os.path.join(*[currentWorkingDir,"Analysis_Results",analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
+
+            
+            bash_args = {
+                "outDir": outDir,
+                "outFileToCheck": outFileToCheck,
+                "memoryGigs": memoryGigs,
+                "swapMemoryGigs": swapMemoryGigs,
+                "currentWorkingDir": currentWorkingDir,
+                "outDir": outDir,
+                "shinyLearnerVersion": shinyLearnerVersion,
+                "hoursMax": hoursMax,
+                "data_all": data_all.rstrip(),
+                "datasetID": datasetID,
+                "classVar": classVar,
+                "i": i,
+                "outer_folds": outer_folds,
+                "inner_folds": inner_folds,
+                "algo": algo,
+                "numCores": numCores,
+            }
+            out = """
+if [ ! -f {outDir}{outFileToCheck} ]
+then
+    docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\
+        -v "{currentWorkingDir}/InputData":"/InputData" \\
+        -v "{outDir}":"/OutputData" \\
+        srp33/shinylearner:version{shinyLearnerVersion} \\
+        timeout -s 9 {hoursMax}h \\
+            "/UserScripts/nestedclassification_crossvalidation" \\
+            {data_all}
+            --description {datasetID}___{classVar}___iteration{i} \\
+            --outer-folds {outer_folds} \\
+            --inner-folds {inner_folds} \\
+            --iterations 1 \\
+            --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
+            --verbose false \\
+            --seed {i} \\
+            --ohe true \\
+            --scale robust \\
+            --impute true \\
+            --num-cores 
+fi
+            """.format(**bash_args)
+            # Build the bash script for this combination of dataset, algorithm, and iteration
+            if scale_mode != "True":
+                out = out.replace(f'--scale robust {line_end(2)}','')
+
+            # This is where the bash script will be stored
+            commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
+            commandFilePath = os.path.join(*commandFilePath)
+            # Create the directory, if necessary, where the bash script will be stored
+            if not os.path.exists(os.path.dirname(commandFilePath)):
+                os.makedirs(os.path.dirname(commandFilePath))
+
+            # Create the bash script
+            with open(commandFilePath, 'w') as outFile:
+                outFile.write(f'{out}\n')
+
+            dockerCommandFilePaths.append(commandFilePath)
 
 if len(dockerCommandFilePaths) == 0:
-    print('All commands have been executed!')
+        print('All commands have been executed!')
 else:
-    # Create a file that indicates the location of all the bash scripts that need to be executed
-    with open(dockerOutFilePath, 'a') as dockerOutFile:
-        for command in dockerCommandFilePaths:
-            dockerOutFile.write(f"bash {command}\n")
+        # Create a file that indicates the location of all the bash scripts that need to be executed
+        with open(dockerOutFilePath, 'a') as dockerOutFile:
+                for command in dockerCommandFilePaths:
+                        dockerOutFile.write(f"bash {command}\n")
