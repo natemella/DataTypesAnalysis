@@ -65,6 +65,7 @@ def fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types
             for Cancer in relevant_types:
                 if tss_dictionary[tss] == Cancer:
                     cancer_dict[Cancer].append(sample_id)
+    return cancer_patient_ids
 
 def dictionary_makers(all_patients):
 
@@ -73,6 +74,5 @@ def dictionary_makers(all_patients):
     relevant_codes = make_tss_dict_and_rev_codes_dic(relevant_types)[0]
     tss_dictionary = make_tss_dict_and_rev_codes_dic(relevant_types)[1]
     abbreviations_dict = make_abbrevation_dict(relevant_types)
-    cancer_patient_ids = (relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients)
-
+    cancer_patient_ids = fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients)
     return [relevant_types, relevant_codes, tss_dictionary, abbreviations_dict, cancer_dict, cancer_patient_ids]
