@@ -27,10 +27,10 @@ def make_relevant_types_list():
             relevant_types = [x.split('\t')[1].strip('\n') for x in abr if x.split('\t')[0] in abreviations]
     return relevant_types
 
-def make_cancer_dict(relevant_types):
+def make_cancer_dict(relevant_types, value_list=[]):
     cancer_dict = {}
     for x in relevant_types:
-        cancer_dict[x] = []
+        cancer_dict[x] = value_list[:]
     return cancer_dict
 
 def make_tss_dict_and_rev_codes_dic(relevant_types):
@@ -55,10 +55,14 @@ def make_abbrevation_dict(relevant_types):
                 abbreviations_dict[list[1]] = list[0]
     return abbreviations_dict
 
-def fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients):
-    cancer_patient_ids = []
+def is_tumor(sample_id):
+    return sample_id.split("-")[3] == "01"
 
+def fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients, value_list=[]):
+    cancer_patient_ids = value_list
     for sample_id in all_patients:
+        if sample_id == "sample" or not is_tumor(sample_id):
+            continue
         if sample_id.split('-')[1] in relevant_codes:
             cancer_patient_ids.append(sample_id)
             tss = sample_id.split('-')[1]
@@ -67,12 +71,12 @@ def fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types
                     cancer_dict[Cancer].append(sample_id)
     return cancer_patient_ids
 
-def dictionary_makers(all_patients):
+def dictionary_makers(all_patients, value_list=[]):
 
     relevant_types = make_relevant_types_list()
-    cancer_dict = make_cancer_dict(relevant_types)
+    cancer_dict = make_cancer_dict(relevant_types, value_list)
     relevant_codes = make_tss_dict_and_rev_codes_dic(relevant_types)[0]
     tss_dictionary = make_tss_dict_and_rev_codes_dic(relevant_types)[1]
     abbreviations_dict = make_abbrevation_dict(relevant_types)
-    cancer_patient_ids = fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients)
+    cancer_patient_ids = fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients, value_list)
     return [relevant_types, relevant_codes, tss_dictionary, abbreviations_dict, cancer_dict, cancer_patient_ids]

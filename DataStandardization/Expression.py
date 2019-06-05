@@ -12,15 +12,14 @@ cancer_dict = list_of_dictionaries[4]
 
 print("Finished Step 1")
 
-i = 1
+step = 1
 for x in cancer_dict:
     df = pd.read_csv(sys.argv[1], delimiter='\t', usecols=cancer_dict[x], engine='c', na_values='NA')[cancer_dict[x]].astype(float)
-    s = pd.Series(index_col)
-    s.name = "SampleID"
-    df = pd.concat([s,df], axis=1)
-    print(f'Finished Step 2.{i}')
-    i+=1
-    # y = y.loc[:, ~y.columns.duplicated()]
+    series = pd.Series(index_col)
+    series.name = "SampleID"
+    df = pd.concat([series, df], axis=1)
+    print(f'Finished Step 2.{step}')
+    step+=1
     if True in df.columns.duplicated():
         df = df.astype(float)
         print("\nFound Duplicates!!!\n")
@@ -32,6 +31,7 @@ for x in cancer_dict:
     for ID in df.columns.values:
         truncatedID = ID[0:12]
         new_columns.append(truncatedID)
+
     df.columns = new_columns
     print(f'Beginning to write DataFrame to file')
     df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[x] + '.ttsv'), sep='\t', na_rep="NA", index=False)
