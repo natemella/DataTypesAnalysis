@@ -21,10 +21,7 @@ else
     echo IT WORKED!!!
     python3 SM.py
 fi
-if [ -e TCGA*.tsv ]
-then
-    rm $fileName
-fi
+
 mv TCGA*.tsv ../
 cd ../
 

@@ -17,13 +17,7 @@ for x in cancer_dict:
     series = pd.Series(index_col)
     series.name = "SampleID"
     df = pd.concat([series, df], axis=1)
-    print(f'Finished Step 2.{step}')
     step+=1
-    if True in df.columns.duplicated():
-        df = df.astype(float)
-        print("\nFound Duplicates!!!\n")
-        print([df.columns.values[i] for i in range(0, len(df.columns.duplicated())) if df.columns.duplicated()[i] == True])
-        df = df.groupby(level=0, axis=1).mean()
 
     new_columns = []
     #truncate the IDs to twelve characters
@@ -32,6 +26,8 @@ for x in cancer_dict:
         new_columns.append(truncatedID)
 
     df.columns = new_columns
-    print(f'Beginning to write DataFrame to file')
+    df = check_for_duplicates(df)
+
+    print(f'Beginning to write {abbreviations_dict[x]} DataFrame to file')
     df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[x] + '.ttsv'), sep='\t', na_rep="NA", index=False)
     print(f'Finished Evaluating TCGA_{abbreviations_dict[x]}')

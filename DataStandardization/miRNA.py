@@ -16,10 +16,7 @@ for x in CancerDict:
     df = df.rename_axis("SampleID")
     print(f'Finished Step 2.{step}')
     step += 1
-    if True in df.columns.duplicated():
-        df = df.astype(float)
-        print("\nFound Duplicates!!!\n")
-        df = df.groupby(level=0, axis=1).mean()
+    df = check_for_duplicates(df)
 
     new_columns = []
     for ID in df.columns.values:

@@ -36,7 +36,7 @@ def make_cancer_dict(relevant_types, value_list=[]):
 def make_tss_dict_and_rev_codes_dic(relevant_types):
     relevant_codes = set()
     tss_dictionary = {}
-    with open("TSS_CODES.tsv") as codes:
+    with open("tss_codes.tsv") as codes:
         codes.readline()
         for x in codes:
             line = x.strip('\n').split('\t')
@@ -80,3 +80,13 @@ def dictionary_makers(all_patients, value_list=[]):
     abbreviations_dict = make_abbrevation_dict(relevant_types)
     cancer_patient_ids = fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients, value_list)
     return [relevant_types, relevant_codes, tss_dictionary, abbreviations_dict, cancer_dict, cancer_patient_ids]
+
+def check_for_duplicates(df):
+    if True in df.columns.duplicated():
+        df = df.astype(float)
+        print("\nFound Duplicates!!!\n")
+        print([df.columns.values[i] for i in range(0, len(df.columns.duplicated())) if df.columns.duplicated()[i] == True])
+        df = df.groupby(level=0, axis=1).mean()
+        return df
+    else:
+        return df
