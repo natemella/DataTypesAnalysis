@@ -26,8 +26,9 @@ for x in cancer_dict:
         new_columns.append(truncatedID)
 
     df.columns = new_columns
+    df.set_index("SampleID")
     df = check_for_duplicates(df)
 
     print(f'Beginning to write {abbreviations_dict[x]} DataFrame to file')
-    df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[x] + '.ttsv'), sep='\t', na_rep="NA", index=False)
+    df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[x] + '.ttsv'), sep='\t', na_rep="NA")
     print(f'Finished Evaluating TCGA_{abbreviations_dict[x]}')
