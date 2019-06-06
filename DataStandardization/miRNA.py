@@ -17,7 +17,6 @@ for x in CancerDict:
     print(f'Finished Step 2.{step}')
     step += 1
     if True in df.columns.duplicated():
-        print(df.loc[:,df.columns.duplicated(keep=False)].sort_index(axis=1))
         df = df.astype(float)
         print("\nFound Duplicates!!!\n")
         df = df.groupby(level=0, axis=1).mean()

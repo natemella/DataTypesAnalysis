@@ -17,7 +17,7 @@ def makedict(row,col):
     return row[col]
 # All of the conditions upon which we will keep a row.
 
-def filter_on_stuff(row):
+def remove_sparse_rows(row):
     sift = split(row, "SIFT")
     poly = split(row, "PolyPhen")
     tumor = makedict(row, "Tumor_Sample_Barcode")
@@ -38,7 +38,7 @@ def chunk_preprocessing(df_chunk, i):
     print(f"Completed Step 2.{i}")
 
     # apply conditions
-    df_chunk = df_chunk.loc[df_chunk.apply(filter_on_stuff, axis="columns")]
+    df_chunk = df_chunk.loc[df_chunk.apply(remove_sparse_rows, axis="columns")]
     return df_chunk
 
 def build_df(df_chunk):
@@ -78,18 +78,7 @@ with open("abreviations.tsv") as abr:
         if list[1] in RelevantTypes:
             Abbreviations_Dict[list[1]] = list[0]
 
-# read in data frame
-# df = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False)
-# print("Completed Step 1")
-#
-# # only keep rows where Filter equals pass and Impact equals moderate or high
-# df = df.loc[(df["FILTER"] == "PASS") & (df["NCALLERS"] >= 3) & (df["IMPACT"].isin(["MODERATE", "HIGH"]))]
-# print("Completed Step 2")
-#
-#  # apply conditions
-# df = df.loc[df.apply(filter_on_stuff, axis="columns")]
-#
-# print("Completed Step 3")
+
 
 one_chunk = pd.read_csv("1c8cfe5f-e52d-41ba-94da-f15ea1337efc", sep='\t', low_memory=False, chunksize=500000)
 print("Completed Step 1")

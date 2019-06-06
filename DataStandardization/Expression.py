@@ -9,7 +9,6 @@ with open(sys.argv[1]) as input:
 
 abbreviations_dict = list_of_dictionaries[3]
 cancer_dict = list_of_dictionaries[4]
-
 print("Finished Step 1")
 
 step = 1
