@@ -83,7 +83,6 @@ def dictionary_makers(all_patients, value_list=[]):
 
 def check_for_duplicates(df):
     if True in df.columns.duplicated():
-        df = df.astype(float)
         print("\nFound Duplicates!!!\n")
         print([df.columns.values[i] for i in range(0, len(df.columns.duplicated())) if df.columns.duplicated()[i] == True])
         df = df.groupby(level=0, axis=1).mean()
