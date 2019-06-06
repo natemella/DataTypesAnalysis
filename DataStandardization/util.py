@@ -56,7 +56,9 @@ def make_abbrevation_dict(relevant_types):
     return abbreviations_dict
 
 def is_tumor(sample_id):
-    return sample_id.split("-")[3].startswith("01")
+    if len(sample_id) > 12:
+        return sample_id.split("-")[3].startswith("01")
+    return True
 
 def fill_cancer_dict(relevant_codes, tss_dictionary, cancer_dict, relevant_types, all_patients, value_list=[]):
     cancer_patient_ids = value_list

@@ -1,7 +1,19 @@
 #!/usr/bin/env bash
 set -a # export all functions
+set -e
 
-somefunc() {
+gunzip_if_gzipped() {
+fileName=$1
+if [[ $fileName =~ \.gz$ ]];
+then
+    gunzip ${fileName}
+    echo ${fileName}
+else
+    echo ${fileName}
+fi
+}
+
+download_and_organize_data() {
 fileName=$1
 python_script=$2
 web_url=$3
@@ -9,14 +21,15 @@ tcga_extension=$4
 folder=$5
 file_extension=$6
 
-if [[ $fileName =~ \.gz$ ]];
-then
-    gunzip $fileName
-fi
+echo $web_url
+echo $fileName
+echo $python_script
 
 if [ -e $fileName* ]
 then
+    fileName=$(gunzip_if_gzipped ${fileName})
     python3 $python_script $fileName
+    echo ${fileName}
 else
     echo $fileName has not yest been downloaded
     wget ${web_url}/${fileName}
