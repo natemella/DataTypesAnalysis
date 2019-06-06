@@ -26,7 +26,7 @@ for x in cancer_dict:
         new_columns.append(truncatedID)
 
     df.columns = new_columns
-    df.set_index("SampleID")
+    df = df.set_index("SampleID")
     df = check_for_duplicates(df)
 
     print(f'Beginning to write {abbreviations_dict[x]} DataFrame to file')
