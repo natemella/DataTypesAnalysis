@@ -6,7 +6,7 @@ rename_if_necessary() {
 fileName=$1
 rename=$2
 extension=$3
-if [[ $rename == True ]];
+if [[ $rename == "True" ]];
 then
     echo RENAMING FILE PRIOR TO PROCESSING
     mv $fileName ${fileName}${extension}
