@@ -35,6 +35,8 @@ for CancerType in INPUT_DATA:
                 for DataType in list_of_dTypes:
                     d_type_directory = f"{parent_directory}{delimiter}InputData{delimiter}{CancerType}{delimiter}{DataType}"
                     if DataType != "Class":
+                        if DataType != "Expression":
+                            continue
                         for input_file in os.listdir(d_type_directory):
                             if already_seen and DataType == "Covariate":
                                 continue
