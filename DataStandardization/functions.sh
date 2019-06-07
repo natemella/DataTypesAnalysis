@@ -44,8 +44,8 @@ then
 else
     echo $fileName has not yest been downloaded
     wget ${web_url}/${fileName}
-    fileName=$(gunzip_if_gzipped ${fileName})
     fileName=$(rename_if_necessary ${fileName} ${rename})
+    fileName=$(gunzip_if_gzipped ${fileName})
     python3 $python_script $fileName
 fi
 rm $fileName
