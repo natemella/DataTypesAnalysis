@@ -36,9 +36,7 @@ INPUT_DATA = next(os.walk(os.path.join(*[parent_directory,"InputData"])))[1]
 _=path_delimiter()
 
 sample_summary = open("sample_summary.tsv",'w+')
-sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\t"
-                     "Total Number of Patients\t"
-                     "Patients with all 7 types of data\n")
+sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\n")
 
 end_points = ["LT_PFI", "ST_PFI"]
 
