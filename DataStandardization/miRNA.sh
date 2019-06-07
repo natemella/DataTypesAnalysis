@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -e
 . ./functions.sh
-fileName="pancanMiRs_EBadjOnProtocolPlatformWithoutRepsWithUnCorrectMiRs_08_04_16.xena"
+fileName="pancanMiRs_EBadjOnProtocolPlatformWithoutRepsWithUnCorrectMiRs_08_04_16.xena.gz"
 python_script=miRNA.py
 web_url="https://pancanatlas.xenahubs.net/download"
 tcga_extension=".ttsv"
 folder=miRNA
-file_extension=".gz"
 
-download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $file_extension $rename
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder
 
 #
 #if [ -e $fileName* ]
