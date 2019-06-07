@@ -1,54 +1,13 @@
 #!/usr/bin/env bash
 
-fileName="broad.mit.edu_PANCAN_Genome_Wide_SNP_6_whitelisted.gene.xena"
-extention=".gz"
-unzippedFile=${fileName}${extention}
+. ./functions.sh
+fileName="broad.mit.edu_PANCAN_Genome_Wide_SNP_6_whitelisted.gene.xena.gz"
+python_script=miRNA.py
+web_url="https://pancanatlas.xenahubs.net/download"
+tcga_extension=".ttsv"
+folder=CNV
 
-if [ -e $fileName* ]
-then
-    gunzip $unzippedFile
-    echo IT WORKED!!!
-    python3 miRNA.py $fileName
-#    cat $fileName
-else
-    echo $unzippedFile has not yest been downloaded
-    wget https://pancanatlas.xenahubs.net/download/${unzippedFile}
-    gunzip $unzippedFile
-    echo IT WORKED!!!
-    python3 miRNA.py $fileName
-fi
-rm $fileName
-mv *.ttsv ../
-cd ../
-if [ -d "InputData" ]
-then
-    mv *.ttsv InputData/
-else
-    mkdir InputData
-    mv *.ttsv InputData/
-fi
+echo RUNNING BASH SCRIPT FOR CNV but using same python script as miRNA to process the data
 
-cd InputData/
-
-
-for file in `ls -p | grep -v /`; do
-    IFS='.' read -ra cancertype <<< "$file"
-    mydir="${cancertype[0]}"
-    if [ -d $mydir"/CNV/" ]
-    then
-        mv $file $mydir/CNV/
-    else
-        if [ -d $mydir ]
-        then
-            mkdir $mydir/CNV
-            mv $file $mydir/CNV/
-        else
-            mkdir $mydir
-            mkdir $mydir/CNV
-            mv $file $mydir/CNV/
-        fi
-    fi
-done
-
-
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder
 
