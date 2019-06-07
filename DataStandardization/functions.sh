@@ -2,6 +2,18 @@
 set -a # export all functions
 set -e
 
+rename_if_necessary() {
+fileName=$1
+rename=$2
+
+if [[ $rename == True ]];
+then
+    mv $fileName ${fileName}".gz"
+    echo ${fileName}
+else
+    echo ${fileName}
+fi
+}
 gunzip_if_gzipped() {
 fileName=$1
 if [[ $fileName =~ \.gz$ ]];
@@ -20,11 +32,10 @@ web_url=$3
 tcga_extension=$4
 folder=$5
 file_extension=$6
-
+rename=$7
 echo $web_url
 echo $fileName
 echo $python_script
-
 if [ -e $fileName* ]
 then
     fileName=$(gunzip_if_gzipped ${fileName})
@@ -33,6 +44,8 @@ then
 else
     echo $fileName has not yest been downloaded
     wget ${web_url}/${fileName}
+    fileName=$(gunzip_if_gzipped ${fileName})
+    fileName=$(rename_if_necessary ${fileName} ${rename})
     python3 $python_script $fileName
 fi
 rm $fileName
