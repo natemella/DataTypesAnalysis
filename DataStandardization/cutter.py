@@ -63,16 +63,14 @@ for CancerType in INPUT_DATA:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType}:overlaping = {len(patients_with_all)},'
-                                                     f' total_samples = {len(patients_per_data)}')
+                                sample_summary.write(f'{DataType}:{len(patients_with_all)}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType}:overlaping = {len(patients_with_all)},'
-                                                         f' total_samples = {len(patients_per_data)}')
+                                    sample_summary.write(f'{DataType}:{len(patients_with_all)}')
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
