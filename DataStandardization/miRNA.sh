@@ -9,4 +9,3 @@ folder=miRNA
 
 download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder
 
-
