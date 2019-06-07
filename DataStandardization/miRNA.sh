@@ -2,7 +2,7 @@
 set -e
 . ./functions.sh
 fileName="pancanMiRs_EBadjOnProtocolPlatformWithoutRepsWithUnCorrectMiRs_08_04_16.xena"
-python_script=SM.py
+python_script=miRNA.py
 web_url="https://pancanatlas.xenahubs.net/download/"
 tcga_extension=".ttsv"
 folder=miRNA
