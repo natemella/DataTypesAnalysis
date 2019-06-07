@@ -76,6 +76,7 @@ for CancerType in INPUT_DATA:
                     else:
                         patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)
+                        sample_summary.write(f'{DataType}:{patients_with_all}')
                     sample_summary.write('\t')
                 sample_summary.write('\n')
 
