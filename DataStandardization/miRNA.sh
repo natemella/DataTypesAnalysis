@@ -3,7 +3,7 @@ set -e
 . ./functions.sh
 fileName="pancanMiRs_EBadjOnProtocolPlatformWithoutRepsWithUnCorrectMiRs_08_04_16.xena"
 python_script=miRNA.py
-web_url="https://pancanatlas.xenahubs.net/download/"
+web_url="https://pancanatlas.xenahubs.net/download"
 tcga_extension=".ttsv"
 folder=miRNA
 file_extension=".gz"
