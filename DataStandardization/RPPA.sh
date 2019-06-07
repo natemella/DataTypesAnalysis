@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-#!/usr/bin/env bash
 set -e
 . ./functions.sh
 fileName="TCGA-RPPA-pancan-clean.xena.gz"
