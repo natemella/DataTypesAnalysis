@@ -81,5 +81,6 @@ for CancerType in INPUT_DATA:
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}')
                     sample_summary.write('\t')
                 sample_summary.write('\n')
+    sample_summary.write('\n')
 
 sample_summary.close()
