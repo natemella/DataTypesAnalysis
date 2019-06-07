@@ -34,9 +34,9 @@ tcga_extension=$4
 folder=$5
 file_extension=$6
 rename=$7
-echo $web_url
-echo $fileName
-echo $python_script
+
+echo $rename
+
 if [ -e $fileName* ]
 then
     fileName=$(rename_if_necessary ${fileName} ${rename})
