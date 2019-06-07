@@ -9,7 +9,7 @@ extension=$3
 if [[ $rename == "True" ]];
 then
     mv $fileName ${fileName}${extension}
-    echo ${fileName}${extension}
+    echo ${fileName}
 else
     echo ${fileName}
 fi
@@ -44,7 +44,7 @@ else
     echo $fileName has not yest been downloaded
     wget ${web_url}/${fileName}
     fileName=$(rename_if_necessary ${fileName} ${rename} ${file_extension})
-    fileName=$(gunzip_if_gzipped ${fileName})
+    fileName=$(gunzip_if_gzipped ${fileName}${file_extension})
     echo Beginning to run${python_script}
     python3 $python_script $fileName
 fi
