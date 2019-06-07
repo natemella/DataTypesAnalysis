@@ -48,6 +48,7 @@ for CancerType in INPUT_DATA:
         sample_summary.write(f'{outcome.replace("T_", "")}\t')
         total_patients = set()
         patients_with_all = set()
+        class_info = set()
         patients_per_data = []
         for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
             already_seen = False
@@ -63,19 +64,20 @@ for CancerType in INPUT_DATA:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType}:{len(patients_with_all)}')
+                                sample_summary.write(f'{DataType[0:5]}:{len(patients_with_all)},{len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType}:{len(patients_with_all)}')
+                                    sample_summary.write(f'{DataType[0:5]}:{len(patients_with_all)},{len(class_info.intersection(patients_per_data))}')
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
                         patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)
+                        class_info.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}')
                     sample_summary.write('\t')
                 sample_summary.write('\n')
