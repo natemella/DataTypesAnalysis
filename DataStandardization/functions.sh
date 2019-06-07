@@ -2,6 +2,12 @@
 set -a # export all functions
 set -e
 
+#grab_file_without_extension() {
+#fileName=$1
+#IFS='.' read -ra splitter <<< "$fileName"
+#fileName="${splitter[0]}"
+#echo ${fileName}
+#}
 rename_if_necessary() {
 fileName=$1
 rename=$2
@@ -9,7 +15,7 @@ extension=$3
 if [[ $rename == "True" ]];
 then
     mv $fileName ${fileName}${extension}
-    echo ${fileName}
+    echo ${fileName}${extension}
 else
     echo ${fileName}
 fi
