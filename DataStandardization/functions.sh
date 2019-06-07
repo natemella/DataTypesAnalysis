@@ -2,12 +2,6 @@
 set -a # export all functions
 set -e
 
-#grab_file_without_extension() {
-#fileName=$1
-#IFS='.' read -ra splitter <<< "$fileName"
-#fileName="${splitter[0]}"
-#echo ${fileName}
-#}
 rename_if_necessary() {
 fileName=$1
 rename=$2
@@ -40,10 +34,10 @@ folder=$5
 file_extension=$6
 rename=$7
 
-echo $rename
 
 if [ -e $fileName* ]
 then
+    echo Beginning to run ${python_script}
     python3 $python_script $fileName
     echo ${fileName}
 else
@@ -51,6 +45,7 @@ else
     wget ${web_url}/${fileName}
     fileName=$(rename_if_necessary ${fileName} ${rename} ${file_extension})
     fileName=$(gunzip_if_gzipped ${fileName})
+    echo Beginning to run${python_script}
     python3 $python_script $fileName
 fi
 rm $fileName
