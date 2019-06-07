@@ -61,9 +61,6 @@ fi
 
 cd InputData/
 
-Path=$(pwd)
-Files=${Path}/*
-
 for file in `ls -p | grep -v /`; do
     IFS='.' read -ra cancertype <<< "$file"
     mydir="${cancertype[0]}"
