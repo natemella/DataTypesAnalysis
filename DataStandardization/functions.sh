@@ -5,10 +5,11 @@ set -e
 rename_if_necessary() {
 fileName=$1
 rename=$2
-
+extension=".gz"
 if [[ $rename == True ]];
 then
-    mv $fileName ${fileName}".gz"
+    echo RENAMING FILE PRIOR TO GUNZIPPING
+    mv $fileName ${fileName}${extension}
     echo ${fileName}
 else
     echo ${fileName}
@@ -38,6 +39,7 @@ echo $fileName
 echo $python_script
 if [ -e $fileName* ]
 then
+    fileName=$(rename_if_necessary ${fileName} ${rename})
     fileName=$(gunzip_if_gzipped ${fileName})
     python3 $python_script $fileName
     echo ${fileName}

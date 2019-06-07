@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
--e
+set -e
 bash Covariate.sh
 echo -------------------
 echo Finished Covariate
