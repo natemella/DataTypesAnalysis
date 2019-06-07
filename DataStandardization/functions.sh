@@ -53,10 +53,10 @@ mv TCGA*${tcga_extension} ../
 cd ../
 if [ -d "InputData" ]
 then
-    mv TCGA*.tsv InputData/
+    mv TCGA*${tcga_extension} InputData/
 else
     mkdir InputData
-    mv TCGA*.tsv InputData/
+    mv TCGA*${tcga_extension} InputData/
 fi
 
 cd InputData/
