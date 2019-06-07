@@ -3,12 +3,10 @@ set -e
 . ./functions.sh
 fileName="pancanMiRs_EBadjOnProtocolPlatformWithoutRepsWithUnCorrectMiRs_08_04_16.xena"
 python_script=SM.py
-web_url="https://api.gdc.cancer.gov/data/"
+web_url="https://pancanatlas.xenahubs.net/download/"
 tcga_extension=".ttsv"
 folder=miRNA
 file_extension=".gz"
-rename="True"
-unzippedFile=${fileName}${file_extension}
 
 download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $file_extension $rename
 
