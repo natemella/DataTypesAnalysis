@@ -1,7 +1,7 @@
 import os
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 import codecs
-from .util import *
+from util import *
 
 RelevantTypes = ()
 
