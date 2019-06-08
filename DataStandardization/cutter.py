@@ -12,14 +12,18 @@ def run_make_df_function(d_type_directory, patients_with_all, DataType):
             make_df(patients_with_all, DataType, input_file)
 
 def filter_cols(input_file, patient_ids):
+    my_cols = list(patient_ids)
+    my_cols.insert(0,"SampleID")
     df = pd.read_csv(input_file, delimiter='\t',
-                       na_values='NA')[patient_ids]
+                       na_values='NA', usecols=my_cols, index_col="SampleID")
+    print(df.iloc[:3])
     return df
 
 def filter_rows(input_file, patient_ids, index_name):
     iter_csv = pd.read_csv(input_file, delimiter='\t', iterator=True, chunksize=1000)
-    return pd.concat([chunk[chunk[index_name].isin(patient_ids)] for chunk in iter_csv])
-
+    df = pd.concat([chunk[chunk[index_name].isin(patient_ids)] for chunk in iter_csv])
+    df = df.set_index(index_name)
+    print(df.iloc[:,0:3])
 def make_df(patient_ids, DataType, input_file):
     print(DataType)
     if input_file.endswith(".ttsv"):
@@ -33,7 +37,6 @@ def make_df(patient_ids, DataType, input_file):
             return
         df = filter_rows(input_file,patient_ids, index_name)
 
-    print(df.iloc[:3])
 
 my_list = path_to_list(currentWorkingDir)
 parent_directory = path_delimiter().join(my_list[:-1])
@@ -49,6 +52,7 @@ sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\n
 end_points = ["LT_PFI", "ST_PFI"]
 
 for CancerType in input_data_dir:
+    wrote_dfs = False
     for outcome in end_points:
         sample_summary.write(f'{CancerType}\t')
         sample_summary.write(f'{outcome.replace("T_", "")}\t')
@@ -63,6 +67,7 @@ for CancerType in input_data_dir:
                     d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                     if DataType != "Class":
                         for input_file in os.listdir(d_type_directory):
+                            data_dict = {}
                             if already_seen and DataType == "Covariate":
                                 continue
                             input_file = f'{d_type_directory}{_}{input_file}'
@@ -70,14 +75,17 @@ for CancerType in input_data_dir:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType[0:5]}:{len(patients_with_all)},{len(class_info.intersection(patients_per_data))}')
+                                data_dict[DataType] = [patients_per_data, len(class_info.intersection(patients_per_data))]
+                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)},PFI={len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType[0:5]}:{len(patients_with_all)},{len(class_info.intersection(patients_per_data))}')
+                                    data_dict[DataType] = [patients_per_data,
+                                                           len(class_info.intersection(patients_per_data))]
+                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)},PFI={len(class_info.intersection(patients_per_data))}')
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
@@ -85,9 +93,9 @@ for CancerType in input_data_dir:
                         patients_with_all.update(patients_per_data)
                         class_info.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)}')
-                    sample_summary.write('\t')
-                    run_make_df_function(d_type_directory,patients_with_all,DataType)
-                sample_summary.write('\n')
+                    sample_summary.write(' | ')
+                    # run_make_df_function(d_type_directory,patients_with_all,DataType)
+                sample_summary.write(f'\t{len(patients_with_all)}\n')
     sample_summary.write('\n')
 
 sample_summary.close()
