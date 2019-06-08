@@ -54,7 +54,7 @@ def make_df(patient_ids, DataType, input_file, mini):
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
     else:
-        if DataType != "DNA_methylation":
+        if DataType != "DNA_Methylation":
             index_name = "SampleID"
         else:
             index_name = "Patient_ID"
