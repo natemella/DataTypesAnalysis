@@ -47,7 +47,7 @@ input_data_dir = next(os.walk(os.path.join(*[parent_directory, "InputData"])))[1
 _=path_delimiter()
 
 sample_summary = open("sample_summary.tsv",'w+')
-sample_summary.write("CancerType\tOutcome\tNumber of Patients per type of Data\n")
+sample_summary.write("CancerType\tOutcome\tClass Info\tNumber of Patients per type of Data\tPatients with all 7 data types\n")
 
 end_points = ["LT_PFI", "ST_PFI"]
 
@@ -92,7 +92,7 @@ for CancerType in input_data_dir:
                         patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)
                         class_info.update(patients_per_data)
-                        sample_summary.write(f'{DataType}:{len(patients_with_all)}')
+                        sample_summary.write(f'{DataType}:{len(patients_with_all)}\t')
                     sample_summary.write(' | ')
                     # run_make_df_function(d_type_directory,patients_with_all,DataType)
                 sample_summary.write(f'\t{len(patients_with_all)}\n')
