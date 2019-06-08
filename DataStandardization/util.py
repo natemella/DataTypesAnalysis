@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 
 def path_to_list(path):
@@ -91,3 +92,19 @@ def check_for_duplicates(df):
         return df
     else:
         return df
+
+def get_paths_to_data_files():
+    current_working_dir = os.path.dirname(os.path.realpath(__file__))
+    my_list = path_to_list(current_working_dir)
+    parent_directory = path_delimiter().join(my_list[:-1])
+    input_data_folder = next(os.walk(os.path.join(*[parent_directory, "InputData"])))[1]
+    list_data_paths: List[str] = []
+    _=path_delimiter()
+    for CancerType in input_data_folder:
+        for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory, "InputData", CancerType]))):
+            for DataType in list_of_dTypes:
+                d_type_directory = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
+                for input_file in os.listdir(d_type_directory):
+                    input_file = f'{d_type_directory}{_}{input_file}'
+                    list_data_paths.append(input_file)
+    return list_data_paths

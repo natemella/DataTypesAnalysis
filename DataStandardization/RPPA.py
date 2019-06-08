@@ -42,7 +42,6 @@ nrow, ncol = df.shape
 
 df = remove_sparse_columns(df)
 df = remove_sparse_rows(df)
-df = df.rename_axis("SampleID")
 
 nrow_post, ncol_post = df.shape
 
@@ -52,4 +51,5 @@ print(f'Tumors removed = {nrow - nrow_post}')
 for cancer in cancer_dict:
     one_cancer_df = df.loc[cancer_dict[cancer]]
     one_cancer_df = truncate_cancer_IDs(one_cancer_df)
+    one_cancer_df = one_cancer_df.rename_axis("SampleID")
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[cancer] + '.tsv'), sep='\t', na_rep='NA')
