@@ -120,7 +120,10 @@ for CancerType in input_data_dir:
                     sample_summary.write(' | ')
                 sample_summary.write(f',{len(patients_with_all)}\n')
                 for path in list_of_paths:
-                    vital_map[path] = patients_with_all
+                    if outcome == "LT_PFI":
+                        vital_map[path] = patients_with_all
+                    else:
+                        vital_map[path].update(patients_with_all)
     sample_summary.write('\n')
 
 sample_summary.close()
