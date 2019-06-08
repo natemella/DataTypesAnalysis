@@ -76,7 +76,7 @@ for CancerType in input_data_dir:
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
                                 data_dict[DataType] = [patients_per_data, len(class_info.intersection(patients_per_data))]
-                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)},PFI={len(class_info.intersection(patients_per_data))}')
+                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
@@ -85,7 +85,7 @@ for CancerType in input_data_dir:
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
                                     data_dict[DataType] = [patients_per_data,
                                                            len(class_info.intersection(patients_per_data))]
-                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)},PFI={len(class_info.intersection(patients_per_data))}')
+                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
                             if DataType == "Covariate":
                                 already_seen = True
                     else:
