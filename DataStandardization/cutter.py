@@ -79,7 +79,6 @@ sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type 
 end_points = ["LT_PFI", "ST_PFI"]
 
 for CancerType in input_data_dir:
-    wrote_dfs = False
     for outcome in end_points:
         sample_summary.write(f'{CancerType},')
         sample_summary.write(f'{outcome.replace("T_", "")},')
@@ -102,7 +101,6 @@ for CancerType in input_data_dir:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                data_dict[DataType] = [patients_per_data, len(class_info.intersection(patients_per_data))]
                                 sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
@@ -110,8 +108,6 @@ for CancerType in input_data_dir:
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    data_dict[DataType] = [patients_per_data,
-                                                           len(class_info.intersection(patients_per_data))]
                                     sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
                             if DataType == "Covariate":
                                 already_seen = True
@@ -121,9 +117,42 @@ for CancerType in input_data_dir:
                         class_info.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)},')
                     sample_summary.write(' | ')
-                    if cut_files == "True":
-                        run_make_df_function(d_type_directory,patients_with_all,DataType,mini_analysis)
                 sample_summary.write(f',{len(patients_with_all)}\n')
     sample_summary.write('\n')
 
 sample_summary.close()
+
+for CancerType in input_data_dir:
+    total_patients = set()
+    patients_with_all = set()
+    class_info = set()
+    patients_per_data = []
+    for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
+        already_seen = False
+        if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
+            for DataType in list_of_dTypes:
+                d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
+                if DataType != "Class":
+                    for input_file in os.listdir(d_type_directory):
+                        data_dict = {}
+                        if already_seen and DataType == "Covariate":
+                            continue
+                        input_file = f'{d_type_directory}{_}{input_file}'
+                        if input_file.endswith(('.tsv','.txt')):
+                            patients_per_data = [line.split('\t')[0] for line in open(input_file)]
+                            total_patients.update(patients_per_data)
+                            patients_with_all = patients_with_all.intersection(set(patients_per_data))
+                        else:
+                            with codecs.open(input_file, 'r') as myfile:
+                                firstline = myfile.readline()
+                                patients_per_data = firstline.split('\t')
+                                total_patients.update(patients_per_data)
+                                patients_with_all = patients_with_all.intersection(set(patients_per_data))
+                        if DataType == "Covariate":
+                            already_seen = True
+                else:
+                    patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.txt')]
+                    patients_with_all.update(patients_per_data)
+                    class_info.update(patients_per_data)
+                if cut_files == "True":
+                    run_make_df_function(d_type_directory, patients_with_all, DataType, mini_analysis)
