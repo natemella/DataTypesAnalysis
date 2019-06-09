@@ -1,13 +1,81 @@
 import os
 import sys
 import shutil
-from .util import *
+from util import *
+import argparse
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 RelevantTypes = ()
 
+parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
+parser.add_argument(
+    "endpoints",
+    help="What you would like to predict (PFI, 0S, DSS, DFI)."
+)
+parser.add_argument(
+    "-c",
+    "--covariate",
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with covariate"
+)
+parser.add_argument(
+    "-m",
+    '--miRNA',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with covariate."
+)
+parser.add_argument(
+    "-n",
+    '--CNV',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with CNV"
+)
+parser.add_argument(
+    "-d",
+    '--DNA-Methylation',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with DNA methylation"
+)
+parser.add_argument(
+    "-e",
+    '--Expression',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with RNA Expression"
+)
+parser.add_argument(
+    "-p",
+    '--RPPA',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with protein expression"
+)
+parser.add_argument(
+    "-s",
+    '--Somatic-Mutations',
+    type=str,
+    default="False",
+    help="bool on whether to combine all data types with somatic mutations"
+)
+
+args = parser.parse_args()
+covariate=args.covariate
+miRNA=args.miRNA
+cnv=args.CNV
+dna_meth = args.DNA_Methylation
+expression = args.Expression
+protein_expression = args.RPPA
+sm = args.Somatic_Mutations
 
 
+parameters = [covariate, miRNA, cnv, dna_meth, expression, protein_expression, sm]
+endpoints = [args.endpoints]
+print(parameters)
+print(endpoints)
 
 def checkfunction(dtype):
     # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
@@ -15,15 +83,15 @@ def checkfunction(dtype):
         File1 = open(f'{output_directory}{_}{dtype}.txt', 'w+')
     else:
         File1 = open(f'{output_directory}{_}{dtype}.txt', 'a')
-
-    if dtype != "Covariate":
-        if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
-            File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
-        else:
-            File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'a')
-        return [File1, File2]
-    else:
-        return [File1]
+    return [File1]
+    # if dtype != "Covariate":
+    #     if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
+    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
+    #     else:
+    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'a')
+    #     return [File1, File2]
+    # else:
+    #     return [File1]
 
 
 def pop_back(file):
@@ -33,8 +101,6 @@ def pop_back(file):
         filehandle.truncate()
     file = open(file.name, 'a')
     return file
-
-endpoints = sys.argv[1:]
 
 
 my_list = path_to_list(currentWorkingDir)
@@ -57,7 +123,7 @@ for CancerType in INPUT_DATA:
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                Covariate_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
+                combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
                 if DataType != "Class":
                     myFiles = checkfunction(DataType)
                     if DataType == "Covariate":
@@ -73,18 +139,18 @@ for CancerType in INPUT_DATA:
                         myFiles[0].close()
                     else:
                         # combined = True
-                        for x in endpoints:
-                            myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate\t')
-                            for input_file in os.listdir(d_type_directory):
-                                myFiles[1].write(f'{input_file},')
-                            myFiles[1] = pop_back(myFiles[1])
-                            myFiles[1].write('\t')
-                            for input_file in os.listdir(Covariate_dir):
-                                if input_file.endswith('.tsv'):
-                                    continue
-                                myFiles[1].write(f'{input_file},')
-                            myFiles[1] = pop_back(myFiles[1])
-                            myFiles[1].write('\n')
+                        # for x in endpoints:
+                            # myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate\t')
+                            # for input_file in os.listdir(d_type_directory):
+                            #     myFiles[1].write(f'{input_file},')
+                            # myFiles[1] = pop_back(myFiles[1])
+                            # myFiles[1].write('\t')
+                            # for input_file in os.listdir(combined_dir):
+                            #     if input_file.endswith('.tsv'):
+                            #         continue
+                            #     myFiles[1].write(f'{input_file},')
+                            # myFiles[1] = pop_back(myFiles[1])
+                            # myFiles[1].write('\n')
                         for x in endpoints:
                             myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
@@ -92,7 +158,7 @@ for CancerType in INPUT_DATA:
                             myFiles[0] = pop_back(myFiles[0])
                             myFiles[0].write('\n')
                         myFiles[0].close()
-                        myFiles[1].close()
+                        # myFiles[1].close()
 
 
 
