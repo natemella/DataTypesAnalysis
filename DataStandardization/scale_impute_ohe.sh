@@ -58,17 +58,17 @@ for CancerType in `ls $search_dir`; do
 			    fi
 				gzip $datatype/$file
 				echo SCALING $file
-				scaling `pwd`${datatype} $file
+				scaling `pwd`/${datatype} $file
 				echo ------------------
 			done
 		fi
 		for file in `ls $datatype`; do
 		    gzip $datatype/$file
 		    echo IMPUTING $file
-		    imputing `pwd`${datatype} $file
+		    imputing `pwd`/${datatype} $file
 		    echo ------------------
 		    echo One-hot encoding $file
-		    one-hot_encoding `pwd`${datatype} $file
+		    one-hot_encoding `pwd`/${datatype} $file
 		    gunzip $datatype/$file
 		done
 	    cd ../
