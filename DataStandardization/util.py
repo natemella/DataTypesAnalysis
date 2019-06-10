@@ -102,9 +102,10 @@ def get_paths_to_data_files():
     _=path_delimiter()
     for CancerType in input_data_folder:
         for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory, "InputData", CancerType]))):
-            for DataType in list_of_dTypes:
-                d_type_directory = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
-                for input_file in os.listdir(d_type_directory):
-                    input_file = f'{d_type_directory}{_}{input_file}'
-                    list_data_paths.append(input_file)
+            if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
+                for DataType in list_of_dTypes:
+                    d_type_directory = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
+                    for input_file in os.listdir(d_type_directory):
+                        input_file = f'{d_type_directory}{_}{input_file}'
+                        list_data_paths.append(input_file)
     return list_data_paths
