@@ -118,16 +118,17 @@ for c in allDataToProcess:
 
     for i in range(startIteration, 1 + stopIteration):
         print("Evaluating " + analysis + ' ' + datasetID + ' ' + classVar + ' ' + 'iteration' + str(i))
-        path = 'Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration/' + str(i) + '/*/' + outFileToCheck
+        path = 'Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
         executed_algos = glob.glob(path)
         executed_algos = [x.split('/')[5].replace('__', '/', 3) for x in executed_algos]
         executed_algos = set(executed_algos)
+        print(executed_algos)
         for algo in executed_algos:
             rootAlgo = algo.split('/')
             default_bool = 0
             if rootAlgo[-1].startswith("default"):
                 default_bool = 1
-            rootAlgo = rootAlgo[-2]
+            rootAlgo = rootAlgo[-1]
             algoName = algo.replace('/', '__')
 
             # Build the part of the command that tells ShinyLearner which data files to parse
