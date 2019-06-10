@@ -1,11 +1,39 @@
 import os
-import sys
 import shutil
 from util import *
 import argparse
-currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
+import random
 
-RelevantTypes = ()
+
+def checkfunction(dtype):
+    # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
+    if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}.txt')):
+        File1 = open(f'{output_directory}{_}{dtype}.txt', 'w+')
+    else:
+        File1 = open(f'{output_directory}{_}{dtype}.txt', 'a')
+    return [File1]
+    # if dtype != "Covariate":
+    #     if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
+    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
+    #     else:
+    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'a')
+    #     return [File1, File2]
+    # else:
+    #     return [File1]
+
+
+def pop_back(file):
+    file.close()
+    with open(file.name, 'rb+') as filehandle:
+        filehandle.seek(-1, os.SEEK_END)
+        filehandle.truncate()
+    file = open(file.name, 'a')
+    return file
+
+def is_temp_file(input_file):
+    extension = input_file.split('_')
+    if extension[-1].split('.')[0] == "temp":
+        return True
 
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
@@ -61,6 +89,15 @@ parser.add_argument(
     default="False",
     help="bool on whether to combine all data types with somatic mutations"
 )
+parser.add_argument(
+    "-q",
+    '--quick-analysis',
+    type=str,
+    default="False",
+    help="bool on whether to do 3 feature quick analysis"
+)
+
+
 
 args = parser.parse_args()
 covariate=args.covariate
@@ -70,37 +107,32 @@ dna_meth = args.DNA_Methylation
 expression = args.Expression
 protein_expression = args.RPPA
 sm = args.Somatic_Mutations
+quick_analysis = args.quick_analysis
 
+currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
-parameters = [covariate, miRNA, cnv, dna_meth, expression, protein_expression, sm]
+RelevantTypes = ()
+
+SEED = 448
+
+with open("CancerTypes.txt") as cancers:
+    list_of_cancer_types = [cancer.strip('\n') for cancer in cancers]
+
+list_of_cancer_types = [f'TCGA_{cancer}' for cancer in list_of_cancer_types]
+random.seed(SEED)
+random.shuffle(list_of_cancer_types)
+
+list_of_cancer_types = list_of_cancer_types[0:8]
+
+print(list_of_cancer_types)
+
+parameters = {"covariate":covariate,"miRNA": miRNA, "cnv":cnv,
+              "dna_meth":dna_meth,"expression": expression,
+              "protein_expression":protein_expression, "sm":sm}
+
 endpoints = [args.endpoints]
 print(parameters)
 print(endpoints)
-
-def checkfunction(dtype):
-    # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
-    if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}.txt')):
-        File1 = open(f'{output_directory}{_}{dtype}.txt', 'w+')
-    else:
-        File1 = open(f'{output_directory}{_}{dtype}.txt', 'a')
-    return [File1]
-    # if dtype != "Covariate":
-    #     if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
-    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
-    #     else:
-    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'a')
-    #     return [File1, File2]
-    # else:
-    #     return [File1]
-
-
-def pop_back(file):
-    file.close()
-    with open(file.name, 'rb+') as filehandle:
-        filehandle.seek(-1, os.SEEK_END)
-        filehandle.truncate()
-    file = open(file.name, 'a')
-    return file
 
 
 my_list = path_to_list(currentWorkingDir)
@@ -119,6 +151,8 @@ _=path_delimiter()
 
 
 for CancerType in INPUT_DATA:
+    if CancerType not in list_of_cancer_types:
+        continue
     for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
@@ -131,6 +165,8 @@ for CancerType in INPUT_DATA:
                         for x in endpoints:
                             myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
+                                if quick_analysis == "True" and not is_temp_file(input_file):
+                                   continue
                                 if input_file.endswith('.tsv'):
                                     continue
                                 myFiles[0].write(f'{input_file},')
@@ -154,6 +190,8 @@ for CancerType in INPUT_DATA:
                         for x in endpoints:
                             myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
+                                if quick_analysis == "True" and not is_temp_file(input_file):
+                                   continue
                                 myFiles[0].write(f'{input_file},')
                             myFiles[0] = pop_back(myFiles[0])
                             myFiles[0].write('\n')

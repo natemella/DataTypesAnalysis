@@ -4,28 +4,7 @@ currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 import codecs
 from util import *
 import argparse
-parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
-parser.add_argument(
-    "-c",
-    "--cut-files",
-    type=str,
-    default="False",
-    help=("bool on whether to shorten files of a data type so that they only contain the SampleID's"
-         " found in the class files."
-          )
-)
-parser.add_argument(
-    "-m",
-    '--mini',
-    type=str,
-    default="False",
-    help="Shorten files to 3 variables for mini, quick analysis."
-)
-args = parser.parse_args()
-cut_files = args.cut_files
-mini_analysis = args.mini
-print(f"Cut files set to {cut_files}")
-print(f"mini_analysis set to {mini_analysis}")
+
 def run_make_df_function(d_type_directory, patients_with_all, DataType, mini):
         if DataType == "Class":
             return
@@ -49,8 +28,28 @@ def filter_rows(input_file, patient_ids, index_name, mini):
     if mini == "True":
         df = df.iloc[:,0:3]
     return df
+
+def build_temp_extension(input_file):
+    if input_file.endswith(".ttsv"):
+        temp_extension = "_temp.ttsv"
+    elif input_file.endswith(".tsv"):
+        temp_extension = "_temp.tsv"
+    else:
+        temp_extension = "_temp.txt"
+    return temp_extension
+
+def get_current_extension(input_file):
+    return f".{input_file.split('.')[-1]}"
+
+def get_new_file_path(input_file):
+    temp_extension = build_temp_extension(input_file)
+    current_extenstion = get_current_extension(input_file)
+    return input_file.replace(current_extenstion, temp_extension)
+
 def make_df(patient_ids, DataType, input_file, mini):
     print(DataType)
+    new_file_path = get_new_file_path(input_file)
+
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
     else:
@@ -62,8 +61,31 @@ def make_df(patient_ids, DataType, input_file, mini):
             return
         df = filter_rows(input_file,patient_ids, index_name, mini)
     print(f"Rewriting {path_to_list(input_file)[-1]}")
-    print(df)
-    # df.to_csv(path_or_buf=input_file, sep='\t')
+    df.to_csv(path_or_buf=new_file_path, sep='\t')
+
+parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
+parser.add_argument(
+    "-c",
+    "--cut-files",
+    type=str,
+    default="False",
+    help=("bool on whether to shorten files of a data type so that they only contain the SampleID's"
+         " found in the class files."
+          )
+)
+parser.add_argument(
+    "-q",
+    '--quick',
+    type=str,
+    default="False",
+    help="Shorten files to 3 variables for mini, quick analysis."
+)
+
+args = parser.parse_args()
+cut_files = args.cut_files
+mini_analysis = args.quick
+print(f"Cut files set to {cut_files}")
+print(f"mini_analysis set to {mini_analysis}")
 
 my_list = path_to_list(currentWorkingDir)
 parent_directory = path_delimiter().join(my_list[:-1])
