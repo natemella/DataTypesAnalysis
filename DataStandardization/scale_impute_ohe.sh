@@ -43,6 +43,7 @@ echo $extension
 
 gzip_all_files() {
 datatype=$1
+    echo our data type is $datatype
     for file in `ls $datatype`; do
         if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
             continue
