@@ -63,6 +63,9 @@ for CancerType in `ls $search_dir`; do
 			done
 		fi
 		for file in `ls $datatype`; do
+		    if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
+			        continue
+			fi
 		    gzip $datatype/$file
 		    echo IMPUTING $file
 		    imputing `pwd`/${datatype} $file
