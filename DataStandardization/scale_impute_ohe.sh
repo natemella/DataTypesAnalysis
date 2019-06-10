@@ -59,7 +59,7 @@ for CancerType in `ls $search_dir`; do
 	        continue
 	    fi
 		cd $CancerType
-	    gzip_all_files `pwd`/${datatype}
+	    gzip_all_files ${datatype}
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
 			    extension=$(get_extension ${file})
@@ -67,7 +67,7 @@ for CancerType in `ls $search_dir`; do
 			        continue
 			    fi
 				echo SCALING $file
-				scaling `pwd`/${datatype} $file
+				scaling ${datatype} $file
 				echo ------------------
 			done
 		fi
@@ -76,10 +76,10 @@ for CancerType in `ls $search_dir`; do
 			        continue
 			fi
 		    echo IMPUTING $file
-		    imputing `pwd`/${datatype} $file
+		    imputing ${datatype} $file
 		    echo ------------------
 		    echo One-hot encoding $file
-		    one-hot_encoding `pwd`/${datatype} $file
+		    one-hot_encoding ${datatype} $file
 		    gunzip $datatype/$file
 		done
 	    cd ../
