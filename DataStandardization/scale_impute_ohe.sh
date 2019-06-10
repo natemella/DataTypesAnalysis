@@ -7,7 +7,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/Scale.py /InputData/${filename}.gz true robust
+    python3 /scripts/Scale.py /InputData/${filename} true robust
 
 }
 
@@ -19,7 +19,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    Rscript --vanilla /scripts/Impute.R /InputData/${filename}.gz true
+    Rscript --vanilla /scripts/Impute.R /InputData/${filename} true
 
 }
 
@@ -30,7 +30,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/OneHotEncode.py /InputData/${filename}.gz
+    python3 /scripts/OneHotEncode.py /InputData/${filename}
 
 }
 
@@ -41,6 +41,15 @@ extension="${mylist[1]}"
 echo $extension
 }
 
+gzip_all_files() {
+datatype=$1
+    for file in `ls $datatype`; do
+        if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
+            continue
+        fi
+        gzip $datatype/$file
+    done
+}
 cd ..
 search_dir=InputData
 for CancerType in `ls $search_dir`; do
@@ -49,6 +58,7 @@ for CancerType in `ls $search_dir`; do
 	    if [[ $datatype == "Class" ]]; then
 	        continue
 	    fi
+	    gzip_all_files ${datatype}
 		cd $CancerType
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
@@ -56,7 +66,6 @@ for CancerType in `ls $search_dir`; do
 			    if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
 			        continue
 			    fi
-				gzip $datatype/$file
 				echo SCALING $file
 				scaling `pwd`/${datatype} $file
 				echo ------------------
@@ -66,7 +75,6 @@ for CancerType in `ls $search_dir`; do
 		    if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
 			        continue
 			fi
-		    gzip $datatype/$file
 		    echo IMPUTING $file
 		    imputing `pwd`/${datatype} $file
 		    echo ------------------
