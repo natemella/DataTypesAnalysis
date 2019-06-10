@@ -30,34 +30,6 @@ parser.add_argument(
     help="Iteration to end on."
 )
 parser.add_argument(
-    "-m",
-    "--memory-gigs",
-    type=int,
-    default=100,
-    help="Amount of memory to allocate to docker in GB."
-)
-parser.add_argument(
-    "-w",
-    "--swap-memory-gigs",
-    type=int,
-    default=100,
-    help="Amount of swap to allocate to docker in GB."
-)
-parser.add_argument(
-    "-t",
-    "--hours-max",
-    type=int,
-    default=4,
-    help="Number of hours to run before timing out."
-)
-parser.add_argument(
-    "-c",
-    "--cores",
-    type=int,
-    default=1,
-    help="Number of cores to allocate to docker."
-)
-parser.add_argument(
     "-a",
     "--algorithms-path",
     default="Algorithms.txt",
@@ -82,25 +54,7 @@ parser.add_argument(
     help="Version of ShinyLearner docker image to use. See https://hub.docker.com/r/srp33/shinylearner/tags for "
          "published versions."
 )
-parser.add_argument(
-    "--scale-mode",
-    default="True",
-    help="Whether to scale the input data to [-1.0, 1.0] before learning."
-)
-parser.add_argument(
-    "-u",
-    "--outer-folds",
-    type=int,
-    default=10,
-    help="Number of outer folds to use in nested cross-validation for parameter optimization."
-)
-parser.add_argument(
-    "-i",
-    "--inner-folds",
-    type=int,
-    default=5,
-    help="Number of inner folds to use in nested cross-validation for parameter optimization."
-)
+
 
 args = parser.parse_args()
 
