@@ -1,12 +1,118 @@
-import glob, gzip, os, shutil, sys
+import glob, gzip, os, shutil
+import argparse
 
-analysis = sys.argv[1]
-startIteration = int(sys.argv[2])
-stopIteration = int(sys.argv[3])
-algorithmsFilePath = sys.argv[4]
-dataToProcessFilePath = sys.argv[5]
-outFileToCheck = sys.argv[6]
-shinyLearnerVersion = sys.argv[7]
+parser = argparse.ArgumentParser(description="Create bash scripts for running ShinyLearner with docker.")
+parser.add_argument(
+    "analysis",
+    help="Output name of the analysis."
+)
+parser.add_argument(
+    "data_path",
+    help=(
+        "Path to a tab-separated file that gives paths for the data to be processed. " 
+        "No header, Columns=[CancerType, Class, DataTypes (comma-separated), FilePaths (comma-separated, "
+        "one column for each DataType)]. "
+        "Generate these files with `DataStandardization/create_data_to_process_files.py`. "
+    )
+)
+parser.add_argument(
+    "-s",
+    "--start-iteration",
+    type=int,
+    default=1,
+    help="Iteration to start on."
+)
+parser.add_argument(
+    "-e",
+    "--stop-iteration",
+    type=int,
+    default=1,
+    help="Iteration to end on."
+)
+parser.add_argument(
+    "-m",
+    "--memory-gigs",
+    type=int,
+    default=100,
+    help="Amount of memory to allocate to docker in GB."
+)
+parser.add_argument(
+    "-w",
+    "--swap-memory-gigs",
+    type=int,
+    default=100,
+    help="Amount of swap to allocate to docker in GB."
+)
+parser.add_argument(
+    "-t",
+    "--hours-max",
+    type=int,
+    default=4,
+    help="Number of hours to run before timing out."
+)
+parser.add_argument(
+    "-c",
+    "--cores",
+    type=int,
+    default=1,
+    help="Number of cores to allocate to docker."
+)
+parser.add_argument(
+    "-a",
+    "--algorithms-path",
+    default="Algorithms.txt",
+    help="Path to a newline-separated list of algorithms to run."
+)
+parser.add_argument(
+    "-x",
+    "--check-file",
+    default="Predictions.tsv",
+    help="Path to the output file. Used to check if analysis has previously been completed."
+)
+parser.add_argument(
+    "-o",
+    "--outfile",
+    default="Docker_Commands.sh",
+    help="Path to save the bash script to run all the docker scripts."
+)
+parser.add_argument(
+    "-l",
+    "--shiny-learner-version",
+    default="513",
+    help="Version of ShinyLearner docker image to use. See https://hub.docker.com/r/srp33/shinylearner/tags for "
+         "published versions."
+)
+parser.add_argument(
+    "--scale-mode",
+    default="True",
+    help="Whether to scale the input data to [-1.0, 1.0] before learning."
+)
+parser.add_argument(
+    "-u",
+    "--outer-folds",
+    type=int,
+    default=10,
+    help="Number of outer folds to use in nested cross-validation for parameter optimization."
+)
+parser.add_argument(
+    "-i",
+    "--inner-folds",
+    type=int,
+    default=5,
+    help="Number of inner folds to use in nested cross-validation for parameter optimization."
+)
+
+args = parser.parse_args()
+
+analysis = args.analysis
+startIteration = args.start_iteration
+stopIteration = args.stop_iteration
+algorithmsFilePath = args.algorithms_path
+dataToProcessFilePath = args.data_path
+outFileToCheck = args.check_file
+dockerOutFilePath = args.outfile
+
+shinyLearnerVersion = args.shiny_learner_version
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
