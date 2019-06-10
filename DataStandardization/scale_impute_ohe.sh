@@ -58,7 +58,7 @@ for CancerType in `ls $search_dir`; do
 	    if [[ $datatype == "Class" ]]; then
 	        continue
 	    fi
-	    gzip_all_files ${datatype}
+	    gzip_all_files `pwd`/${datatype}
 		cd $CancerType
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
