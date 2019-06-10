@@ -41,15 +41,6 @@ extension="${mylist[1]}"
 echo $extension
 }
 
-gzip_all_files() {
-datatype=$1
-    for file in `ls $datatype`; do
-        if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
-            continue
-        fi
-        gzip $datatype/$file
-    done
-}
 cd ..
 search_dir=InputData
 for CancerType in `ls $search_dir`; do
@@ -58,7 +49,12 @@ for CancerType in `ls $search_dir`; do
 	    if [[ $datatype == "Class" ]]; then
 	        continue
 	    fi
-	    gzip_all_files `pwd`/${datatype}
+	    for file in `ls $datatype`; do
+            if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
+                continue
+            fi
+            gzip $datatype/$file
+        done
 		cd $CancerType
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
