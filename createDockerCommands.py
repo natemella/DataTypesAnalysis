@@ -191,7 +191,7 @@ for c in allDataToProcess:
             # Where will the output files be stored?
 
 
-            out_dir = os.path.join(*[current_working_dir, "Analysis_Results", analysis, datasetID, classVar, 'iteration', str(i), algoName]) + _
+            out_dir = os.path.join(*[current_working_dir, "Analysis_Results", analysis, datasetID, classVar, f'iteration{i}', algoName]) + _
 
             
             bash_args = {
