@@ -85,7 +85,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--scale-mode",
-    default="True",
+    default="False",
     help="Whether to scale the input data to [-1.0, 1.0] before learning."
 )
 parser.add_argument(
@@ -228,9 +228,9 @@ then
             --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
             --verbose false \\
             --seed {i} \\
-            --ohe true \\
-            --scale robust \\
-            --impute true \\
+            --ohe false \\
+            --scale none \\
+            --impute false \\
             --num-cores 
 fi
             """.format(**bash_args)
