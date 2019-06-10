@@ -7,7 +7,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/Scale.py /InputData/${filename} true robust
+    python3 /scripts/Scale.py /InputData/${filename}.gz true robust
 
 }
 
@@ -19,7 +19,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    Rscript --vanilla /scripts/Impute.R /InputData/${filename} true
+    Rscript --vanilla /scripts/Impute.R /InputData/${filename}.gz true
 
 }
 
@@ -30,7 +30,7 @@ docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/OneHotEncode.py /InputData/${filename}
+    python3 /scripts/OneHotEncode.py /InputData/${filename}.gz
 
 }
 
