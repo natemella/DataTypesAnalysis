@@ -231,7 +231,7 @@ then
             --ohe true \\
             --scale none \\
             --impute true \\
-            --num-cores 
+            --num-cores {numCores}
 fi
             """.format(**bash_args)
             # Build the bash script for this combination of dataset, algorithm, and iteration
