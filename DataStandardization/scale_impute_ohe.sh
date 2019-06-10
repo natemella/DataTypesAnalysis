@@ -7,7 +7,7 @@ docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/Scale.py /InputData/${filename} true robust
+    python3 /scripts/Scale.py /InputData${filename} true robust
 
 }
 
@@ -18,7 +18,7 @@ docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    Rscript --vanilla /scripts/Impute.R /InputData/${filename} true
+    Rscript --vanilla /scripts/Impute.R /InputData${filename} true
 
 }
 
@@ -28,7 +28,7 @@ docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
   --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
-    python3 /scripts/OneHotEncode.py /InputData/${filename}
+    python3 /scripts/OneHotEncode.py /InputData${filename}
 
 }
 
@@ -40,13 +40,13 @@ echo $extension
 }
 
 cd ..
-for c in `python3 DataStandardization/get_paths.py`; do
-    gunzip_if_gzipped InputData$c
-done
-for c in `python3 DataStandardization/get_paths.py`; do
-    echo $c
-    gzip InputData$c
-done
+#for c in `python3 DataStandardization/get_paths.py`; do
+#    gunzip_if_gzipped InputData$c
+#done
+#for c in `python3 DataStandardization/get_paths.py`; do
+#    echo $c
+#    gzip InputData$c
+#done
 for c in `python3 DataStandardization/get_paths.py`; do
     IFS="/" read -ra mylist <<< "$c"
     data_type="${mylist[2]}"
