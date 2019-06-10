@@ -66,7 +66,7 @@ for CancerType in `ls $search_dir`; do
 		cd $CancerType
 		echo step three
 		pwd
-	    gzip_all_files `pwd`
+	    gzip_all_files `pwd`/$datatype
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
 			    extension=$(get_extension ${file})
