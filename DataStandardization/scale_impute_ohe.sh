@@ -14,6 +14,7 @@ docker run --rm -i \
 imputing() {
 path=$1
 filename=$2
+echo $path
 docker run --rm -i \
   -v $path:"/InputData" \
   --user $(id -u):$(id -g) \
