@@ -4,7 +4,7 @@ set -e
 scaling() {
 filename=$1
 
-python3 DataStandardization/Scale.py $filename true robust
+python3 DataStandardization/Scale.py "InputData"$filename true robust
 
 }
 
