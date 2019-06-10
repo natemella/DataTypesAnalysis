@@ -3,10 +3,8 @@
 set -e
 scaling() {
 filename=$1
-docker run --rm -i \
-  -v `pwd`"/InputData":"/InputData" \
-  srp33/shinylearner:version513 \
-    python3 /scripts/Scale.py /InputData${filename} true robust
+
+python3 DataStandardization/Scale.py $filename true robust
 
 }
 
@@ -15,7 +13,6 @@ filename=$1
 echo $path
 docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
-  --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
     Rscript --vanilla /scripts/Impute.R /InputData${filename} true
 
@@ -25,7 +22,6 @@ one-hot_encoding() {
 filename=$1
 docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
-  --user $(id -u):$(id -g) \
   srp33/shinylearner:version513 \
     python3 /scripts/OneHotEncode.py /InputData${filename}
 
