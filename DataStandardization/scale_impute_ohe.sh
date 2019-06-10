@@ -2,8 +2,7 @@
 . ./functions.sh
 set -e
 scaling() {
-path=$1
-filename=$2
+filename=$1
 docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
   --user $(id -u):$(id -g) \
@@ -13,8 +12,7 @@ docker run --rm -i \
 }
 
 imputing() {
-path=$1
-filename=$2
+filename=$1
 echo $path
 docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
@@ -25,8 +23,7 @@ docker run --rm -i \
 }
 
 one-hot_encoding() {
-path=$1
-filename=$2
+filename=$1
 docker run --rm -i \
   -v `pwd`"/InputData":"/InputData" \
   --user $(id -u):$(id -g) \
@@ -55,10 +52,14 @@ for c in `python3 DataStandardization/get_paths.py`; do
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
         echo scaling ${c}
+        scaling $c
     fi
-    echo ${data_type}
 done
 for c in `python3 DataStandardization/get_paths.py`; do
+    echo Imputing ${c}
+    imputing $c
+    echo One-hot encoding ${c}
+    one-hot_encoding $c
     gunzip InputData${c}
 done
 #pwd
