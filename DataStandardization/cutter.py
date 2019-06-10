@@ -46,9 +46,17 @@ def get_new_file_path(input_file):
     current_extenstion = get_current_extension(input_file)
     return input_file.replace(current_extenstion, temp_extension)
 
+def write_file(df, mini, input_file):
+    new_file_path = get_new_file_path(input_file)
+    if mini == "True":
+        df.to_csv(path_or_buf=new_file_path, sep='\t')
+    else:
+        # df.to_csv(path_or_buf=input_file)
+        print(df)
+
 def make_df(patient_ids, DataType, input_file, mini):
     print(DataType)
-    new_file_path = get_new_file_path(input_file)
+
 
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
@@ -61,7 +69,8 @@ def make_df(patient_ids, DataType, input_file, mini):
             return
         df = filter_rows(input_file,patient_ids, index_name, mini)
     print(f"Rewriting {path_to_list(input_file)[-1]}")
-    df.to_csv(path_or_buf=new_file_path, sep='\t')
+
+
 
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
