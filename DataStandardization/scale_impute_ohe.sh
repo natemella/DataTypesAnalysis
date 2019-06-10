@@ -52,14 +52,20 @@ datatype=$1
     done
 }
 cd ..
+echo step one
+pwd
 search_dir=InputData
 for CancerType in `ls $search_dir`; do
 	cd $search_dir
+	echo step two
+	pwd
 	for datatype in `ls $CancerType`; do
 	    if [[ $datatype == "Class" ]]; then
 	        continue
 	    fi
 		cd $CancerType
+		echo step three
+		pwd
 	    gzip_all_files ${datatype}
 		if [[ $datatype =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
 			for file in `ls $datatype`; do
