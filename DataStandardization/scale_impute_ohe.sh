@@ -56,21 +56,19 @@ for CancerType in `ls $search_dir`; do
 			    if [[ $datatype == "Covariate" ]] && [[ $extension == "tsv" ]]; then
 			        continue
 			    fi
-				echo `pwd`
 				gzip $datatype/$file
 				echo SCALING $file
-				scaling `pwd` $file
+				scaling `pwd`${datatype} $file
 				echo ------------------
 			done
 		fi
 		for file in `ls $datatype`; do
-		    echo `pwd`
 		    gzip $datatype/$file
 		    echo IMPUTING $file
-		    imputing `pwd` $file
+		    imputing `pwd`${datatype} $file
 		    echo ------------------
 		    echo One-hot encoding $file
-		    one-hot_encoding `pwd` $file
+		    one-hot_encoding `pwd`${datatype} $file
 		    gunzip $datatype/$file
 		done
 	    cd ../
