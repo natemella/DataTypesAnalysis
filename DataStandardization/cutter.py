@@ -68,6 +68,7 @@ def make_df(patient_ids, DataType, input_file, mini):
         if DataType == "Covariate" and input_file.endswith(".tsv"):
             return
         df = filter_rows(input_file,patient_ids, index_name, mini)
+    write_file(df,mini,input_file)
     print(f"Rewriting {path_to_list(input_file)[-1]}")
 
 
