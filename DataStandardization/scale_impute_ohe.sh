@@ -43,14 +43,14 @@ echo $extension
 }
 
 cd ..
-for c in `python DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_paths.py`; do
     gunzip_if_gzipped InputData$c
 done
-for c in `python DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_paths.py`; do
     echo $c
     gzip InputData$c
 done
-for c in `python DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_paths.py`; do
     IFS="/" read -ra mylist <<< "$c"
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
@@ -58,7 +58,7 @@ for c in `python DataStandardization/get_paths.py`; do
     fi
     echo ${data_type}
 done
-for c in `python DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_paths.py`; do
     gunzip InputData${c}
 done
 #pwd
