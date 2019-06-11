@@ -4,7 +4,7 @@ import argparse
 from util import *
 
 def filter_parse_columns(one_cancer_df):
-    end_points = ("PFI, OS, DSS, DFI")
+    end_points = ("PFI", "OS", "DSS", "DFI")
     df_describe = one_cancer_df.describe(include="all")
     columns = df_describe.columns.values
     variables_to_keep = []
@@ -16,6 +16,8 @@ def filter_parse_columns(one_cancer_df):
         if i.startswith(end_points):
             variables_to_keep.append(i)
             continue
+        if i == "DFI":
+            print("FREAK")
         Na_count = len(one_cancer_df.index) - df_describe[i][0]
         percent_missing = Na_count / len(one_cancer_df.index)
         if percent_missing > 0.2:
@@ -49,10 +51,15 @@ def index_after_class_filter(df, endpoint):
 def filter_parse_row(df, endpoint):
     df = df[np.isfinite(df[f'{endpoint}.time'])]
     new_index = index_after_class_filter(df, endpoint)
-    df = df.rename_axis("SampleID")
     return df[df.index.isin(new_index)]
 
 parser = argparse.ArgumentParser(description="Decide which endpoint to keep.")
+parser.add_argument(
+    "file-name",
+    type=str,
+    help="Name of excell file with Covariate Data"
+
+)
 parser.add_argument(
     "-e",
     "--endpoint",
@@ -90,7 +97,7 @@ df = df.loc[cancer_patient_ids]
 for sample_id in cancer_dict:
     one_cancer_df = df.loc[cancer_dict[sample_id]]
     one_cancer_df = one_cancer_df.replace("[Not Applicable]", np.nan).replace("[Not Available]", np.nan)
-    one_cancer_df = one_cancer_df.replace("[Not Evaluated]", np.nan)
+    one_cancer_df = one_cancer_df.replace("[Not Evaluated]", np.nan).replace("[Unknown]", np.nan)
     one_cancer_df = filter_parse_row(one_cancer_df,end_point)
     one_cancer_df = filter_parse_columns(one_cancer_df)
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
