@@ -88,7 +88,7 @@ if os.path.exists(analysis + '_Commands/'):
      shutil.rmtree(analysis + '_Commands/')
 
 
-out = "Description\tCancerType\tClassType\tIteration\tAlgorithm\tDefaultParameters\tAUROC\n"
+out = "Description\tCancerType\tClassType\tIteration\tfold\tAlgorithm\tDefaultParameters\tAUROC\n"
 
 input_data = []
 class_path = ''
@@ -142,13 +142,13 @@ for c in allDataToProcess:
             print(metrics_file)
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
-                AUROC_line = metrics_data.readline()
-                AUROC_line = AUROC_line.strip('\n')
-                metrics = AUROC_line.split('\t')
-                AUROC = metrics[-1]
-
-            out += '{}\t{}\t{}\t{}\t{}\t{}'.format( analysis, datasetID, classVar, i, rootAlgo, default_bool)
-            out += '\t' + str(AUROC) + '\n'
+                for line in metrics_data:
+                    metrics = line.strip('\n').split('\t')
+                    if metrics[-2] == "AUROC":
+                        AUROC = metrics[-1]
+                        fold = metrics[2]
+                        out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
+                        out += '\t' + str(AUROC) + '\n'
 
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')

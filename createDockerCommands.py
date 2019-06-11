@@ -79,7 +79,7 @@ parser.add_argument(
 parser.add_argument(
     "-l",
     "--shiny-learner-version",
-    default="513",
+    default="514",
     help="Version of ShinyLearner docker image to use. See https://hub.docker.com/r/srp33/shinylearner/tags for "
          "published versions."
 )
