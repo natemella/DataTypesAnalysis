@@ -6,7 +6,7 @@ filename=$1
 docker run --rm -i \
   -v "/path/on/bonsai":"/InputData" \
   srp33/shinylearner:version513 \
-    python3 /scripts/Scale.py /InputData/${filename} true robust
+    python3 /scripts/Scale.py /InputData${filename} true robust
 
 }
 
@@ -37,12 +37,12 @@ echo $extension
 }
 
 cd ..
-for c in `python3 DataStandardization/get_paths.py`; do
-    gunzip_if_gzipped InputData$c
-done
-for c in `python3 DataStandardization/get_paths.py`; do
-    gzip InputData$c
-done
+#for c in `python3 DataStandardization/get_paths.py`; do
+#    gunzip_if_gzipped InputData$c
+#done
+#for c in `python3 DataStandardization/get_paths.py`; do
+#    gzip InputData$c
+#done
 for c in `python3 DataStandardization/get_paths.py`; do
     IFS="/" read -ra mylist <<< "$c"
     data_type="${mylist[2]}"
