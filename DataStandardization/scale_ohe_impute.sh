@@ -4,7 +4,7 @@ set -e
 scaling() {
 filename=$1
 docker run --rm -i \
-  -v "/path/on/bonsai":"/InputData" \
+  -v `pwd`"/InputData":"/InputData" \
   srp33/shinylearner:version513 \
     python3 /scripts/Scale.py /InputData${filename} true robust
 
