@@ -138,7 +138,7 @@ for c in allDataToProcess:
                 data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
             # Where will the output files be stored?
-            metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'/iteration{str(i)}',algoName,'Metrics.tsv'
+            metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Metrics.tsv'])
             print(metrics_file)
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
