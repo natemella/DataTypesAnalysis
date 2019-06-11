@@ -41,7 +41,6 @@ for c in `python3 DataStandardization/get_paths.py`; do
     gunzip_if_gzipped InputData$c
 done
 for c in `python3 DataStandardization/get_paths.py`; do
-    echo gzipping $c
     gzip InputData$c
 done
 for c in `python3 DataStandardization/get_paths.py`; do
