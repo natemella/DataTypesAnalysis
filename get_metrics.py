@@ -128,7 +128,8 @@ for c in allDataToProcess:
             default_bool = 0
             if rootAlgo[-1].startswith("default"):
                 default_bool = 1
-            rootAlgo = rootAlgo[-1]
+            print(f'root algo = {rootAlgo}')
+            rootAlgo = rootAlgo[-2]
             algoName = algo.replace('/', '__')
 
             # Build the part of the command that tells ShinyLearner which data files to parse
