@@ -37,26 +37,26 @@ echo $extension
 }
 
 cd ..
-#for c in `python3 DataStandardization/get_paths.py`; do
-#    gunzip_if_gzipped InputData$c
-#done
-#for c in `python3 DataStandardization/get_paths.py`; do
-#    echo gzipping $c
-#    gzip InputData$c
-#done
-#for c in `python3 DataStandardization/get_paths.py`; do
-#    IFS="/" read -ra mylist <<< "$c"
-#    data_type="${mylist[2]}"
-#    if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
-#        echo scaling ${c}
-#        scaling $c
-#    fi
-#done
+for c in `python3 DataStandardization/get_paths.py`; do
+    gunzip_if_gzipped InputData$c
+done
+for c in `python3 DataStandardization/get_paths.py`; do
+    echo gzipping $c
+    gzip InputData$c
+done
+for c in `python3 DataStandardization/get_paths.py`; do
+    IFS="/" read -ra mylist <<< "$c"
+    data_type="${mylist[2]}"
+    if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
+        echo scaling ${c}
+        scaling $c
+    fi
+done
 for c in `python3 DataStandardization/get_paths.py`; do
     echo Imputing ${c}
     imputing $c
-#    echo One-hot encoding ${c}
-#    one-hot_encoding $c
-#    echo gunzipping ${c}
+    echo One-hot encoding ${c}
+    one-hot_encoding $c
+    echo gunzipping ${c}
     gunzip InputData${c}
 done
