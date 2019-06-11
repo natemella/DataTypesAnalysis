@@ -160,4 +160,4 @@ if not os.path.exists(os.path.dirname(resultsFilePath)):
 
     # Create the bash script
 with open(resultsFilePath, 'w') as outFile:
-    outFile.write(out + '\n')
+    outFile.write(out)
