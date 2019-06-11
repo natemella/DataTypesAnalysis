@@ -15,7 +15,7 @@ echo -------------------
 bash CNV.sh
 echo -------------------
 echo Finished CNV
-echo --------------------
+echo -------------------
 bash SM.sh
 echo -------------------
 echo Finished SM
@@ -24,3 +24,6 @@ bash Expression.sh
 echo -------------------
 echo Finished Expression
 echo -------------------
+bash DNA_Methylation.sh
+echo -------------------
+echo Finished DNA Methylation
