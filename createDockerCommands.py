@@ -228,9 +228,9 @@ then
             --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
             --verbose false \\
             --seed {i} \\
-            --ohe true \\
+            --ohe false \\
             --scale none \\
-            --impute true \\
+            --impute false \\
             --num-cores {numCores}
 fi
             """.format(**bash_args)
