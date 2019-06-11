@@ -45,6 +45,14 @@ for c in `python3 DataStandardization/get_paths.py`; do
     gzip InputData$c
 done
 for c in `python3 DataStandardization/get_paths.py`; do
+    echo Imputing ${c}
+    imputing $c
+    echo One-hot encoding ${c}
+    one-hot_encoding $c
+    echo gunzipping ${c}
+#    gunzip InputData${c}
+done
+for c in `python3 DataStandardization/get_paths.py`; do
     IFS="/" read -ra mylist <<< "$c"
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
@@ -52,11 +60,4 @@ for c in `python3 DataStandardization/get_paths.py`; do
         scaling $c
     fi
 done
-for c in `python3 DataStandardization/get_paths.py`; do
-    echo Imputing ${c}
-    imputing $c
-    echo One-hot encoding ${c}
-    one-hot_encoding $c
-    echo gunzipping ${c}
-    gunzip InputData${c}
-done
+
