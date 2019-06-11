@@ -52,8 +52,8 @@ cd ..
 #    fi
 #done
 for c in `python3 DataStandardization/get_paths.py`; do
-    echo Imputing ${c}
-    imputing $c
+#    echo Imputing ${c}
+#    imputing $c
     echo One-hot encoding ${c}
     one-hot_encoding $c
     echo gunzipping ${c}
