@@ -139,6 +139,7 @@ for c in allDataToProcess:
 
             # Where will the output files be stored?
             metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Metrics.tsv'])
+            predictions_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Predictions.tsv'])
             print(metrics_file)
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
@@ -154,7 +155,7 @@ if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
 
 resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
-
+predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv"])
 if not os.path.exists(os.path.dirname(resultsFilePath)):
     os.makedirs(os.path.dirname(resultsFilePath))
 
