@@ -47,3 +47,4 @@ filteredData <- spread(filteredData, Gene, Value)
 ## Save data to an output file
 outPutFile <- paste("TCGA_", args[2], ".tsv", sep = "")
 write_tsv(filteredData, outPutFile)
+print(outPutFile)
