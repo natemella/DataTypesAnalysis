@@ -27,3 +27,5 @@ echo -------------------
 bash DNA_Methylation.sh
 echo -------------------
 echo Finished DNA Methylation
+bash scale_ohe_impute.sh
+echo Finished scale_ohe_impute
