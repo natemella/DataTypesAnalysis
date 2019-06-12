@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 file="GPL16304-47833.txt.gz"
+set -e
 if [ -e $file ]
 then
 	python3 CreateDNAmethDataCommands.py
