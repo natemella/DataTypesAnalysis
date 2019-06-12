@@ -36,11 +36,11 @@ abbreviations_dict = list_of_maps[3]
 
 df = pd.read_csv("TCGA-RPPA-pancan-clean.xena", sep="\t", index_col="SampleID")
 df = df.loc[cancer_patient_ids]
+
+df = df.groupby(['SampleID']).mean()
 df = df.T
 df = check_for_duplicates(df)
 df =  df.T
-df = df.groupby(['SampleID']).mean()
-
 nrow, ncol = df.shape
 
 df = remove_sparse_columns(df)
@@ -54,5 +54,6 @@ print(f'Tumors removed = {nrow - nrow_post}')
 for cancer in cancer_dict:
     one_cancer_df = df.loc[cancer_dict[cancer]]
     one_cancer_df = truncate_cancer_IDs(one_cancer_df)
+    one_cancer_df = check_for_duplicates(one_cancer_df.T).T
     one_cancer_df = one_cancer_df.rename_axis("SampleID")
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[cancer] + '.tsv'), sep='\t', na_rep='NA')

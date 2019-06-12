@@ -89,8 +89,6 @@ def check_for_duplicates(df):
         print("\nFound Duplicates!!!\n")
         print([df.columns.values[i] for i in range(0, len(df.columns.duplicated())) if df.columns.duplicated()[i] == True])
         df = df.groupby(level=0, axis=1).mean()
-        if True in df.columns.duplicated():
-            df = check_for_duplicates(df)
         return df
     else:
         return df
