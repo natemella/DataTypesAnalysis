@@ -45,6 +45,5 @@ filteredData <- group_by(filteredData, Patient_ID, Gene) %>%
 filteredData <- spread(filteredData, Gene, Value)
 
 ## Save data to an output file
-outPutFile <- paste("TCGA_", args[2], ".tsv", sep = "")
-write_tsv(filteredData, outPutFile)
-print(outPutFile)
+write_tsv(filteredData, args[2])
+print(paste0("Saved to ", args[2]))
