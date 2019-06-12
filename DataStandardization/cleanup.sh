@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-file_to_delete=RPPA
+file_to_delete=Covariate
 cd ..
 search_dir=InputData
 for CancerType in `ls $search_dir`; do
