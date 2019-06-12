@@ -49,12 +49,12 @@ for cancer_type in next(os.walk(parent_directory + f"{_}InputData"))[1]:
                         final_series = one_endpoint_df.apply(convert_time_values_to_classification_labels, args=(one_endpoint_df.columns.values, upper_cutoff, val), axis="columns")
                         final_series.name = "Class"
                         final_series.to_csv(path_or_buf=f"{Class_dir}{val}.tsv", sep="\t", header=True, na_rep="NA")
-
-                    for var in variables:
-                        if var.startswith(end_points):
-                            continue
-                        else:
-                            df[var].to_csv(path_or_buf=f"{covariate_dir}{_}{var}.tsv", sep="\t", header=True, na_rep='NA')
+                    df[[var for var in variables if not var.startswith(end_points)]].to_csv(path_or_buf=f"{covariate_dir}{_}{cancer_type}.tsv", sep="\t", header=True, na_rep='NA')
+                    # for var in variables:
+                    #     if var.startswith(end_points):
+                    #         continue
+                    #     else:
+                    #         df[var].to_csv(path_or_buf=f"{covariate_dir}{_}{var}.tsv", sep="\t", header=True, na_rep='NA')
                             # this splits apart Covariate features into distinct files
                 else:
                     continue

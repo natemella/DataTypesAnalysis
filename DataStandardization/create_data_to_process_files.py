@@ -168,8 +168,8 @@ for CancerType in INPUT_DATA:
                             for input_file in os.listdir(d_type_directory):
                                 if quick_analysis == "True" and (not is_temp_file(input_file) or seen_files > 3):
                                     continue
-                                if input_file.endswith('.tsv'):
-                                    continue
+                                # if input_file.startswith('TCGA_'):
+                                #     continue
                                 myFiles[0].write(f'{input_file},')
                                 seen_files +=1
                             myFiles[0] = pop_back(myFiles[0])
