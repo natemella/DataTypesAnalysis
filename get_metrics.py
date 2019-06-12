@@ -124,6 +124,8 @@ for c in allDataToProcess:
         executed_algos = [x.split('/')[5].replace('__', '/', 3) for x in executed_algos]
         executed_algos = set(executed_algos)
         print(executed_algos)
+
+        predictions_has_header = True
         for algo in executed_algos:
             rootAlgo = algo.split('/')
             default_bool = 0
@@ -152,8 +154,12 @@ for c in allDataToProcess:
                         out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
                         out += '\t' + str(AUROC) + '\n'
             with open(predictions_file, 'r') as content_file:
+                first_line = content_file.readline()
                 content = content_file.read()
                 with open(predections_results, 'a') as output:
+                    if predictions_has_header:
+                        output.write(first_line)
+                        predictions_has_header = False
                     output.write(content)
 
 if len(aurocCommandFilePaths) == 0:
