@@ -85,10 +85,11 @@ with open(dataToProcessFilePath, 'r') as g:
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
 if os.path.exists(analysis + '_Commands/'):
-     shutil.rmtree(analysis + '_Commands/')
+    shutil.rmtree(analysis + '_Commands/')
 
 
 out = "Description\tCancerType\tClassType\tIteration\tfold\tAlgorithm\tDefaultParameters\tAUROC\n"
+predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv.gz"])
 
 input_data = []
 class_path = ''
@@ -150,12 +151,16 @@ for c in allDataToProcess:
                         fold = metrics[2]
                         out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
                         out += '\t' + str(AUROC) + '\n'
+            with open(predictions_file, 'r') as content_file:
+                content = content_file.read()
+                with gzip.open(predections_results, 'a') as output:
+                    output.write(content)
 
 if len(aurocCommandFilePaths) == 0:
     print('All commands have been executed!')
 
 resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
-predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv"])
+
 if not os.path.exists(os.path.dirname(resultsFilePath)):
     os.makedirs(os.path.dirname(resultsFilePath))
 
