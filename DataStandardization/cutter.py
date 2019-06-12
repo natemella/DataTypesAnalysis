@@ -9,6 +9,8 @@ def run_make_df_function(d_type_directory, patients_with_all, DataType, mini):
         if DataType == "Class":
             return
         for input_file in os.listdir(d_type_directory):
+            if is_cut_or_tempfile(input_file):
+                continue
             input_file = f'{d_type_directory}{_}{input_file}'
             make_df(patients_with_all, DataType, input_file, mini)
 
@@ -38,26 +40,37 @@ def build_temp_extension(input_file):
         temp_extension = "_temp.txt"
     return temp_extension
 
+def build_cut_extension(input_file):
+    if input_file.endswith(".ttsv"):
+        cut_extension = "_cut.ttsv"
+    elif input_file.endswith(".tsv"):
+        cut_extension = "_cut.tsv"
+    else:
+        cut_extension = "_cut.txt"
+    return cut_extension
+
 def get_current_extension(input_file):
     return f".{input_file.split('.')[-1]}"
 
-def get_new_file_path(input_file):
-    temp_extension = build_temp_extension(input_file)
+def get_new_file_path(input_file, mini):
     current_extenstion = get_current_extension(input_file)
-    return input_file.replace(current_extenstion, temp_extension)
+    if mini == "True":
+        temp_extension = build_temp_extension(input_file)
+        return input_file.replace(current_extenstion, temp_extension)
+    else:
+        cut_extension =build_cut_extension(input_file)
+        return input_file.replace(current_extenstion, cut_extension)
 
 def write_file(df, mini, input_file):
-    new_file_path = get_new_file_path(input_file)
+    new_file_path = get_new_file_path(input_file, mini)
     if mini == "True":
         df.to_csv(path_or_buf=new_file_path, sep='\t')
     else:
-        # df.to_csv(path_or_buf=input_file)
-        print(df)
+        df.to_csv(path_or_buf=new_file_path, sep='\t')
+
+
 
 def make_df(patient_ids, DataType, input_file, mini):
-    print(DataType)
-
-
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
     else:
@@ -65,8 +78,6 @@ def make_df(patient_ids, DataType, input_file, mini):
             index_name = "SampleID"
         else:
             index_name = "Patient_ID"
-        if DataType == "Covariate" and input_file.endswith(".tsv"):
-            return
         df = filter_rows(input_file,patient_ids, index_name, mini)
     write_file(df,mini,input_file)
     print(f"Rewriting {path_to_list(input_file)[-1]}")
@@ -127,7 +138,7 @@ for CancerType in input_data_dir:
                     list_of_paths.append(d_type_directory)
                     if DataType != "Class":
                         for input_file in os.listdir(d_type_directory):
-                            if already_seen and DataType == "Covariate":
+                            if is_cut_or_tempfile(input_file):
                                 continue
                             input_file = f'{d_type_directory}{_}{input_file}'
                             if input_file.endswith(('.tsv','.txt')):
@@ -142,8 +153,7 @@ for CancerType in input_data_dir:
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
                                     sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
-                            if DataType == "Covariate":
-                                already_seen = True
+
                     else:
                         patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.tsv') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)

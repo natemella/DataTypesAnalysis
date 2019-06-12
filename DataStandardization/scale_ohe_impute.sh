@@ -37,22 +37,22 @@ echo $extension
 }
 
 cd ..
-for c in `python3 DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_cut_paths.py`; do
     gunzip_if_gzipped InputData$c
 done
-for c in `python3 DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_cut_paths.py`; do
     echo gzipping $c
     gzip InputData$c
 done
-for c in `python3 DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_cut_paths.py`; do
     echo imputing $c
     imputing $c
 done
-for c in `python3 DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_cut_paths.py`; do
     echo one-hot_encoding $c
     one-hot_encoding $c
 done
-for c in `python3 DataStandardization/get_paths.py`; do
+for c in `python3 DataStandardization/get_cut_paths.py`; do
     IFS="/" read -ra mylist <<< "$c"
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then

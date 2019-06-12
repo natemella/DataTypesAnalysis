@@ -29,9 +29,11 @@ echo -------------------
 echo Finished DNA Methylation
 echo -------------------
 python3 cutter.py -q True -c True
+python3 cutter.py -c True
 echo -------------------
 echo Finished cutting
 echo -------------------
 bash scale_ohe_impute.sh
+echo -------------------
 echo Finished scale_ohe_impute
 echo -------------------

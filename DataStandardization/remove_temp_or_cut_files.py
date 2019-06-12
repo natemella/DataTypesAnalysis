@@ -1,10 +1,20 @@
 from util import *
 import os
+import sys
+import argparse
+parser = argparse.ArgumentParser(description="remove temp or cut file ('temp' or 'cut'.")
+parser.add_argument(
+    'remove',
+    type=str,
+    help="Which file would you like to remove ('temp' or 'cut')."
+)
 
+args = parser.parse_args()
+to_remove = args.remove
 def is_temp_file(input_file):
     folders = path_to_list(input_file)
     checking = folders[-1].split("_")
-    if checking[-1].split('.')[0] == "temp":
+    if checking[-1].split('.')[0] == to_remove:
         return True
     return False
 

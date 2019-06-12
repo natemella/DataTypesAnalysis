@@ -36,22 +36,6 @@ def filter_out_middle_range_data(row, df_column_list, lower_cut_off, upper_cut_o
         return True
     return False
 
-def index_after_class_filter(df, endpoint):
-    variables = df.columns.values
-    class_df = df[[value for value in variables if value.startswith(endpoint)]]
-    # separate endpoints. Build df of just endpoint + endpoint.time
-    one_endpoint_df = class_df[[one_endpoint for one_endpoint in variables if one_endpoint.startswith(endpoint)]]
-    average = one_endpoint_df[one_endpoint_df.columns.values[1]].mean()
-    lower_cutoff = average - (180)  # 6 months
-    upper_cutoff = average + (180)  # 6 months
-    one_endpoint_df = one_endpoint_df.loc[one_endpoint_df.apply(filter_out_middle_range_data, args=(
-        one_endpoint_df.columns.values, lower_cutoff, upper_cutoff), axis="columns")]
-    return one_cancer_df.index.values
-
-def filter_parse_row(df, endpoint):
-    df = df[np.isfinite(df[f'{endpoint}.time'])]
-    new_index = index_after_class_filter(df, endpoint)
-    return df[df.index.isin(new_index)]
 
 parser = argparse.ArgumentParser(description="Decide which endpoint to keep.")
 parser.add_argument(
@@ -98,6 +82,5 @@ for sample_id in cancer_dict:
     one_cancer_df = df.loc[cancer_dict[sample_id]]
     one_cancer_df = one_cancer_df.replace("[Not Applicable]", np.nan).replace("[Not Available]", np.nan)
     one_cancer_df = one_cancer_df.replace("[Not Evaluated]", np.nan).replace("[Unknown]", np.nan)
-    one_cancer_df = filter_parse_row(one_cancer_df,end_point)
     one_cancer_df = filter_parse_columns(one_cancer_df)
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')

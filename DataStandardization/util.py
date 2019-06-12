@@ -109,3 +109,9 @@ def get_paths_to_data_files():
                         input_file = f'{d_type_directory}{_}{input_file}'
                         list_data_paths.append(input_file)
     return list_data_paths
+
+def is_cut_or_tempfile(input_file):
+    extension = input_file.split('_')[-1]
+    if extension.split('.')[0] == ("cut" or "temp"):
+        return True
+    return False
