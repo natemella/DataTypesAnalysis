@@ -89,7 +89,7 @@ if os.path.exists(analysis + '_Commands/'):
 
 
 out = "Description\tCancerType\tClassType\tIteration\tfold\tAlgorithm\tDefaultParameters\tAUROC\n"
-predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv.gz"])
+predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv"])
 
 input_data = []
 class_path = ''
@@ -153,7 +153,7 @@ for c in allDataToProcess:
                         out += '\t' + str(AUROC) + '\n'
             with open(predictions_file, 'r') as content_file:
                 content = content_file.read()
-                with gzip.open(predections_results, 'a') as output:
+                with open(predections_results, 'a') as output:
                     output.write(content)
 
 if len(aurocCommandFilePaths) == 0:
