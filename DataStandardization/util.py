@@ -112,6 +112,16 @@ def get_paths_to_data_files():
 
 def is_cut_or_tempfile(input_file):
     extension = input_file.split('_')[-1]
-    if extension.split('.')[0] == ("cut" or "temp"):
+    if extension.split('.')[0] == "cut" or extension.split('.')[0] == "temp":
         return True
     return False
+
+def is_temp_file(input_file):
+    extension = input_file.split('_')
+    if extension[-1].split('.')[0] == "temp":
+        return True
+
+def is_cut_file(input_file):
+    extension = input_file.split('_')
+    if extension[-1].split('.')[0] == "cut":
+        return True

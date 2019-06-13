@@ -5,14 +5,14 @@ import codecs
 from util import *
 import argparse
 
-def run_make_df_function(d_type_directory, patients_with_all, DataType, mini):
+def run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis):
         if DataType == "Class":
             return
         for input_file in os.listdir(d_type_directory):
             if is_cut_or_tempfile(input_file):
                 continue
             input_file = f'{d_type_directory}{_}{input_file}'
-            make_df(patients_with_all, DataType, input_file, mini)
+            make_df(patients_with_all, DataType, input_file, quick_analysis)
 
 def filter_cols(input_file, patient_ids, mini):
     my_cols = list(patient_ids)
@@ -104,10 +104,10 @@ parser.add_argument(
 
 args = parser.parse_args()
 cut_files = args.cut_files
-mini_analysis = args.quick
+quick_analysis = args.quick
 print(f"Cut files set to {cut_files}")
-print(f"mini_analysis set to {mini_analysis}")
-if mini_analysis == "True":
+print(f"quick_analysis set to {quick_analysis}")
+if quick_analysis == "True":
     cut_files = "True"
 
 my_list = path_to_list(currentWorkingDir)
@@ -179,4 +179,4 @@ for CancerType in input_data_dir:
                 d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                 patients_with_all = vital_map[d_type_directory]
                 if cut_files == "True":
-                    run_make_df_function(d_type_directory, patients_with_all, DataType, mini_analysis)
+                    run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis)

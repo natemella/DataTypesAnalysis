@@ -30,15 +30,6 @@ def pop_back(file):
     file = open(file.name, 'a')
     return file
 
-def is_temp_file(input_file):
-    extension = input_file.split('_')
-    if extension[-1].split('.')[0] == "temp":
-        return True
-
-def is_cut_file(input_file):
-    extension = input_file.split('_')
-    if extension[-1].split('.')[0] == "cut":
-        return True
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
     "endpoints",
