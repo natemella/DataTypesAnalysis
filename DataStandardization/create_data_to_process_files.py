@@ -169,14 +169,12 @@ for CancerType in INPUT_DATA:
                             seen_files = 0
                             myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
-                                if quick_analysis == "True" and (not is_temp_file(input_file) or seen_files > 3):
+                                if quick_analysis == "True" and not is_temp_file(input_file):
                                     continue
                                 if cut_files == "True" and not is_cut_file(input_file):
                                     continue
-                                if (quick_analysis and cut_files) == "False" and (is_cut_file(input_file) or is_temp_file(input_file)):
+                                if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                     continue
-                                # if input_file.startswith('TCGA_'):
-                                #     continue
                                 myFiles[0].write(f'{input_file},')
                                 seen_files +=1
                             myFiles[0] = pop_back(myFiles[0])
@@ -203,7 +201,7 @@ for CancerType in INPUT_DATA:
                                     continue
                                 if cut_files == "True" and not is_cut_file(input_file):
                                     continue
-                                if (quick_analysis and cut_files) == "False" and (is_cut_file(input_file) or is_temp_file(input_file)):
+                                if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                     continue
                                 myFiles[0].write(f'{input_file},')
                             myFiles[0] = pop_back(myFiles[0])
