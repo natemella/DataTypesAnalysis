@@ -89,7 +89,7 @@ if os.path.exists(analysis + '_Commands/'):
 
 
 out = "Description\tCancerType\tClassType\tIteration\tfold\tAlgorithm\tDefaultParameters\tAUROC\n"
-predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv"])
+predections_results = os.path.join(*["Analysis_Results","Total_Predictions.tsv.gz"])
 
 input_data = []
 class_path = ''
@@ -149,18 +149,15 @@ for c in allDataToProcess:
                         fold = metrics[2]
                         out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
                         out += '\t' + str(AUROC) + '\n'
-            with open(predictions_file, 'r') as content_file:
+            with open(predictions_file, 'rb') as content_file:
                 content = content_file.read().splitlines(True)
-                if not os.path.exists(os.path.join(*[currentWorkingDir, "Analysis_Results", "Total_Predictions.tsv"])):
-                    print("working 1")
+                if not os.path.exists(os.path.join(*[currentWorkingDir, "Analysis_Results", "Total_Predictions.tsv.gz"])):
                     needs_header = True
-                with open(predections_results, 'a') as output:
+                with gzip.open(predections_results, 'a') as output:
                     if needs_header:
                         output.writelines(content[0:])
-                        print("working 2")
                     else:
                         output.writelines(content[1:])
-                        print("working 3")
 
 
 resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
