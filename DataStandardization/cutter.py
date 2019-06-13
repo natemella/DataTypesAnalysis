@@ -107,6 +107,8 @@ cut_files = args.cut_files
 mini_analysis = args.quick
 print(f"Cut files set to {cut_files}")
 print(f"mini_analysis set to {mini_analysis}")
+if mini_analysis == "True":
+    cut_files = "True"
 
 my_list = path_to_list(currentWorkingDir)
 parent_directory = path_delimiter().join(my_list[:-1])

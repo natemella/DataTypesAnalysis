@@ -35,6 +35,10 @@ def is_temp_file(input_file):
     if extension[-1].split('.')[0] == "temp":
         return True
 
+def is_cut_file(input_file):
+    extension = input_file.split('_')
+    if extension[-1].split('.')[0] == "cut":
+        return True
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
     "endpoints",
@@ -96,6 +100,13 @@ parser.add_argument(
     default="False",
     help="bool on whether to do 3 feature quick analysis"
 )
+parser.add_argument(
+    "-x",
+    '--cut-files',
+    type=str,
+    default="False",
+    help="bool on whether to do analysis on cut_files"
+)
 
 
 
@@ -108,6 +119,7 @@ expression = args.Expression
 protein_expression = args.RPPA
 sm = args.Somatic_Mutations
 quick_analysis = args.quick_analysis
+cut_files = args.cut_files
 
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
@@ -132,7 +144,7 @@ parameters = {"covariate":covariate,"miRNA": miRNA, "cnv":cnv,
 
 endpoints = [args.endpoints]
 print(parameters)
-print(endpoints)
+print(f'endpoints are {endpoints}')
 
 
 my_list = path_to_list(currentWorkingDir)
@@ -168,6 +180,10 @@ for CancerType in INPUT_DATA:
                             for input_file in os.listdir(d_type_directory):
                                 if quick_analysis == "True" and (not is_temp_file(input_file) or seen_files > 3):
                                     continue
+                                if cut_files == "True" and not is_cut_file(input_file):
+                                    continue
+                                if (quick_analysis and cut_files) == "False" and (is_cut_file(input_file) or is_temp_file(input_file)):
+                                    continue
                                 # if input_file.startswith('TCGA_'):
                                 #     continue
                                 myFiles[0].write(f'{input_file},')
@@ -193,6 +209,10 @@ for CancerType in INPUT_DATA:
                             myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
                             for input_file in os.listdir(d_type_directory):
                                 if quick_analysis == "True" and not is_temp_file(input_file):
+                                    continue
+                                if cut_files == "True" and not is_cut_file(input_file):
+                                    continue
+                                if (quick_analysis and cut_files) == "False" and (is_cut_file(input_file) or is_temp_file(input_file)):
                                     continue
                                 myFiles[0].write(f'{input_file},')
                             myFiles[0] = pop_back(myFiles[0])
