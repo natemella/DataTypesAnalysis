@@ -28,7 +28,7 @@ bash DNA_Methylation.sh
 echo -------------------
 echo Finished DNA Methylation
 echo -------------------
-python3 cutter.py -q True -c True
+python3 cutter.py -q True
 python3 cutter.py -c True
 echo -------------------
 echo Finished cutting
