@@ -118,20 +118,17 @@ for c in allDataToProcess:
 
 
     for i in range(startIteration, 1 + stopIteration):
-        print("Evaluating " + analysis + ' ' + datasetID + ' ' + classVar + ' ' + 'iteration' + str(i))
         path = 'Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
         executed_algos = glob.glob(path)
         executed_algos = [x.split('/')[5].replace('__', '/', 3) for x in executed_algos]
         executed_algos = set(executed_algos)
-        print(executed_algos)
 
-        predictions_has_header = True
         for algo in executed_algos:
+            needs_header = False
             rootAlgo = algo.split('/')
             default_bool = 0
             if rootAlgo[-1].startswith("default"):
                 default_bool = 1
-            print(f'root algo = {rootAlgo}')
             rootAlgo = rootAlgo[-2]
             algoName = algo.replace('/', '__')
 
@@ -143,7 +140,6 @@ for c in allDataToProcess:
             # Where will the output files be stored?
             metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Metrics.tsv'])
             predictions_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Predictions.tsv'])
-            print(metrics_file)
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
                 for line in metrics_data:
@@ -154,16 +150,18 @@ for c in allDataToProcess:
                         out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
                         out += '\t' + str(AUROC) + '\n'
             with open(predictions_file, 'r') as content_file:
-                first_line = content_file.readline()
-                content = content_file.read()
+                content = content_file.read().splitlines(True)
+                if not os.path.exists(os.path.join(*[currentWorkingDir, "Analysis_Results", "Total_Predictions.tsv"])):
+                    print("working 1")
+                    needs_header = True
                 with open(predections_results, 'a') as output:
-                    if predictions_has_header:
-                        output.write(first_line)
-                        predictions_has_header = False
-                    output.write(content)
+                    if needs_header:
+                        output.writelines(content[0:])
+                        print("working 2")
+                    else:
+                        output.writelines(content[1:])
+                        print("working 3")
 
-if len(aurocCommandFilePaths) == 0:
-    print('All commands have been executed!')
 
 resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
 

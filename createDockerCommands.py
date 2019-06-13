@@ -203,6 +203,7 @@ for c in allDataToProcess:
                 "shinyLearnerVersion": args.shiny_learner_version,
                 "hoursMax": args.hours_max,
                 "data_all": data_all.rstrip(),
+                "analysis": analysis,
                 "datasetID": datasetID,
                 "classVar": classVar,
                 "i": i,
@@ -221,7 +222,7 @@ then
         timeout -s 9 {hoursMax}h \\
             "/UserScripts/nestedclassification_crossvalidation" \\
             {data_all}
-            --description {datasetID}___{classVar}___iteration{i} \\
+            --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
             --outer-folds {outer_folds} \\
             --inner-folds {inner_folds} \\
             --iterations 1 \\
