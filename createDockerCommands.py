@@ -144,7 +144,7 @@ for c in allDataToProcess:
 
     input_data = list()
     dataset_path =  f'{datasetID}{path_delimiter()}'
-    class_path = [dataset_path,'Class',f'{classVar}.txt']
+    class_path = [dataset_path,'Class',f'{classVar}.tsv']
     class_path = os.path.join(*class_path)
 
     # grab the data types
