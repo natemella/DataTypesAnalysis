@@ -125,7 +125,7 @@ list_of_cancer_types = [f'TCGA_{cancer}' for cancer in list_of_cancer_types]
 random.seed(SEED)
 random.shuffle(list_of_cancer_types)
 
-list_of_cancer_types = list_of_cancer_types[0:8]
+list_of_cancer_types = list_of_cancer_types[0:7]
 
 print(list_of_cancer_types)
 
