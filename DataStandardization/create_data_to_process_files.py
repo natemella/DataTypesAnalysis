@@ -140,7 +140,7 @@ random.shuffle(list_of_cancer_types)
 list_of_cancer_types = list_of_cancer_types[0:7]
 
 parameters = {"Covariate":covariate,"miRNA": miRNA, "CNV":cnv,
-              "DNA_methylation":dna_meth,"Expression": expression,
+              "DNA_Methylation":dna_meth,"Expression": expression,
               "RPPA":protein_expression, "SM":sm}
 
 
@@ -175,7 +175,7 @@ for CancerType in INPUT_DATA:
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
                 list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
-                d_type_directory = f"{parent_directory[1:]}{_}InputData{_}{CancerType}{_}{DataType}"
+                d_type_directory = f"{parent_directory[]}{_}InputData{_}{CancerType}{_}{DataType}"
                 combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
                 if DataType != "Class":
                     myFiles = checkfile(DataType, combination_list)
