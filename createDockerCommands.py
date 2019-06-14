@@ -34,21 +34,21 @@ parser.add_argument(
     "-m",
     "--memory-gigs",
     type=int,
-    default=100,
+    default=200,
     help="Amount of memory to allocate to docker in GB."
 )
 parser.add_argument(
     "-w",
     "--swap-memory-gigs",
     type=int,
-    default=100,
+    default=200,
     help="Amount of swap to allocate to docker in GB."
 )
 parser.add_argument(
     "-t",
     "--hours-max",
     type=int,
-    default=4,
+    default=5,
     help="Number of hours to run before timing out."
 )
 parser.add_argument(
