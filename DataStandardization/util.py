@@ -125,3 +125,7 @@ def is_cut_file(input_file):
     extension = input_file.split('_')
     if extension[-1].split('.')[0] == "cut":
         return True
+
+def get_paths_to_data_type(data_type):
+    paths = get_paths_to_data_files()
+    return [path for path in paths if path_to_list(path)[-2] == data_type]

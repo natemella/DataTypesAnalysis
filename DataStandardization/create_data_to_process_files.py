@@ -5,13 +5,19 @@ import argparse
 import random
 
 
-def checkfile(dtype):
+def checkfile(dtype, to_combine):
     # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
-    if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}.txt')):
-        File1 = open(f'{output_directory}{_}{dtype}.txt', 'w+')
-    else:
-        File1 = open(f'{output_directory}{_}{dtype}.txt', 'a')
-    return [File1]
+
+    file_name = f'{output_directory}{dtype}'
+    File1 = open(f'{file_name}.txt', 'a')
+    myFiles = [File1]
+    if dtype in to_combine:
+        return myFiles
+    for i in range(0, len(to_combine)):
+        file_name += f'_and_{to_combine[i]}'
+        additional_file = open(f'{file_name}.txt', 'a')
+        myFiles.append(additional_file)
+    return myFiles
     # if dtype != "Covariate":
     #     if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
     #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
@@ -29,6 +35,12 @@ def pop_back(file):
         filehandle.truncate()
     file = open(file.name, 'a')
     return file
+
+def get_list_of_data_paths():
+    list_of_paths = get_paths_to_data_files()
+    list_of_paths = [x for x in list_of_paths if
+                     path_to_list(x)[-3] in list_of_cancer_types and path_to_list(x)[-2] != "Class"]
+    return list_of_paths
 
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
@@ -127,16 +139,20 @@ random.shuffle(list_of_cancer_types)
 
 list_of_cancer_types = list_of_cancer_types[0:7]
 
-print(list_of_cancer_types)
+parameters = {"Covariate":covariate,"miRNA": miRNA, "CNV":cnv,
+              "DNA_methylation":dna_meth,"Expression": expression,
+              "RPPA":protein_expression, "SM":sm}
 
-parameters = {"covariate":covariate,"miRNA": miRNA, "cnv":cnv,
-              "dna_meth":dna_meth,"expression": expression,
-              "protein_expression":protein_expression, "sm":sm}
 
 endpoints = [args.endpoints]
-print(parameters)
 print(f'endpoints are {endpoints}')
 
+#
+combination_list = []
+for x in parameters:
+    if parameters[x] == "True":
+        combination_list.append(x)
+print(combination_list)
 
 my_list = path_to_list(currentWorkingDir)
 parent_directory = path_delimiter().join(my_list[:-1])
@@ -152,62 +168,47 @@ INPUT_DATA = next(os.walk(parent_directory + f"{path_delimiter()}InputData"))[1]
 # for unix it would be '{_}' for windows it would be '\'
 _=path_delimiter()
 
-
 for CancerType in INPUT_DATA:
     if CancerType not in list_of_cancer_types:
         continue
     for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
+                list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
                 combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
                 if DataType != "Class":
-                    myFiles = checkfile(DataType)
-                    if DataType == "Covariate":
-                        # combined = False
-                        for x in endpoints:
-                            seen_files = 0
-                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
-                            for input_file in os.listdir(d_type_directory):
+                    myFiles = checkfile(DataType, combination_list)
+                    for x in endpoints:
+                        names_of_input_files = ""
+                        header = f'{CancerType}\t{x}\t{DataType}'
+                        myFiles[0].write(f'{header}\t')
+                        for input_file in os.listdir(d_type_directory):
+                            if quick_analysis == "True" and not is_temp_file(input_file):
+                                continue
+                            if cut_files == "True" and not is_cut_file(input_file):
+                                continue
+                            if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
+                                continue
+                            names_of_input_files += f'{input_file},'
+                        myFiles[0].write(names_of_input_files[:-1])
+                        for i in range(1, len(myFiles)):
+                            header += f',{combination_list[i-1]}'
+                            myFiles[i].write(f'{header}\t')
+                            for input_file in os.listdir(list_of_dtype_dirs[i-1]):
                                 if quick_analysis == "True" and not is_temp_file(input_file):
                                     continue
                                 if cut_files == "True" and not is_cut_file(input_file):
                                     continue
                                 if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                     continue
-                                myFiles[0].write(f'{input_file},')
-                                seen_files +=1
-                            myFiles[0] = pop_back(myFiles[0])
-                            myFiles[0].write('\n')
-                        myFiles[0].close()
-                    else:
-                        # combined = True
-                        # for x in endpoints:
-                        # myFiles[1].write(f'{CancerType}\t{x}\t{DataType},Covariate\t')
-                        # for input_file in os.listdir(d_type_directory):
-                        #     myFiles[1].write(f'{input_file},')
-                        # myFiles[1] = pop_back(myFiles[1])
-                        # myFiles[1].write('\t')
-                        # for input_file in os.listdir(combined_dir):
-                        #     if input_file.endswith('.tsv'):
-                        #         continue
-                        #     myFiles[1].write(f'{input_file},')
-                        # myFiles[1] = pop_back(myFiles[1])
-                        # myFiles[1].write('\n')
-                        for x in endpoints:
-                            myFiles[0].write(f'{CancerType}\t{x}\t{DataType}\t')
-                            for input_file in os.listdir(d_type_directory):
-                                if quick_analysis == "True" and not is_temp_file(input_file):
-                                    continue
-                                if cut_files == "True" and not is_cut_file(input_file):
-                                    continue
-                                if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
-                                    continue
-                                myFiles[0].write(f'{input_file},')
-                            myFiles[0] = pop_back(myFiles[0])
-                            myFiles[0].write('\n')
-                        myFiles[0].close()
-                        # myFiles[1].close()
+                                names_of_input_files += f'{input_file},'
+                            myFiles[i].write(names_of_input_files[:-1])
+                        for file in myFiles:
+                            file.write('\n')
+                    for x in myFiles:
+                        x.close()
+
 
 
 
