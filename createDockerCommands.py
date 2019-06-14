@@ -149,10 +149,12 @@ for c in allDataToProcess:
 
     # grab the data types
     datatype_directory = c.split('\t')[2].split(',')
+    print(datatype_directory)
     number_of_datatypes = len(datatype_directory)
     # grab the data files for each data type
 
     for i in range(0, number_of_datatypes):
+        print(number_of_datatypes)
         datatype = datatype_directory[i]
         input_files = c.split('\t')[3 + i].split(',')
         for x in input_files:

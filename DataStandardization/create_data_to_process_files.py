@@ -192,6 +192,7 @@ for CancerType in INPUT_DATA:
                                 continue
                             names_of_input_files += f'{input_file},'
                         myFiles[0].write(names_of_input_files[:-1])
+                        names_of_input_files = names_of_input_files[:-1] + '\t'
                         for i in range(1, len(myFiles)):
                             header += f',{combination_list[i-1]}'
                             myFiles[i].write(f'{header}\t')
@@ -204,6 +205,7 @@ for CancerType in INPUT_DATA:
                                     continue
                                 names_of_input_files += f'{input_file},'
                             myFiles[i].write(names_of_input_files[:-1])
+                            names_of_input_files = names_of_input_files[:-1] + '\t'
                         for file in myFiles:
                             file.write('\n')
                     for x in myFiles:
