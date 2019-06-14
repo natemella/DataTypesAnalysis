@@ -175,7 +175,7 @@ for CancerType in INPUT_DATA:
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
                 list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
-                d_type_directory = f"{parent_directory[]}{_}InputData{_}{CancerType}{_}{DataType}"
+                d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
                 combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
                 if DataType != "Class":
                     myFiles = checkfile(DataType, combination_list)
