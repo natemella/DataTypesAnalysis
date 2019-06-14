@@ -18,14 +18,6 @@ def checkfile(dtype, to_combine):
         additional_file = open(f'{file_name}.txt', 'a')
         myFiles.append(additional_file)
     return myFiles
-    # if dtype != "Covariate":
-    #     if not os.path.exists(os.path.dirname(f'{output_directory}{_}{dtype}_and_Covariate.txt')):
-    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'w+')
-    #     else:
-    #         File2 = open(f'{output_directory}{_}{dtype}_and_Covariate.txt', 'a')
-    #     return [File1, File2]
-    # else:
-    #     return [File1]
 
 
 def pop_back(file):
@@ -110,6 +102,13 @@ parser.add_argument(
     default="False",
     help="bool on whether to do analysis on cut_files"
 )
+parser.add_argument(
+    "-r",
+    '--remove',
+    type=str,
+    default="False",
+    help="bool on whether to remove everything except for the most combined files"
+)
 
 
 
@@ -123,6 +122,7 @@ protein_expression = args.RPPA
 sm = args.Somatic_Mutations
 quick_analysis = args.quick_analysis
 cut_files = args.cut_files
+remove = args.remove
 
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
@@ -211,7 +211,14 @@ for CancerType in INPUT_DATA:
                     for x in myFiles:
                         x.close()
 
-
+if remove == "True":
+    for input_file in os.listdir(output_directory):
+        if len(input_file.split('_')) < 2:
+            os.remove(os.path.join(*[output_directory, input_file]))
+            continue
+        last_dtype = input_file.split('_')[-1]
+        if last_dtype.split('.')[0] != combination_list[-1]:
+            os.remove(os.path.join(*[output_directory, input_file]))
 
 
 
