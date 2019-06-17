@@ -51,9 +51,3 @@ for cancer_type in next(os.walk(parent_directory + f"{_}InputData"))[1]:
                         final_series.to_csv(path_or_buf=f"{Class_dir}{val}.tsv", sep="\t", header=True, na_rep="NA")
                     df[[var for var in variables if not var.startswith(end_points)]].to_csv(path_or_buf=f"{covariate_dir}{_}{cancer_type}.tsv", sep="\t", header=True, na_rep='NA')
 
-                else:
-                    continue
-
-
-
-
