@@ -16,8 +16,6 @@ def filter_parse_columns(one_cancer_df):
         if i.startswith(end_points):
             variables_to_keep.append(i)
             continue
-        if i == "DFI":
-            print("FREAK")
         Na_count = len(one_cancer_df.index) - df_describe[i][0]
         percent_missing = Na_count / len(one_cancer_df.index)
         if percent_missing > 0.2:
