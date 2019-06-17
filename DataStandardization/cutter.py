@@ -101,10 +101,18 @@ parser.add_argument(
     default="False",
     help="Shorten files to 3 variables for mini, quick analysis."
 )
+parser.add_argument(
+    "-e",
+    '--endpoint',
+    type=str,
+    default="PFI",
+    help="Endpoint that you woul like to use for analysis."
+)
 
 args = parser.parse_args()
 cut_files = args.cut_files
 quick_analysis = args.quick
+endpoint = args.endpoint
 print(f"Cut files set to {cut_files}")
 print(f"quick_analysis set to {quick_analysis}")
 if quick_analysis == "True":
@@ -121,7 +129,7 @@ _=path_delimiter()
 sample_summary = open("sample_summary.csv",'w+')
 sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type of Data,Patients with all 7 data types\n")
 
-end_points = ["LT_PFI", "ST_PFI"]
+end_points = [f"LT_{endpoint}", f"ST_{endpoint}"]
 vital_map = {}
 for CancerType in input_data_dir:
     for outcome in end_points:
@@ -147,24 +155,24 @@ for CancerType in input_data_dir:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
+                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {endpoint}={len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & PFI={len(class_info.intersection(patients_per_data))}')
+                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {endpoint}={len(class_info.intersection(patients_per_data))}')
 
                     else:
-                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}PFI.tsv') if line.strip('\n').split('\t')[1] == outcome]
+                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}{endpoint}.tsv') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)
                         class_info.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)},')
                     sample_summary.write(' | ')
                 sample_summary.write(f',{len(patients_with_all)}\n')
                 for path in list_of_paths:
-                    if outcome == "LT_PFI":
+                    if outcome == f"LT_{endpoint}":
                         vital_map[path] = patients_with_all
                     else:
                         vital_map[path].update(patients_with_all)
