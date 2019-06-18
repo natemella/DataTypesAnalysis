@@ -139,9 +139,10 @@ random.shuffle(list_of_cancer_types)
 
 list_of_cancer_types = list_of_cancer_types[0:7]
 
-parameters = {"Covariate":covariate,"miRNA": miRNA, "CNV":cnv,
-              "DNA_Methylation":dna_meth,"Expression": expression,
-              "RPPA":protein_expression, "SM":sm}
+parameters = {"Covariate":covariate,"miRNA": miRNA,
+              "RPPA":protein_expression, "SM":sm,
+              "DNA_Methylation":dna_meth, "CNV":cnv,
+              "Expression": expression}
 
 
 endpoints = [args.endpoints]
