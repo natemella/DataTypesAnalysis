@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 . ./functions.sh
+
 fileName="broad.mit.edu_PANCAN_Genome_Wide_SNP_6_whitelisted.gene.xena.gz"
 python_script=miRNA.py
 web_url="https://pancanatlas.xenahubs.net/download"

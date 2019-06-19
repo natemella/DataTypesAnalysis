@@ -3,17 +3,18 @@ set -a # export all functions
 set -e
 
 rename_if_necessary() {
-fileName=$1
-rename=$2
-extension=$3
-if [[ $rename == "True" ]];
-then
-    mv $fileName ${fileName}${extension}
-    echo ${fileName}${extension}
-else
-    echo ${fileName}
-fi
+    fileName=$1
+    rename=$2
+    extension=$3
+    if [[ $rename == "True" ]];
+    then
+        mv $fileName ${fileName}${extension}
+        echo ${fileName}${extension}
+    else
+        echo ${fileName}
+    fi
 }
+
 gunzip_if_gzipped() {
 fileName=$1
 if [[ $fileName =~ \.gz$ ]];

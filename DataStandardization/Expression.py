@@ -17,7 +17,7 @@ for x in cancer_dict:
     series = pd.Series(index_col)
     series.name = "SampleID"
     df = pd.concat([series, df], axis=1)
-    step+=1
+    step += 1
 
     new_columns = []
     #truncate the IDs to twelve characters
