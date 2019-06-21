@@ -1,8 +1,33 @@
 import pandas as pd
 import numpy as np
 import sys
-import os
+import roman
 from util import *
+
+def fix_staging_edition_labels(df):
+    df.ajcc_staging_edition = [int(data_point[0]) if not pd.isna(data_point) else data_point for data_point in df.ajcc_staging_edition.values]
+    return df
+
+def fix_nodes_labels(df):
+    df.ajcc_nodes_pathologic_pn = [int(data_point[1]) if not pd.isna(data_point) else data_point for data_point in df.ajcc_nodes_pathologic_pn]
+    return df
+
+def fix_tumor_stage_labels(df, cancer_type):
+    series = df.ajcc_pathologic_tumor_stage
+    new_column = []
+    for data_point in series.values:
+        if pd.isna(data_point):
+            new_column.append(data_point)
+            continue
+        data_point = data_point.replace("Stage ",'')
+        new_column.append(roman.fromRoman(data_point))
+    # merge stage 1 into stage 2 for BLCA because there aren't enough stage 1 patients
+    if cancer_type == "BLCA":
+        new_column = [2.0 if x == 1.0 else x for x in new_column]
+
+    df.ajcc_pathologic_tumor_stage = new_column
+    return df
+
 
 def check_for_duplicates_categorical(df):
     if True in df.index.duplicated():
@@ -27,14 +52,12 @@ def filter_ajcc_tumor_pathologic_pt(row):
     if isinstance(value, float):
         return
     else:
-        value = value.replace("T","0.")
-    return letter_to_number(value)
+       return int(value[1])
 
 def fix_ajcc_tumor_pathologic_pt_labels(df):
     series = df.apply(filter_ajcc_tumor_pathologic_pt, axis="columns")
     series.name = "ajcc_tumor_pathologic_pt"
-    df = df.drop("ajcc_tumor_pathologic_pt", axis=1)
-    df = pd.concat([df,series], axis=1)
+    df.ajcc_tumor_pathologic_pt = series
     return df
 
 def is_categorical(df, col_name):
@@ -98,6 +121,17 @@ def filter_anatomic_neoplasm_subdivision(df):
     df = pd.concat([df, new_df], axis=1)
     return df
 
+def drop_non_useful_variables(df):
+    with open("Interesting_Clinical_Variables.tsv") as input:
+        list_of_variables = input.readline().strip("\n").split('\t')
+    columns = df.columns.values
+    variables_to_keep = []
+    for i in columns:
+        if i not in list_of_variables:
+            continue
+        variables_to_keep.append(i)
+    return df[variables_to_keep]
+
 def filter_parse_rows(one_cancer_df):
     df_describe = one_cancer_df.describe(include="all")
     columns = df_describe.columns.values
@@ -135,18 +169,24 @@ full_df = full_df[cancer_patient_ids]
 
 for sample_id in cancer_dict:
     one_cancer_df = full_df[cancer_dict[sample_id]]
-    one_cancer_df = one_cancer_df.replace("[Not Applicable]", np.nan).replace("[Not Available]", np.nan)
-    one_cancer_df = one_cancer_df.replace("[Not Evaluated]", np.nan).replace("[Unknown]", np.nan)
+    nan_labels = ["[Not Applicable]", "[Not Available]", "[Not Evaluated]", "[Unknown]", "NX", "MX"]
+    one_cancer_df = one_cancer_df.replace(to_replace = nan_labels, value=np.nan)
     one_cancer_df = filter_parse_columns(one_cancer_df)
+    one_cancer_df = drop_non_useful_variables(one_cancer_df)
     one_cancer_df = filter_parse_rows(one_cancer_df.T).T
     my_index = one_cancer_df.index.values
     new_index = [patient_id[0:12] for patient_id in my_index]
     one_cancer_df.index = new_index
 
     if abbreviations_dict[sample_id] == "BLCA":
+        one_cancer_df = fix_nodes_labels(one_cancer_df)
+        one_cancer_df = fix_staging_edition_labels(one_cancer_df)
         one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
         one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
         one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
+        one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
+        if abbreviations_dict[sample_id] == "BLCA":
+            one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","ethnicity"], axis="columns")
         one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
         check_num_of_patients_per_category(one_cancer_df)
 
