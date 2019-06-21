@@ -4,9 +4,6 @@ import sys
 import roman
 from util import *
 
-def fix_staging_edition_labels(df):
-    df.ajcc_staging_edition = [int(data_point[0]) if not pd.isna(data_point) else data_point for data_point in df.ajcc_staging_edition.values]
-    return df
 
 def fix_nodes_labels(df):
     df.ajcc_nodes_pathologic_pn = [int(data_point[1]) if not pd.isna(data_point) else data_point for data_point in df.ajcc_nodes_pathologic_pn]
@@ -180,7 +177,6 @@ for sample_id in cancer_dict:
 
     if abbreviations_dict[sample_id] == "BLCA":
         one_cancer_df = fix_nodes_labels(one_cancer_df)
-        one_cancer_df = fix_staging_edition_labels(one_cancer_df)
         one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
         one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
         one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
