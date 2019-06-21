@@ -17,6 +17,12 @@ def fix_tumor_stage_labels(df, cancer_type):
             new_column.append(data_point)
             continue
         data_point = data_point.replace("Stage ",'')
+        if data_point in ["Tis", "N0", "M0"]:
+            new_column.append(0)
+            continue
+        for character in data_point:
+            if character in ["A", "B", "C"]:
+                data_point = data_point.replace(character, "")
         new_column.append(roman.fromRoman(data_point))
     # merge stage 1 into stage 2 for BLCA because there aren't enough stage 1 patients
     if cancer_type == "BLCA":
@@ -46,8 +52,8 @@ def letter_to_number(mystring):
 
 def filter_ajcc_tumor_pathologic_pt(row):
     value = row["ajcc_tumor_pathologic_pt"]
-    if isinstance(value, float):
-        return
+    if pd.isna(value):
+        return value
     else:
        return int(value[1])
 
@@ -83,6 +89,7 @@ def build_data_frame(series, unique_values, name):
 
 def check_num_of_patients_per_category(df):
     categorical_columns = {}
+    variables_to_drop = []
     for i in df.columns.values:
         if is_categorical(df, i):
             groups = set(df[i].values)
@@ -96,9 +103,11 @@ def check_num_of_patients_per_category(df):
                 my_map[group] = len([x for x in df[i].values if x == group])
             for x in my_map:
                 categorical_columns[i].append(f'{x}:{my_map[x]}')
-
-    df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in categorical_columns.items() ]))
-    df.to_csv(path_or_buf=("category_info.tsv"), sep='\t')
+                if my_map[x] < 5:
+                    variables_to_drop.append(i)
+    return df[[item for item in df.columns.values if item not in variables_to_drop]]
+    # df = pd.DataFrame(dict([ (k,pd.Series(v)) for k,v in categorical_columns.items() ]))
+    # df.to_csv(path_or_buf=("category_info.tsv"), sep='\t')
 
 
 
@@ -166,7 +175,7 @@ full_df = full_df[cancer_patient_ids]
 
 for sample_id in cancer_dict:
     one_cancer_df = full_df[cancer_dict[sample_id]]
-    nan_labels = ["[Not Applicable]", "[Not Available]", "[Not Evaluated]", "[Unknown]", "NX", "MX"]
+    nan_labels = ["[Not Applicable]", "[Not Available]", "[Not Evaluated]", "[Unknown]", "NX", "MX", "TX", "[Discrepancy]"]
     one_cancer_df = one_cancer_df.replace(to_replace = nan_labels, value=np.nan)
     one_cancer_df = filter_parse_columns(one_cancer_df)
     one_cancer_df = drop_non_useful_variables(one_cancer_df)
@@ -174,13 +183,18 @@ for sample_id in cancer_dict:
     my_index = one_cancer_df.index.values
     new_index = [patient_id[0:12] for patient_id in my_index]
     one_cancer_df.index = new_index
-    one_cancer_df = fix_nodes_labels(one_cancer_df)
+    if "ajcc_nodes_pathologic_pn" in one_cancer_df.columns.values:
+        one_cancer_df = fix_nodes_labels(one_cancer_df)
     one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
-    one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
-    one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
-    one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
+    if "anatomic_neoplasm_subdivision" in one_cancer_df.columns.values:
+        one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
+    if "ajcc_tumor_pathologic_pt" in one_cancer_df.columns.values:
+        one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
+    if "ajcc_pathologic_tumor_stage" in one_cancer_df.columns.values:
+        one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
     if abbreviations_dict[sample_id] == "BLCA":
         one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","ethnicity"], axis="columns")
+    one_cancer_df = check_num_of_patients_per_category(one_cancer_df)
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
 
 
