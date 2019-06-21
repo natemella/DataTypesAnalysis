@@ -1,9 +1,0 @@
-version: '3'
-services:
-  jupyter:
-    build: .
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./:/notebooks
-    command: ["/bin/bash", "-c", "cd /notebooks && jupyter notebook --ip=0.0.0.0 --allow-root"]
