@@ -174,16 +174,13 @@ for sample_id in cancer_dict:
     my_index = one_cancer_df.index.values
     new_index = [patient_id[0:12] for patient_id in my_index]
     one_cancer_df.index = new_index
-
+    one_cancer_df = fix_nodes_labels(one_cancer_df)
+    one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
+    one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
+    one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
+    one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
     if abbreviations_dict[sample_id] == "BLCA":
-        one_cancer_df = fix_nodes_labels(one_cancer_df)
-        one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
-        one_cancer_df = filter_anatomic_neoplasm_subdivision(one_cancer_df)
-        one_cancer_df = fix_ajcc_tumor_pathologic_pt_labels(one_cancer_df)
-        one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
-        if abbreviations_dict[sample_id] == "BLCA":
-            one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","ethnicity"], axis="columns")
-        one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
-        check_num_of_patients_per_category(one_cancer_df)
+        one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","ethnicity"], axis="columns")
+    one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
 
 
