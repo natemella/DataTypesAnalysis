@@ -5,6 +5,18 @@ import roman
 import os
 from util import *
 
+def fix_neoplasm_histologic_grade(df):
+    new_col = []
+    for value in df.neoplasm_histologic_grade:
+        if pd.isna(value):
+            new_col.append(value)
+        elif value == "High Grade":
+            new_col.append(3)
+        else:
+            new_col.append(int(value[1]))
+    df.neoplasm_histologic_grade = new_col
+    return df
+
 def fix_nodes_labels(df):
     df.ajcc_nodes_pathologic_pn = [int(data_point[1]) if not pd.isna(data_point) else data_point for data_point in df.ajcc_nodes_pathologic_pn]
     return df
@@ -27,6 +39,10 @@ def fix_residual_tumor(df):
 
 def fix_tumor_grade(df):
     df.tumor_grade = [int(data_point[1]) if not pd.isna(data_point) else data_point for data_point in df.tumor_grade]
+    return df
+
+def fix_pathologic_T(df):
+    df.pathologic_T = [int(data_point[1]) if not pd.isna(data_point) else data_point for data_point in df.pathologic_T]
     return df
 
 def adjust_race_labels(df):
@@ -250,6 +266,20 @@ def combine_anatomic_subdivision(df):
     df.anatomic_organ_subdivision = new_col
     return df
 
+def convert_hemoglobin_or_palate_to_numbers(df, category):
+    new_col= []
+    for data in df[category]:
+        if data == "Low":
+            new_col.append(0)
+        elif data == "Normal":
+            new_col.append(1)
+        elif data == "Elevated":
+            new_col.append(2)
+        else:
+            new_col.append(data)
+    df[category] = new_col
+    return df
+
 def drop_non_useful_variables(df):
     with open("Interesting_Clinical_Variables.tsv") as input:
         list_of_variables = input.readline().strip("\n").split('\t')
@@ -316,8 +346,13 @@ for sample_id in cancer_dict:
     one_cancer_df.index = new_index
     one_cancer_df = check_for_duplicates_categorical(one_cancer_df)
 
+
+    if "history_other_malignancy" in one_cancer_df.columns.values:
+        one_cancer_df = combine_yes_values_history_other_malignancy(one_cancer_df)
     if "race" in one_cancer_df.columns.values:
         one_cancer_df = adjust_race_labels(one_cancer_df)
+    if "pathologic_T" in one_cancer_df.columns.values:
+        one_cancer_df = fix_pathologic_T(one_cancer_df)
     if "tumor_grade" in one_cancer_df.columns.values:
         one_cancer_df = fix_tumor_grade(one_cancer_df)
     if "residual_tumor" in one_cancer_df.columns.values:
@@ -334,7 +369,6 @@ for sample_id in cancer_dict:
         one_cancer_df = fix_tumor_stage_labels(one_cancer_df, abbreviations_dict[sample_id])
     if "clinical_stage" in one_cancer_df.columns.values:
         one_cancer_df = fix_clinical_stage_labels(one_cancer_df)
-
     if "clinical_T" in one_cancer_df.columns.values:
         one_cancer_df = fix_clinical_T_lables(one_cancer_df)
     if "clinical_M" in one_cancer_df.columns.values:
@@ -346,25 +380,32 @@ for sample_id in cancer_dict:
 
     if abbreviations_dict[sample_id] == "BLCA":
         one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","ethnicity"], axis="columns")
-    if abbreviations_dict[sample_id] in ["LGG","KIRC","PRAD"]:
-        one_cancer_df = combine_yes_values_history_other_malignancy(one_cancer_df)
+
     if abbreviations_dict[sample_id] == "LGG":
         one_cancer_df = one_cancer_df.drop(["history_neoadjuvant_treatment","history_ionizing_rt_to_head"], axis="columns")
         one_cancer_df = combine_small_categories(one_cancer_df, "tumor_site")
+
     if abbreviations_dict[sample_id] == "HNSC":
-        one_cancer_df = one_cancer_df.drop("histologic_diagnosis", axis="columns")
+        one_cancer_df = one_cancer_df.drop(["histologic_diagnosis","alcohol_history_documented"], axis="columns")
         one_cancer_df = combine_small_categories(one_cancer_df, "anatomic_organ_subdivision")
+
     if abbreviations_dict[sample_id] == "HNSC" or "LUAD":
         if "tobacco_smoking_history_indicator" in one_cancer_df.columns.values:
             one_cancer_df = combine_smoking_history(one_cancer_df)
+
     if abbreviations_dict[sample_id] == "KIRC":
         one_cancer_df = change_laterality_to_binary(one_cancer_df)
+        one_cancer_df = convert_hemoglobin_or_palate_to_numbers(one_cancer_df, "hemoglobin_level")
+        one_cancer_df = convert_hemoglobin_or_palate_to_numbers(one_cancer_df, "platelet_count")
+
     if abbreviations_dict[sample_id] == "LUAD":
         one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis="columns")
         one_cancer_df = combine_anatomic_subdivision(one_cancer_df)
         one_cancer_df = combine_small_categories(one_cancer_df, "histologic_diagnosis.1")
+
     if abbreviations_dict[sample_id] == "UCEC":
         one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis="columns")
+        one_cancer_df = fix_neoplasm_histologic_grade(one_cancer_df)
 
     one_cancer_df = check_num_of_patients_per_category(one_cancer_df)
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
