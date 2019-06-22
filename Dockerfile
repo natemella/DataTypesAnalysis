@@ -1,14 +1,11 @@
 FROM python:3.6-slim-stretch
 
-LABEL maintainer="Nate <nathanmell@gmail.com>"
-LABEL version="0.1"
+WORKDIR /usr/src/DataTypesAnalysis
 
-WORKDIR /DataTypesAnalysis
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install pandas
-RUN pip install numpy
-RUN pip install roman
+COPY . .
 
-
-CMD python ./DataTypesAnalysis/cutter.py OS -c True
+CMD [ "python"]
 
