@@ -207,14 +207,14 @@ def find_all_unique_values(series, name):
 def filter_anatomic_neoplasm_subdivision(df):
     column = df["anatomic_neoplasm_subdivision"]
     new_df= find_all_unique_values(column, "anatomic_neoplasm_subdivision")
-    df = df.drop("anatomic_neoplasm_subdivision", axis=1)
+    df = df.drop("anatomic_neoplasm_subdivision", axis="columns")
     df = pd.concat([df, new_df], axis=1)
     return df
 
 def filter_history_thyroid_disease(df):
     column = df.history_thyroid_disease
     new_df= find_all_unique_values(column, "history_thyroid_disease")
-    df = df.drop("history_thyroid_disease", axis=1)
+    df = df.drop("history_thyroid_disease", axis="columns")
     df = pd.concat([df, new_df], axis=1)
     return df
 
@@ -235,8 +235,9 @@ def change_laterality_to_binary(df):
     right_side = [1 if data == "Right" or data == "Bilateral" else 0 for data in df.laterality]
     left_side = [1 if data == "Left" or data == "Bilateral" else 0 for data in df.laterality]
     new_df = pd.DataFrame({'laterality_right':right_side,'laterality_left':left_side})
-    df = df.drop("laterality", axis=1)
-    df = pd.concat([df,new_df],axis=1)
+    new_df.index = df.index
+    df = df.drop("laterality", axis="columns")
+    df = pd.concat([df, new_df], axis=1)
     return df
 
 def combine_anatomic_subdivision(df):
@@ -359,11 +360,11 @@ for sample_id in cancer_dict:
     if abbreviations_dict[sample_id] == "KIRC":
         one_cancer_df = change_laterality_to_binary(one_cancer_df)
     if abbreviations_dict[sample_id] == "LUAD":
-        one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis=1)
+        one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis="columns")
         one_cancer_df = combine_anatomic_subdivision(one_cancer_df)
         one_cancer_df = combine_small_categories(one_cancer_df, "histologic_diagnosis.1")
     if abbreviations_dict[sample_id] == "UCEC":
-        one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis=1)
+        one_cancer_df = one_cancer_df.drop("history_neoadjuvant_treatment", axis="columns")
 
     one_cancer_df = check_num_of_patients_per_category(one_cancer_df)
     one_cancer_df.to_csv(path_or_buf=('TCGA_' + abbreviations_dict[sample_id] + '.tsv'), sep='\t', na_rep='NA')
