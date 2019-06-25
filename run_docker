@@ -2,4 +2,4 @@
 
 mkdir -p InputData
 
-docker run -v `pwd`"/InputData":"DataTypesAnalysis/InputData" dta
+docker run -v "/InputData":"/DataTypesAnalysis/InputData" dta
