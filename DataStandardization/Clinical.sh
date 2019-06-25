@@ -7,6 +7,19 @@ folder="Clinical"
 tcga_extension=".tsv"
 
 download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder
+cd ../../
 
+for c in `python3 DataTypesAnalysis/DataStandardization/get_clinical_paths.py`; do
+    gzip $c
+#    Rscript --vanilla scripts/Impute.R $c".gz" true
+    python3 scripts/Scale.py $c".gz" true robust
+    gunzip $c".gz"
+done
 
+python3 DataTypesAnalysis/DataStandardization/Clinical_After_Scaling.py
 
+for c in `python3 DataTypesAnalysis/DataStandardization/get_clinical_paths.py`; do
+    gzip $c
+    python3 scripts/OneHotEncode.py $c".gz"
+    gunzip $c".gz"
+done
