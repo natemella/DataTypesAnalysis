@@ -11,7 +11,7 @@ cd ../../
 
 for c in `python3 DataTypesAnalysis/DataStandardization/get_clinical_paths.py`; do
     gzip $c
-#    Rscript --vanilla scripts/Impute.R $c".gz" true
+    Rscript --vanilla scripts/Impute.R $c".gz" true
     python3 scripts/Scale.py $c".gz" true robust
     gunzip $c".gz"
 done
