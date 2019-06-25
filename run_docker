@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-docker run --rm -d --name dta natemella/dta:v1
+mkdir -p InputData
+
+docker run -v `pwd`"/InputData":"DataTypesAnalysis/InputData" dta
