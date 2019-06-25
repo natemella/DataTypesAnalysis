@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -o errexit
+
+docker build -t DTA .
+docker tag DTA natemella/DTA:v1
+

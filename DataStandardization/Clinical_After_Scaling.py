@@ -302,4 +302,5 @@ for file in list_of_paths:
             one_cancer_df = fix_neoplasm_histologic_grade(one_cancer_df)
 
         one_cancer_df = check_num_of_patients_per_category(one_cancer_df)
+        one_cancer_df = one_cancer_df.rename_axis("SampleID")
         one_cancer_df.to_csv(path_or_buf=file, sep='\t', na_rep='NA')

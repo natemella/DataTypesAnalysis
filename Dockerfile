@@ -1,11 +1,8 @@
-FROM python:3.6-slim-stretch
-
-WORKDIR /usr/src/DataTypesAnalysis
+FROM srp33/shinylearner:version515
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && git clone https://github.com/natemella/DataTypesAnalysis.git
 
-COPY . .
-
-CMD [ "python"]
+COPY InputData/ DataTypesAnalysis/InputData
 
