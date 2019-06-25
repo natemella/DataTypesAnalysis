@@ -2,5 +2,5 @@
 set -o errexit
 
 docker build -t dta .
-docker tag DTA natemella/dta:v1
+docker tag dta natemella/dta:v1
 
