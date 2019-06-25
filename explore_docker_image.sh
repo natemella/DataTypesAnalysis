@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker run --rm -it --entrypoint=/bin/bash DTA
+docker run --rm -it --entrypoint=/bin/bash dta

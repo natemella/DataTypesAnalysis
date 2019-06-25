@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker container stop DTA
+docker container stop dta

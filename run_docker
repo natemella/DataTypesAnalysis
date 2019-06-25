@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker run --rm -d --name DTA natemella/DTA:v1
+docker run --rm -d --name dta natemella/dta:v1
