@@ -2,6 +2,6 @@
 
 mkdir -p InputData
 
-docker run -v "$(pwd)/InputData/":"~/DataTypesAnalysis/InputData/" \
-           -v "$(pwd)/Analysis_Results/":"~/DataTypesAnalysis/Analysis_Results/" dta
+docker run -v "$(pwd)/InputData/":"/DataTypesAnalysis/InputData/" \
+           -v "$(pwd)/Analysis_Results/":"/DataTypesAnalysis/Analysis_Results/" dta
 
