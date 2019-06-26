@@ -14,7 +14,7 @@ def checkfile(dtype, to_combine):
     if dtype in to_combine:
         return myFiles
     for i in range(0, len(to_combine)):
-        file_name += f'_and_{to_combine[i]}'
+        file_name += f'+{to_combine[i]}'
         additional_file = open(f'{file_name}.txt', 'a')
         myFiles.append(additional_file)
     return myFiles
@@ -99,21 +99,21 @@ parser.add_argument(
     "-x",
     '--cut-files',
     type=str,
-    default="False",
+    default="True",
     help="bool on whether to do analysis on cut_files"
 )
 parser.add_argument(
     "-r",
     '--remove',
     type=str,
-    default="False",
+    default="True",
     help="bool on whether to remove everything except for the most combined files"
 )
 
 
 
 args = parser.parse_args()
-covariate=args.covariate
+clinical=args.covariate
 miRNA=args.miRNA
 cnv=args.CNV
 dna_meth = args.DNA_Methylation
@@ -139,7 +139,7 @@ random.shuffle(list_of_cancer_types)
 
 list_of_cancer_types = list_of_cancer_types[0:7]
 
-parameters = {"Covariate":covariate,"miRNA": miRNA,
+parameters = {"Clinical":clinical, "miRNA": miRNA,
               "RPPA":protein_expression, "SM":sm, "CNV":cnv,
               "DNA_Methylation":dna_meth,
               "Expression": expression}
@@ -177,8 +177,8 @@ for CancerType in INPUT_DATA:
             for DataType in list_of_dTypes:
                 list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Covariate{_}"
-                if DataType != "Class":
+                combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Clinical{_}"
+                if DataType != "Class" and DataType != "Covariate":
                     myFiles = checkfile(DataType, combination_list)
                     for x in endpoints:
                         names_of_input_files = ""
@@ -211,7 +211,8 @@ for CancerType in INPUT_DATA:
                             file.write('\n')
                     for x in myFiles:
                         x.close()
-
+if len(combination_list) == 0:
+    remove = "False"
 if remove == "True":
     for input_file in os.listdir(output_directory):
         if len(input_file.split('_')) < 2:

@@ -1,5 +1,5 @@
-FROM srp33/shinylearner:version515
-
+FROM srp33/shinylearner_gpu:version515
+COPY Algorithms.txt ./
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt \
     && git clone https://github.com/natemella/DataTypesAnalysis.git \

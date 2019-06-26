@@ -28,6 +28,10 @@ bash DNA_Methylation.sh
 echo -------------------
 echo Finished DNA Methylation
 echo -------------------
+bash Clinical.sh
+echo -------------------
+echo Finished Clinical
+echo -------------------
 python3 cutter.py -q True
 python3 cutter.py -c True
 echo -------------------

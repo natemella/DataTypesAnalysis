@@ -83,4 +83,60 @@ done
 
 }
 
+execulte_analysis() {
+search_dir=Data_To_Process_Files
+dockerCommandsFile=Docker_Commands.sh
+if [ -f $dockerCommandsFile ]
+then
+    rm $dockerCommandsFile
+fi
+for file in `ls $search_dir`; do
+	IFS='.' read -ra Analysis <<< "$file"
+	datafile=${search_dir}/${file}
+	analysis="${Analysis[0]}"
+	python3 createDockerCommands.py $analysis $datafile
+done
+delay=1
+numJobs=7
+jobLogFile=Analysis.job.log
+rm -f $jobLogFile
+#parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+}
+
+evaluate_results() {
+experiment_name=$1
+new_output=${experiment_name}"_metrics.tsv"
+new_predictions=${experiment_name}"_Predictions.tsv.gz"
+search_dir=Data_To_Process_Files
+for file in `ls $search_dir`; do
+    IFS='.' read -ra Analysis <<< "$file"
+	datafile=${search_dir}/${file}
+	analysis="${Analysis[0]}"
+	IFS='_' read -ra trial <<< "$analysis"
+    python3 get_metrics.py $analysis $datafile
+    output=${analysis}".tsv"
+	cd Analysis_Results
+	if [[ "${trail[0]}" == "CNV" ]];
+	then
+	    cat $output >> $new_output
+	else
+	    tail -n +2 $output >> $new_output
+	fi
+	cd ../
+done
+#
+#cd Analysis_Results
+#mv "Total_Predictions.tsv.gz" $new_predictions
+#mv $new_output ../
+#mv $new_predictions ../
+#cd ../
+#if [ -d Permanent_Results/ ]
+#then
+#    mv $new_output $new_predictions Permanent_Results/
+#else
+#    mkdir Permanent_Results
+#    mv $new_output $new_predictions Permanent_Results/
+#fi
+}
+
 set +a

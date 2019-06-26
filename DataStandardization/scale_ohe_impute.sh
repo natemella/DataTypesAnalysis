@@ -1,32 +1,27 @@
 #!/usr/bin/env bash
 . ./functions.sh
+
 set -e
+
 scaling() {
 filename=$1
-docker run --rm -i \
-  -v `pwd`"/InputData":"/InputData" \
-  srp33/shinylearner:version515 \
-    python3 /scripts/Scale.py /InputData${filename} true robust
-
+cd ~
+python3 /scripts/Scale.py DataTypesAnalysis/InputData${filename} true robust
+cd DataTypesAnalysis/
 }
 
 imputing() {
 filename=$1
-echo $path
-docker run --rm -i \
-  -v `pwd`"/InputData":"/InputData" \
-  srp33/shinylearner:version515 \
-    Rscript --vanilla /scripts/Impute.R /InputData${filename} true
-
+cd ~
+Rscript --vanilla /scripts/Impute.R DataTypesAnalysis/InputData${filename} true
+cd DataTypesAnalysis/
 }
 
 one-hot_encoding() {
-filename=$1
-docker run --rm -i \
-  -v `pwd`"/InputData":"/InputData" \
-  srp33/shinylearner:version515 \
-    python3 /scripts/OneHotEncode.py /InputData${filename}
-
+filename=$1a
+cd ~
+python3 /scripts/OneHotEncode.py DataTypesAnalysis/InputData${filename}
+cd DataTypesAnalysis/
 }
 
 get_extension() {
