@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+endpoint=$1
 bash Covariate.sh
 echo -------------------
 echo Finished Covariate
@@ -32,8 +33,8 @@ bash Clinical.sh
 echo -------------------
 echo Finished Clinical
 echo -------------------
-python3 cutter.py -q True
-python3 cutter.py -c True
+python3 cutter.py -q True -e $endpoint
+python3 cutter.py -c True -e $endpoint
 echo -------------------
 echo Finished cutting
 echo -------------------

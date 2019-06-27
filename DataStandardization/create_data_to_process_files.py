@@ -31,7 +31,7 @@ def pop_back(file):
 def get_list_of_data_paths():
     list_of_paths = get_paths_to_data_files()
     list_of_paths = [x for x in list_of_paths if
-                     path_to_list(x)[-3] in list_of_cancer_types and path_to_list(x)[-2] != "Class"]
+                     path_to_list(x)[-3] in list_of_cancer_types and path_to_list(x)[-2] != "Class" and path_to_list(x)[-2] != "Covariate"]
     return list_of_paths
 
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
@@ -41,17 +41,17 @@ parser.add_argument(
 )
 parser.add_argument(
     "-c",
-    "--covariate",
+    "--clinical",
     type=str,
     default="False",
-    help="bool on whether to combine all data types with covariate"
+    help="bool on whether to combine all data types with clinical"
 )
 parser.add_argument(
     "-m",
     '--miRNA',
     type=str,
     default="False",
-    help="bool on whether to combine all data types with covariate."
+    help="bool on whether to combine all data types with miRNA."
 )
 parser.add_argument(
     "-n",
@@ -113,7 +113,7 @@ parser.add_argument(
 
 
 args = parser.parse_args()
-clinical=args.covariate
+clinical=args.clinical
 miRNA=args.miRNA
 cnv=args.CNV
 dna_meth = args.DNA_Methylation
@@ -177,7 +177,6 @@ for CancerType in INPUT_DATA:
             for DataType in list_of_dTypes:
                 list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
                 d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
-                combined_dir = f"{parent_directory}{_}InputData{_}{CancerType}{_}Clinical{_}"
                 if DataType != "Class" and DataType != "Covariate":
                     myFiles = checkfile(DataType, combination_list)
                     for x in endpoints:
@@ -215,13 +214,12 @@ if len(combination_list) == 0:
     remove = "False"
 if remove == "True":
     for input_file in os.listdir(output_directory):
-        if len(input_file.split('_')) < 2:
+        if len(input_file.split('+')) < 2:
             os.remove(os.path.join(*[output_directory, input_file]))
             continue
-        last_dtype = input_file.split('_')[-1]
+        last_dtype = input_file.split('+')[-1]
         if last_dtype.split('.')[0] != combination_list[-1]:
             os.remove(os.path.join(*[output_directory, input_file]))
-
 
 
 
