@@ -19,7 +19,10 @@ def checkfile(dtype, to_combine):
         myFiles.append(additional_file)
     return myFiles
 
-
+def match_endpoint(inputfile, endpoint):
+    if inputfile.split("_")[-2] == endpoint:
+        return True
+    return False
 def pop_back(file):
     file.close()
     with open(file.name, 'rb+') as filehandle:
@@ -37,7 +40,8 @@ def get_list_of_data_paths():
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
     "endpoints",
-    help="What you would like to predict (PFI, 0S, DSS, DFI)."
+    help="What you would like to predict (PFI, 0S, DSS, DFI).",
+    nargs='+'
 )
 parser.add_argument(
     "-c",
@@ -145,7 +149,7 @@ parameters = {"Clinical":clinical, "miRNA": miRNA,
               "Expression": expression}
 
 
-endpoints = [args.endpoints]
+endpoints = args.endpoints
 print(f'endpoints are {endpoints}')
 
 #
@@ -183,11 +187,15 @@ for CancerType in INPUT_DATA:
                         myFiles[0].write(f'{header}\t')
                         for input_file in os.listdir(d_type_directory):
                             if quick_analysis == "True" and not is_temp_file(input_file):
+                                print(input_file)
                                 continue
                             if cut_files == "True" and not is_cut_file(input_file):
                                 continue
                             if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                 continue
+                            if quick_analysis == "True" or cut_files == "True":
+                                if not match_endpoint(input_file, x):
+                                    continue
                             names_of_input_files += f'{input_file},'
                         myFiles[0].write(names_of_input_files[:-1])
                         names_of_input_files = names_of_input_files[:-1] + '\t'
@@ -201,6 +209,10 @@ for CancerType in INPUT_DATA:
                                     continue
                                 if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                     continue
+                                if quick_analysis == "True" or cut_files == "True":
+                                    print("testing")
+                                    if not match_endpoint(input_file, x):
+                                        continue
                                 names_of_input_files += f'{input_file},'
                             myFiles[i].write(names_of_input_files[:-1])
                             names_of_input_files = names_of_input_files[:-1] + '\t'
