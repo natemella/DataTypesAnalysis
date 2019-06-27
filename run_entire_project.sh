@@ -61,10 +61,10 @@ for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis $dockerCommandsFile
 done
-#parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
-#for i in ${index_array[@]}; do
-#    ${ARRAY_OF_COMBINATIONS[$i]}
-#    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
-#done
+parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+for i in ${index_array[@]}; do
+    ${ARRAY_OF_COMBINATIONS[$i]}
+    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
+done
 
 rm -r *_Commands
