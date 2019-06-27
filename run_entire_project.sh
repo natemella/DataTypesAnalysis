@@ -37,10 +37,8 @@ ARRAY_OF_ANALYSIS_NAMES=("no_combination" "+clinical" "+clinical+miRNA" "+clinic
 index_array=(0 1 2 3 4 5 6)
 
 for i in ${index_array[@]}; do
-    cd DataStandardization
     ${ARRAY_OF_COMBINATIONS[$i]}
-    cd ../
     execulte_analysis
 #    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
 done
-
+rm -r *_Commands

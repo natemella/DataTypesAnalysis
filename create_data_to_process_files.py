@@ -1,6 +1,6 @@
 import os
 import shutil
-from util import *
+from DataStandardization.util import *
 import argparse
 import random
 
@@ -130,7 +130,7 @@ RelevantTypes = ()
 
 SEED = 448
 
-with open("CancerTypes.txt") as cancers:
+with open("DataStandardization/CancerTypes.txt") as cancers:
     list_of_cancer_types = [cancer.strip('\n') for cancer in cancers]
 
 list_of_cancer_types = [f'TCGA_{cancer}' for cancer in list_of_cancer_types]
@@ -155,16 +155,14 @@ for x in parameters:
         combination_list.append(x)
 print(combination_list)
 
-my_list = path_to_list(currentWorkingDir)
-parent_directory = path_delimiter().join(my_list[:-1])
-output_directory = os.path.join(*[parent_directory, f'Data_To_Process_Files{path_delimiter()}'])
+output_directory = os.path.join(*[currentWorkingDir, f'Data_To_Process_Files{path_delimiter()}'])
 if not os.path.exists(os.path.dirname(output_directory)):
     os.makedirs(os.path.dirname(output_directory))
 else:
     shutil.rmtree(os.path.dirname(output_directory))
     os.makedirs(os.path.dirname(output_directory))
 
-INPUT_DATA = next(os.walk(parent_directory + f"{path_delimiter()}InputData"))[1]
+INPUT_DATA = next(os.walk(currentWorkingDir + f"{path_delimiter()}InputData"))[1]
 
 # for unix it would be '{_}' for windows it would be '\'
 _=path_delimiter()
@@ -172,11 +170,11 @@ _=path_delimiter()
 for CancerType in INPUT_DATA:
     if CancerType not in list_of_cancer_types:
         continue
-    for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
+    for list_of_dTypes in next(os.walk(os.path.join(*[currentWorkingDir,"InputData",CancerType]))):
         if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
             for DataType in list_of_dTypes:
-                list_of_dtype_dirs = [f"{parent_directory}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
-                d_type_directory = f"{parent_directory}{_}InputData{_}{CancerType}{_}{DataType}"
+                list_of_dtype_dirs = [f"{currentWorkingDir}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
+                d_type_directory = f"{currentWorkingDir}{_}InputData{_}{CancerType}{_}{DataType}"
                 if DataType != "Class" and DataType != "Covariate":
                     myFiles = checkfile(DataType, combination_list)
                     for x in endpoints:
