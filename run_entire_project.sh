@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 . ./DataStandardization/functions.sh
 
+endpoint=$1
+
+if [ ! -f InputData/TCGA_UCEC/Clinical/TCGA_UCEC_cut.tsv ]
+then
+    bash DataStandardization/download_and_parse_all_data.sh $endpoint
+fi
+
 no_combination() {
 python3 create_data_to_process_files.py PFI
 }
@@ -39,6 +46,6 @@ index_array=(0 1 2 3 4 5 6)
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis
-#    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
+    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
 done
 rm -r *_Commands
