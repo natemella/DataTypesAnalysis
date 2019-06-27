@@ -5,14 +5,14 @@ import codecs
 from util import *
 import argparse
 
-def run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis):
+def run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis, endpoint):
         if DataType == "Class":
             return
         for input_file in os.listdir(d_type_directory):
             if is_cut_or_tempfile(input_file):
                 continue
             input_file = f'{d_type_directory}{_}{input_file}'
-            make_df(patients_with_all, DataType, input_file, quick_analysis)
+            make_df(patients_with_all, DataType, input_file, quick_analysis, endpoint)
 
 def filter_cols(input_file, patient_ids, mini):
     my_cols = list(patient_ids)
@@ -31,38 +31,38 @@ def filter_rows(input_file, patient_ids, index_name, mini):
         df = df.iloc[:,0:3]
     return df
 
-def build_temp_extension(input_file):
+def build_temp_extension(input_file, endpoint):
     if input_file.endswith(".ttsv"):
-        temp_extension = "_temp.ttsv"
+        temp_extension = f"_{endpoint}_temp.ttsv"
     elif input_file.endswith(".tsv"):
-        temp_extension = "_temp.tsv"
+        temp_extension = f"_{endpoint}_temp.tsv"
     else:
-        temp_extension = "_temp.txt"
+        temp_extension = f"_{endpoint}_temp.txt"
     return temp_extension
 
-def build_cut_extension(input_file):
+def build_cut_extension(input_file, endpoint):
     if input_file.endswith(".ttsv"):
-        cut_extension = "_cut.ttsv"
+        cut_extension = f"_{endpoint}_cut.ttsv"
     elif input_file.endswith(".tsv"):
-        cut_extension = "_cut.tsv"
+        cut_extension = f"_{endpoint}_cut.tsv"
     else:
-        cut_extension = "_cut.txt"
+        cut_extension = f"_{endpoint}_cut.txt"
     return cut_extension
 
 def get_current_extension(input_file):
     return f".{input_file.split('.')[-1]}"
 
-def get_new_file_path(input_file, mini):
+def get_new_file_path(input_file, mini, endpoint):
     current_extenstion = get_current_extension(input_file)
     if mini == "True":
-        temp_extension = build_temp_extension(input_file)
+        temp_extension = build_temp_extension(input_file, endpoint)
         return input_file.replace(current_extenstion, temp_extension)
     else:
-        cut_extension =build_cut_extension(input_file)
+        cut_extension =build_cut_extension(input_file, endpoint)
         return input_file.replace(current_extenstion, cut_extension)
 
-def write_file(df, mini, input_file):
-    new_file_path = get_new_file_path(input_file, mini)
+def write_file(df, mini, input_file, endpoint):
+    new_file_path = get_new_file_path(input_file, mini, endpoint)
     if mini == "True":
         df.to_csv(path_or_buf=new_file_path, sep='\t')
     else:
@@ -70,7 +70,7 @@ def write_file(df, mini, input_file):
 
 
 
-def make_df(patient_ids, DataType, input_file, mini):
+def make_df(patient_ids, DataType, input_file, mini, endpoint):
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
     else:
@@ -79,8 +79,9 @@ def make_df(patient_ids, DataType, input_file, mini):
         else:
             index_name = "Patient_ID"
         df = filter_rows(input_file,patient_ids, index_name, mini)
-    write_file(df,mini,input_file)
-    print(f"Rewriting {path_to_list(input_file)[-1]}")
+    write_file(df, mini, input_file, endpoint)
+    print(f"Cutting {path_to_list(input_file)[-1]} and making a new copy based on all patients "
+          f"who have data for across all data types and {endpoint} data")
 
 
 
@@ -112,7 +113,7 @@ parser.add_argument(
 args = parser.parse_args()
 cut_files = args.cut_files
 quick_analysis = args.quick
-endpoint = args.endpoint
+Analysis_endpoint = args.endpoint
 print(f"Cut files set to {cut_files}")
 print(f"quick_analysis set to {quick_analysis}")
 if quick_analysis == "True":
@@ -129,7 +130,7 @@ _=path_delimiter()
 sample_summary = open("sample_summary.csv",'w+')
 sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type of Data,Patients with all 7 data types\n")
 
-end_points = [f"LT_{endpoint}", f"ST_{endpoint}"]
+end_points = [f"LT_{Analysis_endpoint}", f"ST_{Analysis_endpoint}"]
 vital_map = {}
 for CancerType in input_data_dir:
     for outcome in end_points:
@@ -155,24 +156,24 @@ for CancerType in input_data_dir:
                                 patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {endpoint}={len(class_info.intersection(patients_per_data))}')
+                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data))}')
                             else:
                                 with codecs.open(input_file, 'r') as myfile:
                                     firstline = myfile.readline()
                                     patients_per_data = firstline.split('\t')
                                     total_patients.update(patients_per_data)
                                     patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {endpoint}={len(class_info.intersection(patients_per_data))}')
+                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data))}')
 
                     else:
-                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}{endpoint}.tsv') if line.strip('\n').split('\t')[1] == outcome]
+                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}{Analysis_endpoint}.tsv') if line.strip('\n').split('\t')[1] == outcome]
                         patients_with_all.update(patients_per_data)
                         class_info.update(patients_per_data)
                         sample_summary.write(f'{DataType}:{len(patients_with_all)},')
                     sample_summary.write(' | ')
                 sample_summary.write(f',{len(patients_with_all)}\n')
                 for path in list_of_paths:
-                    if outcome == f"LT_{endpoint}":
+                    if outcome == f"LT_{Analysis_endpoint}":
                         vital_map[path] = patients_with_all
                     else:
                         vital_map[path].update(patients_with_all)
@@ -187,4 +188,4 @@ for CancerType in input_data_dir:
                 d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                 patients_with_all = vital_map[d_type_directory]
                 if cut_files == "True":
-                    run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis)
+                    run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis, Analysis_endpoint)

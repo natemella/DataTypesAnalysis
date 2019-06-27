@@ -181,7 +181,7 @@ for c in allDataToProcess:
             # Build the part of the command that tells ShinyLearner which data files to parse
             data_all = ''
             for d in input_data:
-                data_all = data_all + f'--data "{d}" {line_end(3)}'
+                data_all = data_all + f'--data "{d}" {line_end(1)}'
 
             # so that windows computers don't crash
             if path_delimiter() == '\\':
@@ -213,27 +213,33 @@ for c in allDataToProcess:
                 "numCores": args.cores,
             }
             out = """
+#!/usr/bin/env bash
+cd ../
 if [ ! -f {outDir}{outFileToCheck} ]
 then
-    docker run --memory {memoryGigs}G --memory-swap {swapMemoryGigs}G --rm -i \\
-        -v "{currentWorkingDir}/InputData":"/InputData" \\
-        -v "{outDir}":"/OutputData" \\
-        srp33/shinylearner:version{shinyLearnerVersion} \\
-        timeout -s 9 {hoursMax}h \\
-            "/UserScripts/nestedclassification_crossvalidation" \\
-            {data_all}
-            --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
-            --outer-folds {outer_folds} \\
-            --inner-folds {inner_folds} \\
-            --iterations 1 \\
-            --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
-            --verbose false \\
-            --seed {i} \\
-            --ohe false \\
-            --scale none \\
-            --impute false \\
-            --num-cores {numCores}
+    if [ "$(ls -A OutputData/)" ]; then
+        rm OutputData/*
+    else
+        echo PROCESSING {analysis}__{datasetID}___{classVar}___iteration{i}
+    fi
+    mv "{currentWorkingDir}/InputData" ~ \\
+    "UserScripts/nestedclassification_crossvalidation" \\
+    {data_all}
+    --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
+    --outer-folds {outer_folds} \\
+    --inner-folds {inner_folds} \\
+    --iterations 1 \\
+    --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
+    --verbose false \\
+    --seed {i} \\
+    --ohe false \\
+    --scale none \\
+    --impute false \\
+    --num-cores {numCores}
 fi
+for file in `ls OutputData`; do
+    mkdir -p {outDir}; mv OutputData/$file $_
+done
             """.format(**bash_args)
             # Build the bash script for this combination of dataset, algorithm, and iteration
             if args.scale_mode != "True":

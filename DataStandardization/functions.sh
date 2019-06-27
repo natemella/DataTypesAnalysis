@@ -85,22 +85,13 @@ done
 
 execulte_analysis() {
 search_dir=Data_To_Process_Files
-dockerCommandsFile=Docker_Commands.sh
-if [ -f $dockerCommandsFile ]
-then
-    rm $dockerCommandsFile
-fi
+dockerCommandsFile=$1
 for file in `ls $search_dir`; do
 	IFS='.' read -ra Analysis <<< "$file"
 	datafile=${search_dir}/${file}
 	analysis="${Analysis[0]}"
-	python3 createDockerCommands.py $analysis $datafile
+	python3 create_temporary_bash_scripts.py $analysis $datafile
 done
-delay=1
-numJobs=7
-jobLogFile=Analysis.job.log
-rm -f $jobLogFile
-#parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
 }
 
 evaluate_results() {
@@ -124,19 +115,19 @@ for file in `ls $search_dir`; do
 	fi
 	cd ../
 done
-#
-#cd Analysis_Results
-#mv "Total_Predictions.tsv.gz" $new_predictions
-#mv $new_output ../
-#mv $new_predictions ../
-#cd ../
-#if [ -d Permanent_Results/ ]
-#then
-#    mv $new_output $new_predictions Permanent_Results/
-#else
-#    mkdir Permanent_Results
-#    mv $new_output $new_predictions Permanent_Results/
-#fi
+
+cd Analysis_Results
+mv "Total_Predictions.tsv.gz" $new_predictions
+mv $new_output ../
+mv $new_predictions ../
+cd ../
+if [ -d Permanent_Results/ ]
+then
+    mv $new_output $new_predictions Permanent_Results/
+else
+    mkdir Permanent_Results
+    mv $new_output $new_predictions Permanent_Results/
+fi
 }
 
 set +a

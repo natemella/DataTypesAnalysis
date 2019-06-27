@@ -2,38 +2,46 @@
 . ./DataStandardization/functions.sh
 
 endpoint=$1
+numJobs=$2
 
-if [ ! -f InputData/TCGA_UCEC/Clinical/TCGA_UCEC_cut.tsv ]
+if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
-    bash DataStandardization/download_and_parse_all_data.sh $endpoint
+    if [ InputData/TCGA_UCEC/Clinical/TCGA_UCEC.tsv ]
+    then
+        cd DataStandardization/
+        python3 cutter.py -c True -e $endpoint
+        cd ../
+    else
+        bash DataStandardization/download_and_parse_all_data.sh $endpoint
+    fi
 fi
 
 no_combination() {
-python3 create_data_to_process_files.py PFI
+python3 create_data_to_process_files.py $endpoint
 }
 
 add_clinical() {
-python3 create_data_to_process_files.py PFI -c True
+python3 create_data_to_process_files.py $endpoint -c True
 }
 
 add_miRNA() {
-python3 create_data_to_process_files.py PFI -c True -m True
+python3 create_data_to_process_files.py $endpoint -c True -m True
 }
 
 add_RPPA() {
-python3 create_data_to_process_files.py PFI -c True -m True -p True
+python3 create_data_to_process_files.py $endpoint -c True -m True -p True
 }
 
 add_SM() {
-python3 create_data_to_process_files.py PFI -c True -m True -p True -s True
+python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True
 }
 
 add_CNV() {
-python3 create_data_to_process_files.py PFI -c True -m True -p True -s True -n True
+python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True -n True
 }
 
 add_dna_methylation() {
-python3 create_data_to_process_files.py PFI -c True -m True -p True -s True -n True -e True
+python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True -n True -e True
 }
 
 declare -a ARRAY_OF_COMBINATIONS
@@ -43,9 +51,19 @@ ARRAY_OF_COMBINATIONS=(no_combination add_clinical add_miRNA add_RPPA add_SM add
 ARRAY_OF_ANALYSIS_NAMES=("no_combination" "+clinical" "+clinical+miRNA" "+clinical+miRNA+RPPA" "+SM" "add_CNV" "add_dna_methylation")
 index_array=(0 1 2 3 4 5 6)
 
+delay=1
+jobLogFile=Analysis.job.log
+dockerCommandsFile=Docker_Commands.sh
+rm -f $jobLogFile
+rm $dockerCommandsFile
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
-    execulte_analysis
+    execulte_analysis $dockerCommandsFile
+done
+parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+for i in ${index_array[@]}; do
+    ${ARRAY_OF_COMBINATIONS[$i]}
     evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
 done
+
 rm -r *_Commands
