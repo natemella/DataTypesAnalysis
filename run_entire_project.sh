@@ -58,7 +58,10 @@ delay=1
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
 rm -f $jobLogFile
-rm $dockerCommandsFile
+if [ -f $dockerCommandsFile ]
+then
+    rm $dockerCommandsFile
+fi
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis $dockerCommandsFile
