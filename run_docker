@@ -18,4 +18,5 @@ fi
 docker run --rm --memory 200G --memory-swap 200G -it -v "$(pwd)/InputData/":"/DataTypesAnalysis/InputData/" \
        -v "$(pwd)/Analysis_Results/":"/DataTypesAnalysis/Analysis_Results/" \
        -v "$(pwd)/Permanent_Results/":"/DataTypesAnalysis/Permanent_Results/" dta
-       DataTypesAnalysis/run_entire_project.sh $endpoints $numJobs
+       cd DataTypesAnalysis/
+       bash run_entire_project.sh $endpoints $numJobs
