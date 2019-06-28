@@ -7,7 +7,7 @@ folder="Clinical"
 tcga_extension=".tsv"
 force=$1
 echo $force
-download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $force
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder - - $force
 cd ../../
 
 for c in `python3 DataTypesAnalysis/DataStandardization/get_clinical_paths.py`; do
