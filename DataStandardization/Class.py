@@ -48,6 +48,6 @@ for cancer_type in next(os.walk(parent_directory + f"{_}InputData"))[1]:
                         one_endpoint_df = one_endpoint_df.loc[one_endpoint_df.apply(filter_out_middle_range_data, args=(one_endpoint_df.columns.values, lower_cutoff, upper_cutoff), axis="columns")]
                         final_series = one_endpoint_df.apply(convert_time_values_to_classification_labels, args=(one_endpoint_df.columns.values, upper_cutoff, val), axis="columns")
                         final_series.name = "Class"
-                        final_series.to_csv("{Class_dir}{val}.tsv", sep="\t", header=True, na_rep="NA")
+                        final_series.to_csv(f"{Class_dir}{val}.tsv", sep="\t", header=True, na_rep="NA")
                     df[[var for var in variables if not var.startswith(end_points)]].to_csv(path_or_buf=f"{covariate_dir}{_}{cancer_type}.tsv", sep="\t", header=True, na_rep='NA')
 
