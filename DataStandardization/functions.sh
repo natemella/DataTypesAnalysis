@@ -29,7 +29,7 @@ fi
 check_if_file_already_exits() {
 filepath=$1
 force=$2
-if [[ $force -ne "-f" ]]
+if [[ $force != "-f" ]]
 then
     if [ -f ${filepath} ]
     then
