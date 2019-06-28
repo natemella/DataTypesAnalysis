@@ -21,3 +21,4 @@ docker run --rm --memory 200G --memory-swap 200G -it --entrypoint=/bin/bash \
        -v "$(pwd)/Permanent_Results/":"/DataTypesAnalysis/Permanent_Results/" dta
 cd DataTypesAnalysis
 bash run_entire_project.sh $endpoints $numJobs
+exit
