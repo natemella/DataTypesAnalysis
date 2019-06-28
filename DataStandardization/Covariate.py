@@ -73,7 +73,7 @@ cancer_patient_ids = list_of_dictionaries[5]
 
 df = pd.read_excel(filename, sheet_name=0, sep="\t")
 df.index = df.bcr_patient_barcode
-df = df.drop(labels=["Unnamed: 0","bcr_patient_barcode"], axis=1)
+df = df.drop(labels="bcr_patient_barcode", axis=1)
 
 df = df.loc[cancer_patient_ids]
 
