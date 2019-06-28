@@ -58,7 +58,7 @@ with open("Clinical_Variables.csv") as data:
 
 input = pd.read_excel(filename)
 header = input.columns.values
-all_patients = input.index
+all_patients = input.bcr_patient_barcode
 
 list_of_dictionaries = dictionary_makers(all_patients)
 
