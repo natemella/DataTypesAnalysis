@@ -58,7 +58,7 @@ index_array=(0 1 2 3 4 5 6)
 
 echo WORKING STEP 2
 
-delay=1
+delay=0
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
 rm -f $jobLogFile
