@@ -6,6 +6,7 @@ python_script=Clinical.py
 folder="Clinical"
 tcga_extension=".tsv"
 force=$1
+echo $force
 download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $force
 cd ../../
 

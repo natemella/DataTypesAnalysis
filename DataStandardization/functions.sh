@@ -29,6 +29,7 @@ fi
 check_if_file_already_exits() {
 filepath=$1
 force=$2
+echo $force
 if [[ $force != "force" ]]
 then
     if [ -f ${filepath} ]
@@ -48,6 +49,8 @@ folder=$5
 file_extension=$6
 rename=$7
 force=$8
+
+echo $force
 
 file_to_check="../InputData/TCGA_BRCA/"${folder}"/*"${tcga_extension}
 check_if_file_already_exits ${file_to_check} $force
