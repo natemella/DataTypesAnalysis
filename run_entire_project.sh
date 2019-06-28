@@ -4,7 +4,7 @@
 endpoint=$1
 numJobs=$2
 
-echo WOKRING
+echo WORKING
 
 if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
