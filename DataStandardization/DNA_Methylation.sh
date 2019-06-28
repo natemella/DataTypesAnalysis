@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
+. ./functions.sh
 file="GPL16304-47833.txt.gz"
 set -e
+file_to_check="../InputData/TCGA_BRCA/DNA_Methylation/*.tsv"
+check_if_file_already_exits $file_to_check
 if [ -e $file ]
 then
 	for c in `cat CancerTypes.txt`; do

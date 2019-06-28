@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 endpoint=$1
 bash Covariate.sh
 echo -------------------

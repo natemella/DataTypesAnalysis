@@ -5,22 +5,23 @@ set -e
 
 scaling() {
 filename=$1
-cd ~
-python3 /scripts/Scale.py DataTypesAnalysis/InputData${filename} true robust
+cd ../
+python3 scripts/Scale.py DataTypesAnalysis/InputData${filename} true robust
 cd DataTypesAnalysis/
 }
 
 imputing() {
 filename=$1
-cd ~
-Rscript --vanilla /scripts/Impute.R DataTypesAnalysis/InputData${filename} true
+cd ../
+pwd
+Rscript --vanilla scripts/Impute.R DataTypesAnalysis/InputData${filename} true
 cd DataTypesAnalysis/
 }
 
 one-hot_encoding() {
 filename=$1a
-cd ~
-python3 /scripts/OneHotEncode.py DataTypesAnalysis/InputData${filename}
+cd ../
+python3 scripts/OneHotEncode.py DataTypesAnalysis/InputData${filename}
 cd DataTypesAnalysis/
 }
 

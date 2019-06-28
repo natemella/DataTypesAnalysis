@@ -26,6 +26,16 @@ else
 fi
 }
 
+check_if_file_already_exits() {
+filepath=$1
+if [ -f ${filepath} ]
+then
+    echo Already Downloaded
+    exit 1
+fi
+
+
+}
 download_and_organize_data() {
 fileName=$1
 python_script=$2
@@ -35,6 +45,8 @@ folder=$5
 file_extension=$6
 rename=$7
 
+file_to_check="../InputData/TCGA_BRCA/"${folder}"/*"${tcga_extension}
+check_if_file_already_exits ${file_to_check}
 
 if [ -e $fileName* ]
 then
