@@ -4,6 +4,8 @@
 endpoint=$1
 numJobs=$2
 
+echo WOKRING
+
 if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
     if [ -f InputData/TCGA_UCEC/Clinical/TCGA_UCEC.tsv ]
@@ -54,6 +56,8 @@ ARRAY_OF_COMBINATIONS=(no_combination add_clinical add_miRNA add_RPPA add_SM add
 ARRAY_OF_ANALYSIS_NAMES=("no_combination" "+clinical" "+clinical+miRNA" "+clinical+miRNA+RPPA" "+SM" "add_CNV" "add_dna_methylation")
 index_array=(0 1 2 3 4 5 6)
 
+echo WORKING STEP 2
+
 delay=1
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
@@ -66,6 +70,7 @@ for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis $dockerCommandsFile
 done
+echo WORKING STEP 3
 parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
