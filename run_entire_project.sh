@@ -13,7 +13,9 @@ then
         bash scale_ohe_impute.sh
         cd ../
     else
-        bash DataStandardization/download_and_parse_all_data.sh $endpoint
+        cd DataStandardization/
+        bash download_and_parse_all_data.sh $endpoint
+        cd ../
     fi
 fi
 
