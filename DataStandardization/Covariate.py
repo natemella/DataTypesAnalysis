@@ -56,7 +56,7 @@ filename = args.filename
 with open("Clinical_Variables.csv") as data:
     variable_list = data.readline().strip('\n').split(',')
 
-input = pd.read_excel(filename, index_col="bcr_patient_barcode")
+input = pd.read_excel(filename)
 header = input.columns.values
 all_patients = input.index
 
@@ -71,8 +71,9 @@ abbreviations_dict = list_of_dictionaries[3]
 cancer_dict = list_of_dictionaries[4]
 cancer_patient_ids = list_of_dictionaries[5]
 
-df = pd.read_excel(filename, sheet_name=0, sep="\t", index_col="bcr_patient_barcode")
-df = df.drop(labels="Unnamed: 0", axis=1)
+df = pd.read_excel(filename, sheet_name=0, sep="\t")
+df.index = df.bcr_patient_barcode
+df = df.drop(labels=["Unnamed: 0","bcr_patient_barcode"], axis=1)
 
 df = df.loc[cancer_patient_ids]
 
