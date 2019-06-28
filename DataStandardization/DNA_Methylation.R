@@ -10,7 +10,7 @@ library(stringr)
 args <- commandArgs(trailingOnly = TRUE)
 
 ## Read metadata
-metadata <- read_tsv("/Scripts/GPL16304-47833.txt.gz", comment="#") %>%
+metadata <- read_tsv("GPL16304-47833.txt.gz", comment="#") %>%
   select(ID, Distance_closest_TSS, Closest_TSS_gene_name) %>%
   dplyr::rename(Probe=ID, TSS_Distance=Distance_closest_TSS, Gene=Closest_TSS_gene_name) %>%
   arrange(Gene, TSS_Distance)
