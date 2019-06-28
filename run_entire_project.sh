@@ -66,7 +66,7 @@ if [ -f $dockerCommandsFile ]
 then
     rm $dockerCommandsFile
 fi
-mv InputData ../
+cp -r InputData ../
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis $dockerCommandsFile
