@@ -222,7 +222,6 @@ then
     else
         echo PROCESSING {analysis}__{datasetID}___{classVar}___iteration{i}
     fi
-    mv "{currentWorkingDir}/InputData" ~ \\
     "UserScripts/nestedclassification_crossvalidation" \\
     {data_all}
     --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
