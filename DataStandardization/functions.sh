@@ -28,12 +28,15 @@ fi
 
 check_if_file_already_exits() {
 filepath=$1
-if [ -f ${filepath} ]
+force=$2
+if [[ $force != "-f" ]]
 then
-    echo Already Downloaded
-    exit 1
+    if [ -f ${filepath} ]
+    then
+        echo Already Downloaded
+        exit 1
+    fi
 fi
-
 
 }
 download_and_organize_data() {
@@ -44,9 +47,10 @@ tcga_extension=$4
 folder=$5
 file_extension=$6
 rename=$7
+force=$8
 
 file_to_check="../InputData/TCGA_BRCA/"${folder}"/*"${tcga_extension}
-check_if_file_already_exits ${file_to_check}
+check_if_file_already_exits ${file_to_check} $force
 
 if [ -e $fileName* ]
 then

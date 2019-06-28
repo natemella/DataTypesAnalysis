@@ -5,8 +5,8 @@ web_url="ftp://ftp.ncbi.nlm.nih.gov/geo/series/GSE62nnn/GSE62944/suppl/"
 python_script=Clinical.py
 folder="Clinical"
 tcga_extension=".tsv"
-
-download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder
+force=$1
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $force
 cd ../../
 
 for c in `python3 DataTypesAnalysis/DataStandardization/get_clinical_paths.py`; do
