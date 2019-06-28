@@ -6,7 +6,7 @@ numJobs=$2
 
 if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
-    if [ InputData/TCGA_UCEC/Clinical/TCGA_UCEC.tsv ]
+    if [ -f InputData/TCGA_UCEC/Clinical/TCGA_UCEC.tsv ]
     then
         cd DataStandardization/
         python3 cutter.py -c True -e $endpoint
