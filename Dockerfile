@@ -6,6 +6,7 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && mkdir DataTypesAnalysis/InputData \
     && mkdir DataTypesAnalysis/Analysis_Results \
     && mkdir DataTypesAnalysis/Permanent_Results \
+    && mkdir OutputData \
     && mv Algorithms.txt DataTypesAnalysis \
     && find DataTypesAnalysis/ -type d -exec chmod 755 {} \;
 
