@@ -37,7 +37,7 @@ def filter_out_middle_range_data(row, df_column_list, lower_cut_off, upper_cut_o
 
 parser = argparse.ArgumentParser(description="Decide which endpoint to keep.")
 parser.add_argument(
-    "file-name",
+    "filename",
     type=str,
     help="Name of excell file with Covariate Data"
 
@@ -52,10 +52,11 @@ parser.add_argument(
 )
 args = parser.parse_args()
 end_point = args.endpoint
+filename = args.filename
 with open("Clinical_Variables.csv") as data:
     variable_list = data.readline().strip('\n').split(',')
 
-input = pd.read_excel("mmc1.xlsx", index_col="bcr_patient_barcode")
+input = pd.read_excel(filename, index_col="bcr_patient_barcode")
 header = input.columns.values
 all_patients = input.index
 
@@ -70,7 +71,7 @@ abbreviations_dict = list_of_dictionaries[3]
 cancer_dict = list_of_dictionaries[4]
 cancer_patient_ids = list_of_dictionaries[5]
 
-df = pd.read_excel("mmc1.xlsx", sep="\t", index_col="bcr_patient_barcode")
+df = pd.read_excel(filename, sheet_name=0, sep="\t", index_col="bcr_patient_barcode")
 df = df.drop(labels="Unnamed: 0", axis=1)
 
 df = df.loc[cancer_patient_ids]

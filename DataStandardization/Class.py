@@ -31,8 +31,8 @@ for cancer_type in next(os.walk(parent_directory + f"{_}InputData"))[1]:
         if "Covariate" in subdir:
             covariate_dir = f"{parent_directory}{_}InputData{_}{cancer_type}{_}Covariate"
             for filename in os.listdir(covariate_dir):
-                if filename.endswith(".tsv"):
-                    df = pd.read_csv(filepath_or_buffer=f"{covariate_dir}{_}{filename}", sep="\t", index_col="bcr_patient_barcode")
+                if filename.endswith(".tsv") and not is_temp_file(filename) and not is_cut_file(filename):
+                    df = pd.read_csv(filepath_or_buffer=f"{covariate_dir}{_}{filename}", sep="\t", index_col=0)
                     df = df.rename_axis("SampleID")
                     variables = df.columns.values
                     class_df = df[[value for value in variables if value.startswith(end_points)]]

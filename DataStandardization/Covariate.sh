@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 . ./functions.sh
 fileName="mmc1.xlsx"
 web_url="https://www.cell.com/cms/10.1016/j.cell.2018.02.052/attachment/f4eb6b31-8957-4817-a41f-e46fd2a1d9c3/"
