@@ -145,7 +145,6 @@ for CancerType in input_data_dir:
             already_seen = False
             if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
                 for DataType in list_of_dTypes:
-                    print(DataType)
                     d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                     list_of_paths.append(d_type_directory)
                     if DataType != "Class":
@@ -189,4 +188,5 @@ for CancerType in input_data_dir:
                 d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                 patients_with_all = vital_map[d_type_directory]
                 if cut_files == "True":
+                    print(DataType)
                     run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis, Analysis_endpoint)
