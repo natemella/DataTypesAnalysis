@@ -61,7 +61,7 @@ then
     python3 $python_script $fileName
     echo ${fileName}
 else
-    echo $fileName has not yest been downloaded
+    echo $fileName has not yet been downloaded
     wget ${web_url}/${fileName}
     fileName=$(rename_if_necessary ${fileName} ${rename} ${file_extension})
     fileName=$(gunzip_if_gzipped ${fileName})
