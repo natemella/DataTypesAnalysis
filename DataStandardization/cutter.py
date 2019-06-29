@@ -133,6 +133,7 @@ sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type 
 end_points = [f"LT_{Analysis_endpoint}", f"ST_{Analysis_endpoint}"]
 vital_map = {}
 for CancerType in input_data_dir:
+    print(CancerType)
     for outcome in end_points:
         sample_summary.write(f'{CancerType},')
         sample_summary.write(f'{outcome.replace("T_", "")},')
@@ -145,7 +146,6 @@ for CancerType in input_data_dir:
             already_seen = False
             if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
                 for DataType in list_of_dTypes:
-                    print(DataType)
                     d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
                     list_of_paths.append(d_type_directory)
                     if DataType != "Class":
