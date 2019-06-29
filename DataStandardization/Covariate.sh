@@ -7,9 +7,9 @@ python_script=Covariate.py
 folder="Covariate"
 tcga_extension=".tsv"
 file_to_check="../InputData/TCGA_BRCA/Class/*tsv"
-
+force=$1
 check_if_file_already_exits $file_to_check
-download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder "" "" $1
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder "" "" $force
 
 
 cd ../
