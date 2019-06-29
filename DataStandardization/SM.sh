@@ -8,5 +8,5 @@ folder=SM
 file_extension=".gz"
 rename="True"
 
-download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $file_extension $rename
+download_and_organize_data $fileName $python_script $web_url $tcga_extension $folder $file_extension $rename $1
 
