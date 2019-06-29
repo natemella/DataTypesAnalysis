@@ -153,7 +153,7 @@ for CancerType in input_data_dir:
                                 continue
                             input_file = f'{d_type_directory}{_}{input_file}'
                             if input_file.endswith(('.tsv','.txt')):
-                                patients_per_data = [line.split('\t')[0] for line in codecs.open(input_file)]
+                                patients_per_data = [line.split('\t')[0] for line in open(input_file)]
                                 total_patients.update(patients_per_data)
                                 patients_with_all = patients_with_all.intersection(set(patients_per_data))
                                 sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data))}')
