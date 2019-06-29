@@ -5,7 +5,7 @@ fileName="GSM1536837_06_01_15_TCGA_24.tumor_Rsubread_TPM.txt"
 extension2=".gz"
 extention=".tar"
 file_to_check="../InputData/TCGA_BRCA/Expression/*ttsv"
-check_if_file_already_exits $file_to_check
+check_if_file_already_exits $file_to_check $1
 
 compressedFile=${tarFile}${extention}
 
