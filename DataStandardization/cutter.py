@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 import codecs
 from util import *
 import argparse
@@ -68,8 +67,6 @@ def write_file(df, mini, input_file, endpoint):
     else:
         df.to_csv(path_or_buf=new_file_path, sep='\t')
 
-
-
 def make_df(patient_ids, DataType, input_file, mini, endpoint):
     if input_file.endswith(".ttsv"):
         df = filter_cols(input_file, patient_ids, mini)
@@ -83,9 +80,7 @@ def make_df(patient_ids, DataType, input_file, mini, endpoint):
     print(f"Cutting {path_to_list(input_file)[-1]} and making a new copy based on all patients "
           f"who have data for across all data types and {endpoint} data")
 
-
-
-parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
+parser = argparse.ArgumentParser(description="Cut the files so that we only keep data that we have across all data types.")
 parser.add_argument(
     "-c",
     "--cut-files",
@@ -114,80 +109,60 @@ args = parser.parse_args()
 cut_files = args.cut_files
 quick_analysis = args.quick
 Analysis_endpoint = args.endpoint
+
 print(f"Cut files set to {cut_files}")
 print(f"quick_analysis set to {quick_analysis}")
-if quick_analysis == "True":
-    cut_files = "True"
 
-my_list = path_to_list(currentWorkingDir)
-parent_directory = path_delimiter().join(my_list[:-1])
-
+# get path to input data folders
+currentWorkingDir = os.getcwd()
+parent_folders = path_to_list(currentWorkingDir)
+parent_directory = path_delimiter().join(parent_folders[:-1])
 input_data_dir = next(os.walk(os.path.join(*[parent_directory, "InputData"])))[1]
 
 # for unix it would be '{_}' for windows it would be '\'
 _=path_delimiter()
 
-sample_summary = open("sample_summary.csv",'w+')
-sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type of Data,Patients with all 7 data types\n")
+map = {} # All of the patients of one cancer type mapped to a path of one data type
 
-end_points = [f"LT_{Analysis_endpoint}", f"ST_{Analysis_endpoint}"]
-vital_map = {}
-for CancerType in input_data_dir:
-    print(CancerType)
-    for outcome in end_points:
-        sample_summary.write(f'{CancerType},')
-        sample_summary.write(f'{outcome.replace("T_", "")},')
-        total_patients = set()
-        patients_with_all = set()
-        class_info = set()
-        patients_per_data = []
-        for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
-            list_of_paths = []
-            already_seen = False
-            if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
-                for DataType in list_of_dTypes:
-                    d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
-                    list_of_paths.append(d_type_directory)
-                    if DataType != "Class":
-                        for input_file in os.listdir(d_type_directory):
-                            if is_cut_or_tempfile(input_file):
-                                continue
-                            input_file = f'{d_type_directory}{_}{input_file}'
-                            if input_file.endswith(('.tsv','.txt')):
-                                patients_per_data = [line.split('\t')[0] for line in open(input_file)]
-                                total_patients.update(patients_per_data)
-                                patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data))}')
-                            else:
-                                with codecs.open(input_file, 'r') as myfile:
-                                    firstline = myfile.readline()
-                                    patients_per_data = firstline.split('\t')
-                                    total_patients.update(patients_per_data)
-                                    patients_with_all = patients_with_all.intersection(set(patients_per_data))
-                                    sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data))}')
+for CancerType in sorted(input_data_dir):
 
-                    else:
-                        patients_per_data = [line.split('\t')[0] for line in open(f'{d_type_directory}{_}{Analysis_endpoint}.tsv') if line.strip('\n').split('\t')[1] == outcome]
-                        patients_with_all.update(patients_per_data)
-                        class_info.update(patients_per_data)
-                        sample_summary.write(f'{DataType}:{len(patients_with_all)},')
-                    sample_summary.write(' | ')
-                sample_summary.write(f',{len(patients_with_all)}\n')
-                for path in list_of_paths:
-                    if outcome == f"LT_{Analysis_endpoint}":
-                        vital_map[path] = patients_with_all
-                    else:
-                        vital_map[path].update(patients_with_all)
-    sample_summary.write('\n')
+    patients_with_all_data_types = set()
+    class_info = set()
+    patients_per_data_type = []
+    cancer_path = os.path.join(*[parent_directory, "InputData", CancerType])
+    data_paths = []
 
-sample_summary.close()
+    for DataType in sorted(os.listdir(cancer_path)):
 
-for CancerType in input_data_dir:
-    for list_of_dTypes in next(os.walk(os.path.join(*[parent_directory,"InputData",CancerType]))):
-        if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
-            for DataType in list_of_dTypes:
-                d_type_directory = os.path.join(*[parent_directory,"InputData",CancerType,DataType])
-                patients_with_all = vital_map[d_type_directory]
-                if cut_files == "True":
-                    print(DataType)
-                    run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis, Analysis_endpoint)
+        data_type_path = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
+        data_paths.append(data_type_path)
+
+        if DataType != "Class":
+            for input_file in sorted(os.listdir(data_type_path)):
+                # we don't want to re-cut an already cut file
+                if is_cut_or_tempfile(input_file):
+                    continue
+
+                input_file = f'{data_type_path}{_}{input_file}'
+                # In TSV files, patient ID's are the first word of each line
+                if input_file.endswith('.tsv'):
+                    patients_per_data_type = [line.split('\t')[0] for line in open(input_file)]
+                    patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
+                else:
+                    # In TTSV files, patient ID's are the first line
+                    with codecs.open(input_file, 'r') as myfile:
+                        firstline = myfile.readline()
+                        patients_per_data_type = firstline.split('\t')
+                        patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
+
+        # We expect to open the Class files first since Class comes alphabetically before Clinical, Covariate, CNV, DNA_Methylation, Expression, miRNA, RPPA, and SM
+        # This is where we begin to build our set of patients with all_data_types
+        else:
+            patients_per_data_type = [line.split('\t')[0] for line in open(f'{data_type_path}{_}{Analysis_endpoint}.tsv')]
+            patients_with_all_data_types.update(patients_per_data_type)
+            class_info.update(patients_per_data_type)
+
+    for DataType in sorted(os.listdir(cancer_path)):
+        data_type_path = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
+        if cut_files == "True" or quick_analysis == "True":
+            run_make_df_function(data_type_path, patients_with_all_data_types, DataType, quick_analysis, Analysis_endpoint)
