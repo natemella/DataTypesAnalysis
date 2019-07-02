@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH -N 1 -n 8 --mem=32G -C rhel7
-#SBATCH --array=0:256
+#SBATCH --array=0-256
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
 #SBATCH --time=12:00:00   # walltime
