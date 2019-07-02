@@ -76,6 +76,7 @@ cp -r InputData ../
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
     execulte_analysis $dockerCommandsFile
+    wait
 done
 echo WORKING STEP 3
 while read line; do
