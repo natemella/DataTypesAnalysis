@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#SBATCH -N 1 -n 8 --mem=32G -C rhel7
+#SBATCH --array=0:256
+#SBATCH --mail-user=nathanmell@gmail.com   # email address
+#SBATCH --mail-type=END
+
 . ./DataStandardization/functions.sh
 
 endpoint=$1
@@ -72,10 +77,13 @@ for i in ${index_array[@]}; do
     execulte_analysis $dockerCommandsFile
 done
 echo WORKING STEP 3
-#parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+while read line; do
+    $line &
+done < <(sed -n $(($SLURM_TASK_ARRAY_ID * $SLURM_NTASKS + 1)),$((($SLURM_TASK_ARRAY_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+wait
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
-#    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
+    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
 done
 
-#rm -r *_Commands
+rm -r *_Commands
