@@ -72,10 +72,10 @@ for i in ${index_array[@]}; do
     execulte_analysis $dockerCommandsFile
 done
 echo WORKING STEP 3
-parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
+#parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
-    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
+#    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
 done
 
-rm -r *_Commands
+#rm -r *_Commands

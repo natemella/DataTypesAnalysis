@@ -27,13 +27,14 @@ fi
 }
 
 check_if_file_already_exits() {
-filepath=$1
-force=$2
+filepath=$2
+force=$1
 echo $force
 if [[ $force != "force" ]]
 then
     if [ -f ${filepath} ]
     then
+        echo $force
         echo Already Downloaded
         exit 1
     fi
@@ -53,7 +54,7 @@ force=$8
 echo $force
 
 file_to_check="../InputData/TCGA_BRCA/"${folder}"/*"${tcga_extension}
-check_if_file_already_exits ${file_to_check} $force
+check_if_file_already_exits $force ${file_to_check}
 
 if [ -e $fileName* ]
 then

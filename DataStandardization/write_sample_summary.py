@@ -1,23 +1,10 @@
 import os
 import codecs
 from util import *
-import argparse
-parser = argparse.ArgumentParser(description="Develop a summary of file information.")
-parser.add_argument(
-    "-e",
-    '--endpoint',
-    type=str,
-    default="PFI",
-    help="Endpoint that you woul like to use for analysis."
-)
+import sys
 
-args = parser.parse_args()
-cut_files = args.cut_files
-quick_analysis = args.quick
-Analysis_endpoint = args.endpoint
 
-print(f"Cut files set to {cut_files}")
-print(f"quick_analysis set to {quick_analysis}")
+Analysis_endpoint = sys.argv[1]
 
 # get path to input data folders
 currentWorkingDir = os.getcwd()
@@ -47,13 +34,13 @@ for CancerType in sorted(input_data_dir):
         cancer_path = os.path.join(*[parent_directory, "InputData", CancerType])
         data_paths = []
 
-        for DataType in sorted(os.listdir(cancer_path)):
+        for DataType in sorted(os.listdir(cancer_path), key=lambda s: s.lower()):
 
             data_type_path = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
             data_paths.append(data_type_path)
 
             if DataType != "Class":
-                for input_file in sorted(os.listdir(data_type_path)):
+                for input_file in (os.listdir(data_type_path)):
                     # we don't want to re-cut an already cut file
                     if is_cut_or_tempfile(input_file):
                         continue

@@ -4,20 +4,39 @@ import codecs
 from util import *
 import argparse
 
-def run_make_df_function(d_type_directory, patients_with_all, DataType, quick_analysis, endpoint):
+def run_make_df_function(d_type_path, patients_with_all, DataType, quick_analysis, endpoint):
         if DataType == "Class":
             return
-        for input_file in os.listdir(d_type_directory):
+        for input_file in os.listdir(d_type_path):
             if is_cut_or_tempfile(input_file):
                 continue
-            input_file = f'{d_type_directory}{_}{input_file}'
+            input_file = f'{d_type_path}{_}{input_file}'
             make_df(patients_with_all, DataType, input_file, quick_analysis, endpoint)
+
+def make_df(patient_ids, DataType, input_file, mini, endpoint):
+    if input_file.endswith(".ttsv"):
+        df = filter_cols(input_file, patient_ids, mini)
+    else:
+        if DataType != "DNA_Methylation":
+            index_name = "SampleID"
+        else:
+            index_name = "Patient_ID"
+        df = filter_rows(input_file,patient_ids, index_name, mini)
+    write_file(df, mini, input_file, endpoint)
+
 
 def filter_cols(input_file, patient_ids, mini):
     my_cols = list(patient_ids)
     my_cols.insert(0,"SampleID")
+    my_list = [line.split('\t')[0] for line in open(input_file)]
+    print(input_file)
+    print(len(open(input_file).readlines()))
+    print(my_list[0:10])
     df = pd.read_csv(input_file, delimiter='\t',
                        na_values='NA', usecols=my_cols, index_col="SampleID")
+    print(input_file)
+    print(len(df.index.values))
+    print(df.index.values[0:10])
     if mini == "True":
         df = df.iloc[:3]
     return df
@@ -66,19 +85,9 @@ def write_file(df, mini, input_file, endpoint):
         df.to_csv(path_or_buf=new_file_path, sep='\t')
     else:
         df.to_csv(path_or_buf=new_file_path, sep='\t')
+    print(f"Cutting {path_to_list(input_file)[-3:]} based on {endpoint}")
+    print(f'Rewriting the file as {path_to_list(new_file_path)[-1]}')
 
-def make_df(patient_ids, DataType, input_file, mini, endpoint):
-    if input_file.endswith(".ttsv"):
-        df = filter_cols(input_file, patient_ids, mini)
-    else:
-        if DataType != "DNA_Methylation":
-            index_name = "SampleID"
-        else:
-            index_name = "Patient_ID"
-        df = filter_rows(input_file,patient_ids, index_name, mini)
-    write_file(df, mini, input_file, endpoint)
-    print(f"Cutting {path_to_list(input_file)[-1]} and making a new copy based on all patients "
-          f"who have data for across all data types and {endpoint} data")
 
 parser = argparse.ArgumentParser(description="Cut the files so that we only keep data that we have across all data types.")
 parser.add_argument(
@@ -132,7 +141,7 @@ for CancerType in sorted(input_data_dir):
     cancer_path = os.path.join(*[parent_directory, "InputData", CancerType])
     data_paths = []
 
-    for DataType in sorted(os.listdir(cancer_path)):
+    for DataType in sorted(os.listdir(cancer_path), key=lambda s: s.lower()):
 
         data_type_path = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
         data_paths.append(data_type_path)

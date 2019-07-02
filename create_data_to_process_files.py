@@ -210,7 +210,6 @@ for CancerType in INPUT_DATA:
                                 if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
                                     continue
                                 if quick_analysis == "True" or cut_files == "True":
-                                    print("testing")
                                     if not match_endpoint(input_file, x):
                                         continue
                                 names_of_input_files += f'{input_file},'
