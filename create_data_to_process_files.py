@@ -164,7 +164,8 @@ if not os.path.exists(os.path.dirname(output_directory)):
     os.makedirs(os.path.dirname(output_directory))
 else:
     for file in os.listdir(os.path.dirname(output_directory)):
-        os.remove(os.path.join(*[currentWorkingDir,output_directory,file]))
+        if os.path.exists(os.path.join(*[currentWorkingDir,output_directory,file])):
+            os.remove(os.path.join(*[currentWorkingDir,output_directory,file]))
 
 INPUT_DATA = next(os.walk(currentWorkingDir + f"{path_delimiter()}InputData"))[1]
 
