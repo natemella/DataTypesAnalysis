@@ -163,8 +163,8 @@ output_directory = os.path.join(*[currentWorkingDir, f'Data_To_Process_Files{pat
 if not os.path.exists(os.path.dirname(output_directory)):
     os.makedirs(os.path.dirname(output_directory))
 else:
-    shutil.rmtree(os.path.dirname(output_directory))
-    os.makedirs(os.path.dirname(output_directory))
+    for file in os.listdir(os.path.dirname(output_directory)):
+        os.remove(os.path.join(*[currentWorkingDir,output_directory,file]))
 
 INPUT_DATA = next(os.walk(currentWorkingDir + f"{path_delimiter()}InputData"))[1]
 
