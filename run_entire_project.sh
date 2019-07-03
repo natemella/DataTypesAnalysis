@@ -66,6 +66,6 @@ for i in ${index_array[@]}; do
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
     echo "########################################"
     evaluate_results $(python3 get_analysis_name.py $(new_combo $i))
-    rm -r *_Commands
+#    rm -r *_Commands
 done
 
