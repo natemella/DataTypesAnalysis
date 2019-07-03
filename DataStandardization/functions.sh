@@ -116,7 +116,7 @@ done
 
 evaluate_results() {
 experiment_name=$1
-new_output=${experiment_name}"_metrics.tsv"
+new_output=${experiment_name}".tsv"
 new_predictions=${experiment_name}"_Predictions.tsv.gz"
 search_dir=Data_To_Process_Files
 for file in `ls $search_dir`; do

@@ -9,7 +9,9 @@ set -u
 
 endpoint=$1
 
-echo WORKING
+echo *****************************************
+echo CHECKING WHETHER DATA HAS BEEN DOWNLOADED
+echo *****************************************
 
 if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
@@ -26,65 +28,44 @@ then
     fi
 fi
 
-no_combination() {
-python3 create_data_to_process_files.py $endpoint
+new_combo() {
+counter=$1
+if [ $counter -eq 0 ] ; then
+    echo ${endpoint}
+else
+    echo $(python3 get_combo.py $(new_combo $(($counter-1))))
+fi
 }
 
-add_clinical() {
-python3 create_data_to_process_files.py $endpoint -c True
-}
-
-add_miRNA() {
-python3 create_data_to_process_files.py $endpoint -c True -m True
-}
-
-add_RPPA() {
-python3 create_data_to_process_files.py $endpoint -c True -m True -p True
-}
-
-add_SM() {
-python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True
-}
-
-add_CNV() {
-python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True -n True
-}
-
-add_dna_methylation() {
-python3 create_data_to_process_files.py $endpoint -c True -m True -p True -s True -n True -e True
-}
-
-declare -a ARRAY_OF_COMBINATIONS
-declare -a ARRAY_OF_ANALYSIS_NAMES
-
-ARRAY_OF_COMBINATIONS=(no_combination add_clinical add_miRNA add_RPPA add_SM add_CNV add_dna_methylation)
-ARRAY_OF_ANALYSIS_NAMES=("no_combination" "+clinical" "+clinical+miRNA" "+clinical+miRNA+RPPA" "+SM" "add_CNV" "add_dna_methylation")
 index_array=(0 1 2 3 4 5 6)
 
-echo WORKING STEP 2
 
 delay=0
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
 rm -f $jobLogFile
-if [ -f $dockerCommandsFile ]
-then
-    rm $dockerCommandsFile
-fi
 cp -r InputData ../
 for i in ${index_array[@]}; do
-    ${ARRAY_OF_COMBINATIONS[$i]}
+    if [ -e $dockerCommandsFile ]; then
+        rm $dockerCommandsFile
+    fi
+    python3 create_data_to_process_files.py $(new_combo $i)
+    echo *****************************************
+    echo MAKING TEMPORARY COMMAND FILES
+    echo *****************************************
     execulte_analysis $dockerCommandsFile
     wait
-done
-echo WORKING STEP 3
-while read line; do
-    $line &
-done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
-wait
-for i in ${index_array[@]}; do
-    ${ARRAY_OF_COMBINATIONS[$i]}
-    evaluate_results ${ARRAY_OF_ANALYSIS_NAMES[$i]}
+    echo *****************************************
+    echo RUNNING $(python3 get_analysis_name $(new_combo $i)) ANALYSIS COMMANDS
+    echo *****************************************
+    while read line; do
+        $line &
+    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+    wait
+    echo *****************************************
+    echo EVALUATING RESULTS FOR $(python3 get_analysis_name $(new_combo $i))
+    echo *****************************************
+    evaluate_results $(python3 get_analysis_name $(new_combo $i))
+    rm -r *_Commands
 done
 
-rm -r *_Commands
