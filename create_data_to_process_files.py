@@ -162,7 +162,7 @@ print(combination_list)
 output_directory = os.path.join(*[currentWorkingDir, f'Data_To_Process_Files{path_delimiter()}'])
 
 if os.path.exists(output_directory):
-    shutil.rmtree(output_directory)
+    shutil.rmtree(output_directory, ignore_errors=True)
 os.makedirs(output_directory)
 
 INPUT_DATA = next(os.walk(currentWorkingDir + f"{path_delimiter()}InputData"))[1]
