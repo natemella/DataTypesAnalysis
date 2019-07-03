@@ -9,9 +9,9 @@ set -u
 
 endpoint=$1
 
-echo *****************************************
+echo "########################################"
 echo CHECKING WHETHER DATA HAS BEEN DOWNLOADED
-echo *****************************************
+echo "########################################"
 
 if [ ! -f "InputData/TCGA_UCEC/Clinical/TCGA_UCEC_"$endpoint"_cut.tsv" ]
 then
@@ -49,22 +49,22 @@ for i in ${index_array[@]}; do
         rm $dockerCommandsFile
     fi
     python3 create_data_to_process_files.py $(new_combo $i)
-    echo *****************************************
+    echo "########################################"
     echo MAKING TEMPORARY COMMAND FILES
-    echo *****************************************
+    echo "########################################"
     execulte_analysis $dockerCommandsFile
     wait
-    echo *****************************************
+    echo "########################################"
     echo RUNNING $(python3 get_analysis_name $(new_combo $i)) ANALYSIS COMMANDS
-    echo *****************************************
+    echo "########################################"
     while read line; do
         $line &
     done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
     wait
     python3 create_data_to_process_files.py $(new_combo $i)
-    echo *****************************************
+    echo "########################################"
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name $(new_combo $i))
-    echo *****************************************
+    echo "########################################"
     evaluate_results $(python3 get_analysis_name $(new_combo $i))
     rm -r *_Commands
 done
