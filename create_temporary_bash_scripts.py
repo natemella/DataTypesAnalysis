@@ -275,5 +275,8 @@ else:
         # Create a file that indicates the location of all the bash scripts that need to be executed
         with open(dockerOutFilePath, 'a') as dockerOutFile:
                 for command in dockerCommandFilePaths:
-                        dockerOutFile.write(f"sbatch {command}\n")
-                dockerOutFile.write("wait\necho DONE\n")
+                        if command == dockerCommandFilePaths[-1]:
+                            dockerOutFile.write(f'sbatch --wait {command}\n')
+                        else:
+                            dockerOutFile.write(f"sbatch {command}\n")
+
