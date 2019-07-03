@@ -28,9 +28,11 @@ data_type_to_command["RPPA"] = " -p True"
 #calculate winning combination
 input_file = get_analysis_file(results_dir, analysis)
 df = pd.read_csv(input_file, sep="\t")
-print(df.groupby(['CancerType','Algorithm','Description'], sort=True).mean())
+df = df.groupby(['CancerType','Algorithm','Description'], sort=True).mean()
+df["Rank"] = df.groupby(['CancerType','Algorithm'])["AUROC"].rank()
+winning_df = df.reset_index()
+winning_df = winning_df.groupby(['Description'], sort=True)['Rank'].mean()
 
-winner = "Expression"
+winner = winning_df.idxmax()
 new_combo = previous_combo + data_type_to_command[winner]
 print(new_combo)
-print(analysis)
