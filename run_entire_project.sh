@@ -39,7 +39,6 @@ fi
 
 index_array=(0 1 2 3 4 5 6)
 
-
 delay=0
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
@@ -62,6 +61,7 @@ for i in ${index_array[@]}; do
         $line &
     done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
     wait
+    python3 create_data_to_process_files.py $(new_combo $i)
     echo *****************************************
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name $(new_combo $i))
     echo *****************************************
