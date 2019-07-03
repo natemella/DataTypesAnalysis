@@ -55,7 +55,7 @@ for i in ${index_array[@]}; do
     execulte_analysis $dockerCommandsFile
     wait
     echo "########################################"
-    echo RUNNING $(python3 get_analysis_name $(new_combo $i)) ANALYSIS COMMANDS
+    echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"
     while read line; do
         $line &
@@ -63,9 +63,9 @@ for i in ${index_array[@]}; do
     wait
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
-    echo EVALUATING RESULTS FOR $(python3 get_analysis_name $(new_combo $i))
+    echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
     echo "########################################"
-    evaluate_results $(python3 get_analysis_name $(new_combo $i))
+    evaluate_results $(python3 get_analysis_name.py $(new_combo $i))
     rm -r *_Commands
 done
 
