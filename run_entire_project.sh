@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-#SBATCH -N 1 -n 8 --mem=16G -C rhel7
-#SBATCH --array=0-0
+#SBATCH -N 1 -n 8 --mem=32G -C rhel7
+#SBATCH --array=0-256
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --qos=test
-#SBATCH --time=1:00:00   # walltime
+#SBATCH --time=12:00:00   # walltime
 set -u
 . ./DataStandardization/functions.sh
 
 endpoint=$1
-numJobs=$2
 
 echo WORKING
 
