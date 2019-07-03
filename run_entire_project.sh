@@ -82,7 +82,7 @@ done
 echo WORKING STEP 3
 while read line; do
     $line &
-done < <(sed -n $(($SLURM_TASK_ARRAY_ID * $SLURM_NTASKS + 1)),$((($SLURM_TASK_ARRAY_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
 wait
 for i in ${index_array[@]}; do
     ${ARRAY_OF_COMBINATIONS[$i]}
