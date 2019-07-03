@@ -276,4 +276,4 @@ else:
         with open(dockerOutFilePath, 'a') as dockerOutFile:
                 for command in dockerCommandFilePaths:
                         dockerOutFile.write(f"sbatch {command}\n")
-                dockerOutFile.write("wait")
+                dockerOutFile.write("wait\n")

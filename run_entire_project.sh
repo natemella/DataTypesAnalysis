@@ -61,6 +61,7 @@ for i in ${index_array[@]}; do
 #        $line &
 #    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
     wait
+    rm $dockerCommandsFile
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
