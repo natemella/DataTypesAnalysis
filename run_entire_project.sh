@@ -3,7 +3,8 @@
 #SBATCH --array=0-256
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=12:00:00   # walltime
+#SBATCH --qos=test
+#SBATCH --time=1:00:00   # walltime
 
 . ./DataStandardization/functions.sh
 
