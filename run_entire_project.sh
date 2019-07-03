@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 #SBATCH -N 1 -n 8 --mem=32G -C rhel7
-#SBATCH --array=0-0
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
 #SBATCH --time=12:00:00   # walltime
@@ -57,9 +56,10 @@ for i in ${index_array[@]}; do
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"
-    while read line; do
-        $line &
-    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+    bash $dockerCommandsFile
+#    while read line; do
+#        $line &
+#    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
     wait
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
