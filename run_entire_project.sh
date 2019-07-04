@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#SBATCH -N 1 -n 8 --mem=1G -C rhel7
+#SBATCH -N 1 -n 8 --mem=8 -C rhel7
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=72:00:00   # walltime
+#SBATCH --time=12:00:00   # walltime
 set -u
 . ./DataStandardization/functions.sh
 
@@ -52,15 +52,11 @@ for i in ${index_array[@]}; do
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
     execulte_analysis $dockerCommandsFile
-    wait
+    sbatch --wait job_array.sh $dockerCommandsFile
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"
     bash $dockerCommandsFile
-#    while read line; do
-#        $line &
-#    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
-    wait
     rm $dockerCommandsFile
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
