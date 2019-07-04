@@ -9,3 +9,5 @@ dockerCommandsFile=$1
     while read line; do
         $line &
     done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+wait
+echo DONE
