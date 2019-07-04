@@ -127,7 +127,7 @@ for file in `ls $search_dir`; do
     python3 get_metrics.py $analysis $datafile
     output=${analysis}".tsv"
 	cd Analysis_Results
-	if [[ "${trial[0]}" == "CNV" ]];
+	if [[ "${trial[0]}" == "Clinical" ]];
 	then
 	    cat $output >> $new_output
 	else
