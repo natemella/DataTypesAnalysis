@@ -215,7 +215,7 @@ for c in allDataToProcess:
             out = """
 #!/bin/bash
 
-#SBATCH --time=04:00:00   # walltime
+#SBATCH --time=08:00:00   # walltime
 #SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
