@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#SBATCH -N 1 -n 8 --mem=32G -C rhel7
+#SBATCH -N 1 -n 8 --mem=1G -C rhel7
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
 #SBATCH --time=12:00:00   # walltime
