@@ -50,6 +50,7 @@ for i in ${index_array[@]}; do
     execute_analysis $dockerCommandsFile
 #    replace_last_line $dockerCommandsFile
     bash $dockerCommandsFile
+    wait
 #    sbatch --wait job_array.sh $dockerCommandsFile
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
