@@ -103,7 +103,7 @@ done
 
 }
 
-execulte_analysis() {
+execute_analysis() {
 search_dir=Data_To_Process_Files
 dockerCommandsFile=$1
 for file in `ls $search_dir`; do
