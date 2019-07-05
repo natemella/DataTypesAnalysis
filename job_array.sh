@@ -4,6 +4,7 @@
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
 #SBATCH --time=18:00:00   # walltime
+module load jdk/1.8
 
 dockerCommandsFile=$1
     while read line; do
