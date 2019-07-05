@@ -276,7 +276,7 @@ else:
         with open(dockerOutFilePath, 'a') as dockerOutFile:
                 for command in dockerCommandFilePaths:
                         if command == dockerCommandFilePaths[-1]:
-                            dockerOutFile.write(f'bash {command}\n')
+                            dockerOutFile.write(f'sbatch --wait {command}\n')
                         else:
-                            dockerOutFile.write(f"bash {command}\n")
+                            dockerOutFile.write(f"sbatch {command}\n")
 
