@@ -2,7 +2,7 @@
 #SBATCH -N 1 -n 8 --mem=8 -C rhel7
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=12:00:00   # walltime
+#SBATCH --time=72:00:00   # walltime
 set -u
 . ./DataStandardization/functions.sh
 
@@ -52,7 +52,9 @@ for i in ${index_array[@]}; do
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
     execulte_analysis $dockerCommandsFile
-    sbatch job_array.sh $dockerCommandsFile
+    replace_last_line $dockerCommandsFile
+    bash $dockerCommandsFile
+    wait
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"

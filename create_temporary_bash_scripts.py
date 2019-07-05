@@ -166,7 +166,7 @@ for c in allDataToProcess:
 
     for i in range(startIteration, 1+stopIteration):
         print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
-        path = ['Analysis_Results',analysis, datasetID, classVar, 'iteration', str(i), '*' ,outFileToCheck]
+        path = ['Analysis_Results',analysis, datasetID, classVar, f'iteration{i}', '*' ,outFileToCheck]
         path = os.path.join(*path)
         executed_algos = glob.glob(path)
         executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
@@ -276,7 +276,7 @@ else:
         with open(dockerOutFilePath, 'a') as dockerOutFile:
                 for command in dockerCommandFilePaths:
                         if command == dockerCommandFilePaths[-1]:
-                            dockerOutFile.write(f'bash {command}\n')
+                            dockerOutFile.write(f'sbatch {command}\n')
                         else:
-                            dockerOutFile.write(f"bash {command}\n")
+                            dockerOutFile.write(f"sbatch {command}\n")
 

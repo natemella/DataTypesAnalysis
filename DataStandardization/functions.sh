@@ -150,4 +150,12 @@ else
 fi
 }
 
+replace_last_line() {
+dockerCommandsFile=$1
+python -c "lines = open('${dockerCommandsFile}', 'r').readlines();"\
+"last = lines[-1].split(' ');"\
+"last.insert(1, '--wait');"\
+"lines[-1] = ' '.join(last);"\
+"open('${dockerCommandsFile}', 'w').write('\n'.join(lines))"
+}
 set +a
