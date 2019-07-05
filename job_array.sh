@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -N 1 -n 1 --mem=16G -C rhel7
+#SBATCH -N 1 -n 1 --mem=64G -C rhel7
 #SBATCH --array=0-490
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
