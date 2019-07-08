@@ -1,4 +1,4 @@
-FROM srp33/shinylearner_gpu:version515
+FROM srp33/shinylearner_gpu:version517
 COPY Algorithms.txt ./
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt \
