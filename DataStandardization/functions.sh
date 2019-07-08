@@ -119,15 +119,21 @@ experiment_name=$1
 new_output=${experiment_name}".tsv"
 new_predictions=${experiment_name}"_Predictions.tsv.gz"
 search_dir=Data_To_Process_Files
+
+ARRAY=()
+for file in `ls $search_dir`; do
+    ARRAY+=(${file})
+done
+
 for file in `ls $search_dir`; do
     IFS='.' read -ra Analysis <<< "$file"
 	datafile=${search_dir}/${file}
 	analysis="${Analysis[0]}"
-	IFS='_' read -ra trial <<< "$analysis"
+	IFS='+' read -ra trial <<< "$analysis"
     python3 get_metrics.py $analysis $datafile
     output=${analysis}".tsv"
 	cd Analysis_Results
-	if [[ "${trial[0]}" == "Clinical" ]];
+	if [[ ${file} == "${ARRAY[0]}" ]];
 	then
 	    cat $output >> $new_output
 	else
