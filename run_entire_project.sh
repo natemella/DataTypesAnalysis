@@ -48,20 +48,16 @@ for i in ${index_array[@]}; do
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
     execute_analysis $dockerCommandsFile
-#    replace_last_line $dockerCommandsFile
-#    bash $dockerCommandsFile
-#    wait
     sbatch --wait job_array.sh $dockerCommandsFile
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"
-    bash $dockerCommandsFile
     rm $dockerCommandsFile
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
     echo "########################################"
     evaluate_results $(python3 get_analysis_name.py $(new_combo $i))
-#    rm -r *_Commands
+    rm -r *_Commands
 done
 
