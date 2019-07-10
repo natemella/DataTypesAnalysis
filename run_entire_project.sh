@@ -48,7 +48,11 @@ for i in ${index_array[@]}; do
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
     execute_analysis $dockerCommandsFile
-    sbatch --wait job_array.sh $dockerCommandsFile
+    num_of_commands=$(wc -l < $dockerCommandsFile)
+    python3 build_job_array.py $num_of_commands
+    if [ $num_of_commands -ne 0 ]; then
+        sbatch --wait job_array.sh $dockerCommandsFile
+    fi
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
     echo "########################################"

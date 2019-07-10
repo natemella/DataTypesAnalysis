@@ -212,8 +212,7 @@ for c in allDataToProcess:
                 "algo": algo,
                 "numCores": args.cores,
             }
-            out = """
-#!/bin/bash
+            out = """#!/bin/bash
 
 #SBATCH --time=08:00:00   # walltime
 #SBATCH --ntasks=1   # number of processor cores (i.e. tasks)
@@ -254,8 +253,7 @@ done
             # if algo == "tsv/keras/dnn/" or algo == "tsv/sklearn/logistic_regression/":
             #     out = out.replace("#!/bin/bash\n\n","")
             #     out = "#!/bin/bash\n\n#SBATCH --gres=gpu:1" + out
-            else:
-                out = out.replace("\n#!","#!")
+
             # This is where the bash script will be stored
             commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
             commandFilePath = os.path.join(*commandFilePath)

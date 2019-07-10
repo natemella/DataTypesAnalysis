@@ -1,6 +1,11 @@
-#!/bin/bash
+import sys
+
+bash_args = {
+    "numCommands": sys.argv[1],
+}
+out = """#!/bin/bash
 #SBATCH -N 1 -n 1 --mem=64G -C rhel7
-#SBATCH --array=0-25
+#SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
 #SBATCH --time=18:00:00   # walltime
@@ -11,3 +16,6 @@ dockerCommandsFile=$1
         $line &
     done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
 wait
+""".format(**bash_args)
+with open ("job_array.sh", 'w') as output:
+    output.write(out)
