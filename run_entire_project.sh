@@ -32,6 +32,23 @@ else
 fi
 }
 
+check_if_all_commands_finished() {
+inputfile=$1
+execute_analysis ${inputfile}
+num_of_commands=$(wc -l < ${inputfile})
+if [ $num_of_commands -ne 0 ]; then
+    echo THE FOLLOWING COMMANDS FAILED TO COMPLETE:
+    cat ${inputfile}
+    echo THIS PROGRAM WILL THEREFORE EXIT
+    rm -rf *_Commands
+    exit
+else
+    echo SUCCESS, ALL COMMANDS SUCCESSFULLY FINISHED!!!!
+    echo BEGINNING NEXT COMBINATION OF DATA TYPES!!!
+    rm -rf *_Commands
+fi
+}
+
 index_array=(0 1 2 3 4 5 6)
 
 delay=0
@@ -62,5 +79,6 @@ for i in ${index_array[@]}; do
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
     echo "########################################"
     evaluate_results $(python3 get_analysis_name.py $(new_combo $i))
+    check_if_all_commands_finished $dockerCommandsFile
 done
 
