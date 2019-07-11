@@ -186,7 +186,6 @@ for CancerType in INPUT_DATA:
                         myFiles[0].write(f'{header}\t')
                         for input_file in os.listdir(d_type_directory):
                             if quick_analysis == "True" and not is_temp_file(input_file):
-                                print(input_file)
                                 continue
                             if cut_files == "True" and not is_cut_file(input_file):
                                 continue
