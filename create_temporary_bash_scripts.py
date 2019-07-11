@@ -250,9 +250,9 @@ done
             # Build the bash script for this combination of dataset, algorithm, and iteration
             if args.scale_mode != "True":
                 out = out.replace(f'--scale robust {line_end(2)}','')
-            # if algo == "tsv/keras/dnn/" or algo == "tsv/sklearn/logistic_regression/":
-            #     out = out.replace("#!/bin/bash\n\n","")
-            #     out = "#!/bin/bash\n\n#SBATCH --gres=gpu:1" + out
+            if algo == "tsv/keras/dnn/" or algo == "tsv/sklearn/logistic_regression/":
+                out = out.replace("#!/bin/bash\n\n","")
+                out = "#!/bin/bash\n\n#SBATCH --gres=gpu:1" + out
 
             # This is where the bash script will be stored
             commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
