@@ -129,3 +129,10 @@ def is_cut_file(input_file):
 def get_paths_to_data_type(data_type):
     paths = get_paths_to_data_files()
     return [path for path in paths if path_to_list(path)[-2] == data_type]
+
+def find_dnn_algorithms(Commands):
+    dnn_algorithms = []
+    for command in Commands:
+        if command.split(path_delimiter())[-1] == "tsv__keras__dnn__.sh":
+            dnn_algorithms.append(command)
+    return dnn_algorithms

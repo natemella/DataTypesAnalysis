@@ -48,14 +48,14 @@ parser.add_argument(
     "-t",
     "--hours-max",
     type=int,
-    default=5,
+    default=18,
     help="Number of hours to run before timing out."
 )
 parser.add_argument(
     "-c",
     "--cores",
     type=int,
-    default=1,
+    default=24,
     help="Number of cores to allocate to docker."
 )
 parser.add_argument(
@@ -79,7 +79,7 @@ parser.add_argument(
 parser.add_argument(
     "-l",
     "--shiny-learner-version",
-    default="515",
+    default="520",
     help="Version of ShinyLearner docker image to use. See https://hub.docker.com/r/srp33/shinylearner/tags for "
          "published versions."
 )
@@ -252,7 +252,7 @@ done
                 out = out.replace(f'--scale robust {line_end(2)}','')
             if algo == "tsv/keras/dnn/" or algo == "tsv/sklearn/logistic_regression/":
                 out = out.replace("#!/bin/bash\n\n","")
-                out = "#!/bin/bash\n\n#SBATCH --gres=gpu:1\n" + out
+                out = "#!/bin/bash\n\n#SBATCH --gres=gpu:2\n" + out
 
             # This is where the bash script will be stored
             commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
@@ -270,11 +270,15 @@ done
 if len(dockerCommandFilePaths) == 0:
         print('All commands have been executed!')
 else:
+        dnn_commands = find_dnn_algorithms(dockerCommandFilePaths)
         # Create a file that indicates the location of all the bash scripts that need to be executed
         with open(dockerOutFilePath, 'a') as dockerOutFile:
                 for command in dockerCommandFilePaths:
-                        if command == dockerCommandFilePaths[-1]:
-                            dockerOutFile.write(f'bash {command}\n')
+                        if command in dnn_commands:
+                            if command == dnn_commands[-1]:
+                                dockerOutFile.write(f'sbatch --wait {command}\n')
+                            else:
+                                dockerOutFile.write(f'sbatch {command}\n')
                         else:
                             dockerOutFile.write(f"bash {command}\n")
 
