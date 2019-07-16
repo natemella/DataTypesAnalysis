@@ -102,6 +102,12 @@ parser.add_argument(
     default=5,
     help="Number of inner folds to use in nested cross-validation for parameter optimization."
 )
+parser.add_argument(
+    "-e",
+    "--slurm-environment",
+    default="True",
+    help="Whether project can run through slurm and sbatch"
+)
 
 args = parser.parse_args()
 
@@ -112,6 +118,7 @@ algorithmsFilePath = args.algorithms_path
 dataToProcessFilePath = args.data_path
 outFileToCheck = args.check_file
 dockerOutFilePath = args.outfile
+s_environment = args.slurm_environment
 current_working_dir = os.path.dirname(os.path.realpath(__file__))
 
 dockerCommandFilePaths = []
@@ -268,17 +275,21 @@ done
             dockerCommandFilePaths.append(commandFilePath)
 
 if len(dockerCommandFilePaths) == 0:
-        print('All commands have been executed!')
+    print('All commands have been executed!')
 else:
-        dnn_commands = find_dnn_algorithms(dockerCommandFilePaths)
-        # Create a file that indicates the location of all the bash scripts that need to be executed
-        with open(dockerOutFilePath, 'a') as dockerOutFile:
-                for command in dockerCommandFilePaths:
-                        if command in dnn_commands:
-                            if command == dnn_commands[-1]:
-                                dockerOutFile.write(f'sbatch --wait {command}\n')
-                            else:
-                                dockerOutFile.write(f'sbatch {command}\n')
-                        else:
-                            dockerOutFile.write(f"bash {command}\n")
+    dnn_commands = find_dnn_algorithms(dockerCommandFilePaths)
+    # Create a file that indicates the location of all the bash scripts that need to be executed
+    with open(dockerOutFilePath, 'a') as dockerOutFile:
+        if s_environment == "True":
+            for command in dockerCommandFilePaths:
+                if command in dnn_commands:
+                    if command == dnn_commands[-1]:
+                        dockerOutFile.write(f'sbatch --wait {command}\n')
+                    else:
+                        dockerOutFile.write(f'sbatch {command}\n')
+                else:
+                    dockerOutFile.write(f"bash {command}\n")
+        else:
+            for command in dockerCommandFilePaths:
+                dockerOutFile.write(f"bash {command}\n")
 
