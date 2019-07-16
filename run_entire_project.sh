@@ -80,11 +80,11 @@ for i in ${index_array[@]}; do
             rm -f $jobLogFile
             parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
         fi
+        echo "########################################"
+        echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
+        echo "########################################"
+        rm $dockerCommandsFile
     fi
-    echo "########################################"
-    echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
-    echo "########################################"
-    rm $dockerCommandsFile
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
