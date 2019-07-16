@@ -2,7 +2,8 @@
 set -u
 . ./DataStandardization/functions.sh
 
-endpoint=$1
+endpoint=${1:-PFI}
+slurm_environment=${2:-True}
 
 echo "########################################"
 echo CHECKING WHETHER DATA HAS BEEN DOWNLOADED
@@ -64,11 +65,19 @@ for i in ${index_array[@]}; do
     echo "########################################"
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
-    execute_analysis $dockerCommandsFile
-    num_of_commands=$(wc -l < $dockerCommandsFile)
-    python3 build_job_array.py $num_of_commands
-    if [ $num_of_commands -ne 0 ]; then
-        sbatch --wait job_array.sh $dockerCommandsFile
+    execute_analysis $dockerCommandsFile $slurm_environment
+    if [[ $slurm_environment == "True" ]]; then
+        num_of_commands=$(wc -l < $dockerCommandsFile)
+        python3 build_job_array.py $num_of_commands
+        if [ $num_of_commands -ne 0 ]; then
+            sbatch --wait job_array.sh $dockerCommandsFile
+        fi
+    else
+        delay=1
+        numJobs=7
+        jobLogFile=Analysis.job.log
+        rm -f $jobLogFile
+        parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
     fi
     echo "########################################"
     echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS

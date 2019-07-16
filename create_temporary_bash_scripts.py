@@ -103,7 +103,7 @@ parser.add_argument(
     help="Number of inner folds to use in nested cross-validation for parameter optimization."
 )
 parser.add_argument(
-    "-e",
+    "-z",
     "--slurm-environment",
     default="True",
     help="Whether project can run through slurm and sbatch"
@@ -172,7 +172,6 @@ for c in allDataToProcess:
     not_executed_algos = set()
 
     for i in range(startIteration, 1+stopIteration):
-        print(f'{analysis} {datasetID} {classVar} iteration {str(i)}')
         path = ['Analysis_Results',analysis, datasetID, classVar, f'iteration{i}', '*' ,outFileToCheck]
         path = os.path.join(*path)
         executed_algos = glob.glob(path)
