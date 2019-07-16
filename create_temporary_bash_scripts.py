@@ -221,10 +221,10 @@ for c in allDataToProcess:
             out = """#!/bin/bash
 
 #SBATCH --time=20:00:00   # walltime
-#SBATCH --ntasks=24   # number of processor cores (i.e. tasks)
+#SBATCH --ntasks=28   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
-#SBATCH --mem-per-cpu=79872M   # memory per CPU core
+#SBATCH --mem=128G   # memory 
 
 
 cd ../
@@ -258,7 +258,7 @@ done
                 out = out.replace(f'--scale robust {line_end(2)}','')
             if algo == "tsv/keras/dnn/" or algo == "tsv/sklearn/logistic_regression/":
                 out = out.replace("#!/bin/bash\n\n","")
-                out = "#!/bin/bash\n\n#SBATCH --gres=gpu:2\n" + out
+                out = "#!/bin/bash\n\n#SBATCH --gres=gpu:4\n" + out
 
             # This is where the bash script will be stored
             commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']

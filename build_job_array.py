@@ -15,7 +15,7 @@ module load jdk/1.8
 dockerCommandsFile=$1
     while read line; do
         $line &
-    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * $SLURM_NTASKS + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * $SLURM_NTASKS))p $dockerCommandsFile)
+    done < <(sed -n $(($SLURM_ARRAY_TASK_ID * 1 + 1)),$((($SLURM_ARRAY_TASK_ID + 1) * 1))p $dockerCommandsFile)
 wait
 """.format(**bash_args)
 with open ("job_array.sh", 'w') as output:
