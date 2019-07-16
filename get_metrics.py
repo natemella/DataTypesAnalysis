@@ -84,8 +84,8 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-# if os.path.exists(analysis + '_Commands/'):
-#     shutil.rmtree(analysis + '_Commands/')
+if os.path.exists(analysis + '_Commands/'):
+    shutil.rmtree(analysis + '_Commands/')
 
 
 out = "Description\tCancerType\tClassType\tIteration\tfold\tAlgorithm\tDefaultParameters\tAUROC\n"
