@@ -50,14 +50,14 @@ for CancerType in sorted(input_data_dir):
                     if input_file.endswith(('.tsv','.txt')):
                         patients_per_data_type = [line.split('\t')[0] for line in open(input_file)]
                         patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
-                        sample_summary.write(len(class_info.intersection(patients_per_data_type)))
+                        sample_summary.write(f'{len(class_info.intersection(patients_per_data_type))}')
                     else:
                         # In TTSV files, patient ID's are the first line
                         with codecs.open(input_file, 'r') as myfile:
                             firstline = myfile.readline()
                             patients_per_data_type = firstline.split('\t')
                             patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
-                            sample_summary.write(len(class_info.intersection(patients_per_data_type)))
+                            sample_summary.write(f'{len(class_info.intersection(patients_per_data_type))}')
 
             # We expect to open the Class files first since Class comes alphabetically before Clinical, Covariate, CNV, DNA_Methylation, Expression, miRNA, RPPA, and SM
             # This is where we begin to build our set of patients with all_data_types
