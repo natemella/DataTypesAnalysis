@@ -17,7 +17,7 @@ _=path_delimiter()
 
 # write header of sample_summary file
 sample_summary = open("sample_summary.csv",'w+')
-sample_summary.write("CancerType,Outcome,Class Info,Number of Patients per type of Data,Patients with all 7 data types\n")
+sample_summary.write("CancerType,Outcome,Class,Clinical,CNV,Covariate,DNA_Methylation,Expression,miRNA,RPPA,SM,Total\n")
 
 end_points = [f"LT_{Analysis_endpoint}", f"ST_{Analysis_endpoint}"]
 for CancerType in sorted(input_data_dir):
@@ -50,14 +50,14 @@ for CancerType in sorted(input_data_dir):
                     if input_file.endswith(('.tsv','.txt')):
                         patients_per_data_type = [line.split('\t')[0] for line in open(input_file)]
                         patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
-                        sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data_type)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data_type))}')
+                        sample_summary.write(len(class_info.intersection(patients_per_data_type)))
                     else:
                         # In TTSV files, patient ID's are the first line
                         with codecs.open(input_file, 'r') as myfile:
                             firstline = myfile.readline()
                             patients_per_data_type = firstline.split('\t')
                             patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
-                            sample_summary.write(f'{DataType[0:5]}:Total={len(patients_per_data_type)} & {Analysis_endpoint}={len(class_info.intersection(patients_per_data_type))}')
+                            sample_summary.write(len(class_info.intersection(patients_per_data_type)))
 
             # We expect to open the Class files first since Class comes alphabetically before Clinical, Covariate, CNV, DNA_Methylation, Expression, miRNA, RPPA, and SM
             # This is where we begin to build our set of patients with all_data_types
