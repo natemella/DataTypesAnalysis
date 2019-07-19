@@ -33,13 +33,13 @@ for CancerType in sorted(input_data_dir):
         patients_per_data_type = []
         cancer_path = os.path.join(*[parent_directory, "InputData", CancerType])
         data_paths = []
-
+        out = ""
         for DataType in sorted(os.listdir(cancer_path), key=lambda s: s.lower()):
 
             data_type_path = os.path.join(*[parent_directory, "InputData", CancerType, DataType])
             data_paths.append(data_type_path)
 
-            out = ""
+
             if DataType != "Class":
                 for input_file in (os.listdir(data_type_path)):
                     # we don't want to re-cut an already cut file
@@ -66,9 +66,9 @@ for CancerType in sorted(input_data_dir):
                 patients_per_data_type = [line.split('\t')[0] for line in open(f'{data_type_path}{_}{Analysis_endpoint}.tsv') if line.strip('\n').split('\t')[1] == outcome]
                 patients_with_all_data_types.update(patients_per_data_type)
                 class_info.update(patients_per_data_type)
-                sample_summary.write(f'{len(patients_with_all_data_types)}')
-            out = out[:-1]
-            sample_summary.write(f'{out}')
-        sample_summary.write(f',{len(patients_with_all_data_types)}\n')
+                out += (f'{len(patients_with_all_data_types)}')
+
+            out += ','
+        sample_summary.write(f'{out}{len(patients_with_all_data_types)}\n')
 
 sample_summary.close()
