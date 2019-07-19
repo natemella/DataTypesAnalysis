@@ -68,7 +68,7 @@ for CancerType in sorted(input_data_dir):
                 class_info.update(patients_per_data_type)
                 sample_summary.write(f'{len(patients_with_all_data_types)}')
             out = out[:-1]
-            sample_summary.write(f'{out},')
+            sample_summary.write(f'{out}')
         sample_summary.write(f',{len(patients_with_all_data_types)}\n')
 
 sample_summary.close()
