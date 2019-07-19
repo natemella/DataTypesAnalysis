@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 endpoints=$1
-numJobs=$2
+environment=$2
 
 if [ ! -d "InputData/" ]; then
 mkdir InputData/
@@ -20,4 +20,4 @@ docker run --rm --memory 200G --memory-swap 200G \
        -v "$(pwd)/InputData/":"/DataTypesAnalysis/InputData/" \
        -v "$(pwd)/Analysis_Results/":"/DataTypesAnalysis/Analysis_Results/" \
        -v "$(pwd)/Permanent_Results/":"/DataTypesAnalysis/Permanent_Results/" dta \
-       bash run_entire_project.sh $endpoints $numJobs
+       bash run_entire_project.sh $endpoints $environment
