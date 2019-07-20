@@ -56,7 +56,7 @@ for CancerType in sorted(input_data_dir):
                         # In TTSV files, patient ID's are the first line
                         with codecs.open(input_file, 'r') as myfile:
                             firstline = myfile.readline()
-                            patients_per_data_type = firstline.split('\t')
+                            patients_per_data_type = firstline.split('\t').strip('\n')
                             patients_with_all_data_types = patients_with_all_data_types.intersection(set(patients_per_data_type))
                             out += (f'{len(class_info.intersection(patients_per_data_type))}')
 
