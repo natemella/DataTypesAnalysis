@@ -147,7 +147,8 @@ for c in allDataToProcess:
                     if metrics[-2] == "AUROC":
                         AUROC = metrics[-1]
                         fold = metrics[2]
-                        out += f'{analysis}\t{datasetID}\t{classVar}\t{i}\t{fold}\t{rootAlgo}\t{default_bool}'
+                        iterations = metrics[1]
+                        out += f'{analysis}\t{datasetID}\t{classVar}\t{iterations}\t{fold}\t{rootAlgo}\t{default_bool}'
                         out += '\t' + str(AUROC) + '\n'
             with open(predictions_file, 'rb') as content_file:
                 content = content_file.read().splitlines(True)
