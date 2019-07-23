@@ -45,11 +45,11 @@ for c in `python3 DataStandardization/get_cut_paths.py`; do
     imputing $c
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
-    echo one-hot_encoding $c
+    echo one-hot_encoding 'InputData'$c
     one-hot_encoding $c
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
-    IFS="/" read -ra mylist <<< "$c"
+    IFS="/" read -ra mylist <<< "InputData$c"
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
         echo scaling ${c}
