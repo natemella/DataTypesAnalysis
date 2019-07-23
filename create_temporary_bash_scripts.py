@@ -27,7 +27,7 @@ parser.add_argument(
     "-e",
     "--stop-iteration",
     type=int,
-    default=5,
+    default=1,
     help="Iteration to end on."
 )
 parser.add_argument(
@@ -240,7 +240,7 @@ then
     --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
     --outer-folds {outer_folds} \\
     --inner-folds {inner_folds} \\
-    --iterations 1 \\
+    --iterations 5 \\
     --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
     --verbose false \\
     --seed {i} \\
