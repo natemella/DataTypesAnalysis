@@ -92,7 +92,7 @@ parser.add_argument(
     "-u",
     "--outer-folds",
     type=int,
-    default=3,
+    default=1,
     help="Number of outer folds to use in nested cross-validation for parameter optimization."
 )
 parser.add_argument(
