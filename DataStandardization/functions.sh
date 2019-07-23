@@ -19,7 +19,7 @@ gunzip_if_gzipped() {
 fileName=$1
 if [[ $fileName =~ \.gz$ ]];
 then
-    gunzip ${fileName}
+    gunzip -f ${fileName}
     echo ${fileName//.gz/}
 else
     echo ${fileName}
