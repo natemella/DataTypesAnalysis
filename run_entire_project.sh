@@ -22,6 +22,7 @@ then
         bash download_and_parse_all_data.sh $endpoint
         cd ../
     fi
+    cp -r InputData ../
 fi
 
 new_combo() {
@@ -56,7 +57,7 @@ delay=0
 jobLogFile=Analysis.job.log
 dockerCommandsFile=Docker_Commands.sh
 rm -f $jobLogFile
-cp -r InputData ../
+
 for i in ${index_array[@]}; do
     if [ -e $dockerCommandsFile ]; then
         rm $dockerCommandsFile
