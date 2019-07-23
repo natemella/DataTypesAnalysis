@@ -22,6 +22,7 @@ one-hot_encoding() {
 filename=$1a
 cd ../
 python3 scripts/OneHotEncode.py DataTypesAnalysis/InputData${filename}
+echo $PWD
 cd DataTypesAnalysis/
 }
 
@@ -45,14 +46,14 @@ for c in `python3 DataStandardization/get_cut_paths.py`; do
     imputing $c
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
-    echo one-hot_encoding 'InputData'$c
-    one-hot_encoding 'InputData'$c
+    echo one-hot_encoding $c
+    one-hot_encoding $c
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
     IFS="/" read -ra mylist <<< "InputData$c"
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
-        echo scaling 'InputData'${c}
+        echo scaling ${c}
         scaling 'InputData'$c
     fi
 done
