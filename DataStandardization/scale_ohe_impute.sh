@@ -38,7 +38,7 @@ for c in `python3 DataStandardization/get_cut_paths.py`; do
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
     echo gzipping $c
-    gzip InputData$c
+    gzip -f InputData$c
 done
 for c in `python3 DataStandardization/get_cut_paths.py`; do
     echo imputing $c
