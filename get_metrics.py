@@ -26,7 +26,7 @@ parser.add_argument(
     "-e",
     "--stop-iteration",
     type=int,
-    default=1,
+    default=5,
     help="Iteration to end on."
 )
 parser.add_argument(
