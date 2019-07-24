@@ -9,8 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt \
     && mkdir OutputData \
     && export LANG=C.UTF-8 \
     && mv Algorithms.txt DataTypesAnalysis \
-    && mv scripts/OneHotEncode.py $PWD \
-    && mv scripts/Scale.py $PWD \
     && find DataTypesAnalysis/ -type d -exec chmod 755 {} \;
 
 #COPY InputData/ DataTypesAnalysis/InputData
