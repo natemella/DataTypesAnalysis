@@ -22,8 +22,11 @@ then
         bash download_and_parse_all_data.sh $endpoint
         cd ../
     fi
-    cp -r InputData ../
 fi
+echo "########################################"
+echo COPYING INPUTDATA TO CORRECT LOCATION
+echo "########################################"
+cp -r InputData ../
 
 new_combo() {
 counter=$1
