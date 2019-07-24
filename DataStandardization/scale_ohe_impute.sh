@@ -6,7 +6,7 @@ set -e
 scaling() {
 filename=$1
 cd ../
-python3 Scale.py DataTypesAnalysis/InputData${filename} true robust
+python3 scripts/Scale.py DataTypesAnalysis/InputData${filename} true robust
 cd DataTypesAnalysis/
 }
 
@@ -19,9 +19,9 @@ cd DataTypesAnalysis/
 }
 
 one-hot_encoding() {
-filename=$1a
+filename=$1
 cd ../
-python3 OneHotEncode.py DataTypesAnalysis/InputData${filename}
+python3 scripts/OneHotEncode.py DataTypesAnalysis/InputData${filename}
 cd DataTypesAnalysis/
 }
 
