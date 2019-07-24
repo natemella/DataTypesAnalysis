@@ -53,7 +53,7 @@ for c in `python3 DataStandardization/get_cut_paths.py`; do
     data_type="${mylist[2]}"
     if [[ $data_type =~ ^(Covariate|Expression|RPPA|miRNA)$ ]]; then
         echo scaling ${c}
-        scaling 'InputData'$c
+        scaling $c
     fi
 done
 
