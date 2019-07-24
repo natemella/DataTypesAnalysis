@@ -21,7 +21,7 @@ cd DataTypesAnalysis/
 one-hot_encoding() {
 filename=$1a
 cd ../
-python3 OneHotEncode.py /DataTypesAnalysis/InputData${filename}
+python3 OneHotEncode.py DataTypesAnalysis/InputData${filename}
 cd DataTypesAnalysis/
 }
 
