@@ -79,7 +79,7 @@ for i in ${index_array[@]}; do
             fi
         else
             delay=1
-            numJobs=7
+            numJobs=1
             jobLogFile=Analysis.job.log
             rm -f $jobLogFile
             parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
