@@ -88,6 +88,7 @@ for i in ${index_array[@]}; do
             numJobs=1
             jobLogFile=Analysis.job.log
             rm -f $jobLogFile
+            cat $dockerCommandsFile
             parallel --retries 0 --shuf --progress --eta --delay $delay --joblog $jobLogFile -j $numJobs -- < $dockerCommandsFile
         fi
         echo "########################################"
