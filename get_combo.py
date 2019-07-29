@@ -24,7 +24,7 @@ previous_combo = ' '.join(sys.argv[1:])
 analysis = get_name(sys.argv[1:])
 #calculate winning combination
 input_file = get_analysis_file(results_dir, analysis)
-df = pd.read_csv(input_file, sep="\t").to_numeric()
+df = pd.read_csv(input_file, sep="\t").to_numeric
 # Use double groupby in order to get the average for each iterations
 df = df.groupby(['CancerType','Algorithm','Description', 'Iteration'], sort=True).mean()
 df = df.groupby(['CancerType','Algorithm','Description'], sort=True).mean()
