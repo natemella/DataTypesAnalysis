@@ -67,7 +67,7 @@ parser.add_argument(
 parser.add_argument(
     "-x",
     "--check-file",
-    default="Predictions.tsv",
+    default="Metrics.tsv",
     help="Path to the output file. Used to check if analysis has previously been completed."
 )
 parser.add_argument(
