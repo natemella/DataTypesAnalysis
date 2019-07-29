@@ -7,9 +7,9 @@ slurm_environment=${2:-True}
 number_of_cores=${3:-24}
 
 echo Parameters are:
-echo $endpoint
-echo $slurm_environment
-echo $number_of_cores
+echo endpoint = $endpoint
+echo slurm environment = $slurm_environment
+echo number of cores = $number_of_cores
 
 echo "########################################"
 echo CHECKING WHETHER DATA HAS BEEN DOWNLOADED
