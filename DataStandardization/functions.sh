@@ -107,11 +107,12 @@ execute_analysis() {
 search_dir=Data_To_Process_Files
 dockerCommandsFile=${1-Docker_Commands.sh}
 slurm_environment=${2:-True}
+number_of_cores=${3:-24}
 for file in `ls $search_dir`; do
 	IFS='.' read -ra Analysis <<< "$file"
 	datafile=${search_dir}/${file}
 	analysis="${Analysis[0]}"
-	python3 create_temporary_bash_scripts.py $analysis $datafile -z ${slurm_environment}
+	python3 create_temporary_bash_scripts.py $analysis $datafile -z ${slurm_environment} -c ${number_of_cores}
 done
 }
 

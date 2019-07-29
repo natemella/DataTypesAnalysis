@@ -4,6 +4,7 @@ set -u
 
 endpoint=${1:-PFI}
 slurm_environment=${2:-True}
+number_of_cores=${3:-24}
 
 echo "########################################"
 echo CHECKING WHETHER DATA HAS BEEN DOWNLOADED
