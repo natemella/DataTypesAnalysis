@@ -85,7 +85,7 @@ for i in ${index_array[@]}; do
             fi
         else
             delay=1
-            numJobs=1
+            numJobs=7
             jobLogFile=Analysis.job.log
             rm -f $jobLogFile
             cat $dockerCommandsFile
