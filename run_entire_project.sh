@@ -29,10 +29,17 @@ then
         cd ../
     fi
 fi
-echo "########################################"
-echo COPYING INPUTDATA TO CORRECT LOCATION
-echo "########################################"
-cp -r InputData ../
+
+cd ../
+if [ ! -d "InputData/" ]; then
+    cd DataTypesAnalysis
+    echo "########################################"
+    echo COPYING INPUTDATA TO CORRECT LOCATION
+    echo "########################################"
+    cp -r InputData ../
+else
+    cd DataTypesAnalysis
+fi
 
 new_combo() {
 counter=$1
