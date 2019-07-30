@@ -94,7 +94,9 @@ for i in ${index_array[@]}; do
         echo "########################################"
         echo RUNNING $(python3 get_analysis_name.py $(new_combo $i)) ANALYSIS COMMANDS
         echo "########################################"
-        rm $dockerCommandsFile
+        if [ -e $dockerCommandsFile ]; then
+            rm $dockerCommandsFile
+        fi
     fi
     python3 create_data_to_process_files.py $(new_combo $i)
     echo "########################################"
