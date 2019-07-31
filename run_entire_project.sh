@@ -2,6 +2,11 @@
 set -u
 . ./DataStandardization/functions.sh
 
+#Remove existing analysis results
+cd Analysis_Results/
+rm *.tsv
+cd ../
+
 endpoint=${1:-PFI}
 slurm_environment=${2:-True}
 number_of_cores=${3:-24}
