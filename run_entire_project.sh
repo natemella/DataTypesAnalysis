@@ -4,7 +4,10 @@ set -u
 
 #Remove existing analysis results
 cd Analysis_Results/
-rm *.tsv
+if [ -f *.tsv ]
+then
+    rm *.tsv
+fi
 cd ../
 
 endpoint=${1:-PFI}
