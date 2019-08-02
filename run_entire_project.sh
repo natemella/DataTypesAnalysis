@@ -60,7 +60,6 @@ fi
 
 check_if_all_commands_finished() {
 inputfile=$1
-execute_analysis ${inputfile}
 num_of_commands=$(wc -l < ${inputfile})
 if [ $num_of_commands -ne 0 ]; then
     echo THE FOLLOWING COMMANDS FAILED TO COMPLETE:
@@ -118,6 +117,7 @@ for i in ${index_array[@]}; do
     echo EVALUATING RESULTS FOR $(python3 get_analysis_name.py $(new_combo $i))
     echo "########################################"
     evaluate_results $(python3 get_analysis_name.py $(new_combo $i))
+    execute_analysis $dockerCommandsFile
     if [ -e $dockerCommandsFile ]; then
         check_if_all_commands_finished $dockerCommandsFile
     else
