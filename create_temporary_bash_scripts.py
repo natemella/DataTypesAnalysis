@@ -55,7 +55,7 @@ parser.add_argument(
     "-c",
     "--cores",
     type=int,
-    default=10,
+    default=24,
     help="Number of cores to allocate to docker."
 )
 parser.add_argument(
