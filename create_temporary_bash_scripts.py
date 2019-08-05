@@ -240,7 +240,7 @@ then
     --description {analysis}__{datasetID}___{classVar}___iteration{i} \\
     --outer-folds {outer_folds} \\
     --inner-folds {inner_folds} \\
-    --iterations 1 \\
+    --iterations 5 \\
     --classif-algo "AlgorithmScripts/Classification/{algo}*" \\
     --verbose false \\
     --seed {i} \\
