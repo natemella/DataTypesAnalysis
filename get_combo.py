@@ -20,12 +20,15 @@ data_type_to_command["RPPA"] = " -p True"
 
 cwd = os.getcwd()
 results_dir = os.path.join(*[cwd,"Permanent_Results"])
-previous_combo = ' '.join(sys.argv[1:])
-analysis = get_name(sys.argv[1:])
+previous_combo = ' '.join(sys.argv[2:])
+analysis = get_name(sys.argv[2:])
+algo = sys.argv[1]
 #calculate winning combination
 input_file = get_analysis_file(results_dir, analysis)
 df = pd.read_csv(input_file, sep="\t")
 df.AUROC = pd.to_numeric(df.AUROC)
+"PRINTING ALGORITHM"
+df = df.loc[df.Algorithm == algo]
 # Use double groupby in order to get the average for each iterations
 df = df.groupby(['CancerType','Algorithm','Description', 'Iteration'], sort=True).mean()
 df = df.groupby(['CancerType','Algorithm','Description'], sort=True).mean()
@@ -34,4 +37,4 @@ winning_df = df.reset_index()
 winning_df = winning_df.groupby(['Description'], sort=True)['Rank'].mean()
 winner = winning_df.idxmax().split('+')[0]
 new_combo = previous_combo + data_type_to_command[winner]
-print(new_combo)
+print(algo,new_combo)

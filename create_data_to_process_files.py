@@ -39,6 +39,10 @@ def get_list_of_data_paths():
 
 parser = argparse.ArgumentParser(description="Develop a summary of file information and cut the file.")
 parser.add_argument(
+    "algorithm",
+    help="which algorithm would you like to use",
+)
+parser.add_argument(
     "endpoints",
     help="What you would like to predict (PFI, 0S, DSS, DFI).",
     nargs='+'
@@ -127,6 +131,7 @@ sm = args.Somatic_Mutations
 quick_analysis = args.quick_analysis
 cut_files = args.cut_files
 remove = args.remove
+algorithm = args.algorithm
 
 currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
@@ -150,16 +155,15 @@ parameters = {"Clinical":clinical, "miRNA": miRNA,
 
 
 endpoints = args.endpoints
-print(f'endpoints are {endpoints}')
 
 #
 combination_list = []
 for x in parameters:
     if parameters[x] == "True":
         combination_list.append(x)
-print(combination_list)
+print(f'Combination(s) for {algorithm}: {combination_list}')
 
-output_directory = os.path.join(*[currentWorkingDir, f'Data_To_Process_Files{path_delimiter()}'])
+output_directory = os.path.join(*[currentWorkingDir, f'Data_To_Process_Files{path_delimiter()}{algorithm}{path_delimiter()}'])
 
 if os.path.exists(output_directory):
     shutil.rmtree(output_directory)
