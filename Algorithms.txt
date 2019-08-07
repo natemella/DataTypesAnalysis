@@ -1,0 +1,8 @@
+AlgorithmScripts/Classification/tsv/sklearn/random_forest/
+AlgorithmScripts/Classification/tsv/sklearn/svm/
+AlgorithmScripts/Classification/tsv/sklearn/knn/
+AlgorithmScripts/Classification/tsv/sklearn/logistic_regression/
+AlgorithmScripts/Classification/tsv/mlr/glmnet/
+AlgorithmScripts/Classification/tsv/mlr/naiveBayes/
+AlgorithmScripts/Classification/tsv/mlr/xgboost/
+AlgorithmScripts/Classification/arff/weka/VFI/
