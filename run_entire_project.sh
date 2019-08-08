@@ -40,11 +40,15 @@ fi
 build_parameters() {
 i=$1
 for algorithm_path in $(cat Algorithms.txt); do
-    IFS="/" read -ra Algorithms <<< "$algorithm_path"
-    algorithm="${Algorithms[@]: -1:1}"
+#    IFS="/" read -ra Algorithms <<< "$algorithm_path"
+#    algorithm="${Algorithms[@]: -1:1}"
+    algorithm_path="${algorithm_path/AlgorithmScripts\/Classification\//}"
+    algorithm_path="${algorithm_path/\//__}"
+    algorithm_path="${algorithm_path/\//__}"
+    algorithm_path="${algorithm_path/\//}"
+    algorithm=${algorithm_path}
     python3 create_data_to_process_files.py $(new_combo $i $algorithm)
 done
-
 }
 #Remove existing analysis results
 cd Analysis_Results/
@@ -53,8 +57,6 @@ then
     rm *.tsv
 fi
 cd ../
-
-
 
 
 echo "########################################"
@@ -86,8 +88,6 @@ if [ ! -d "InputData/" ]; then
 else
     cd DataTypesAnalysis
 fi
-
-
 
 index_array=(0 1 2 3 4 5 6)
 
