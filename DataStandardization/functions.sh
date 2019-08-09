@@ -161,7 +161,7 @@ else
     mv $new_output $new_predictions Permanent_Results/
 fi
 cd Analysis_Results
-rm *__*.*
+rm *__*.t*
 cd ../
 }
 
