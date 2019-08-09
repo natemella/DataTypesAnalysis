@@ -1,0 +1,31 @@
+CancerType,Outcome,Class Info,Number of Patients per type of Data,Patients with all 7 data types
+TCGA_BLCA,LPFI,Class:92, | Clini:Total=385 & PFI=82 | CNV:Total=407 & PFI=92 | Covar:Total=413 & PFI=92 | DNA_M:Total=413 & PFI=92 | Expre:Total=409 & PFI=91 | miRNA:Total=410 & PFI=92 | RPPA:Total=345 & PFI=72 | SM:Total=411 & PFI=92 | ,64
+TCGA_BLCA,SPFI,Class:128, | Clini:Total=385 & PFI=117 | CNV:Total=407 & PFI=125 | Covar:Total=413 & PFI=128 | DNA_M:Total=413 & PFI=128 | Expre:Total=409 & PFI=126 | miRNA:Total=410 & PFI=126 | RPPA:Total=345 & PFI=109 | SM:Total=411 & PFI=128 | ,98
+
+TCGA_BRCA,LPFI,Class:330, | Clini:Total=954 & PFI=310 | CNV:Total=1069 & PFI=318 | Covar:Total=1098 & PFI=330 | DNA_M:Total=793 & PFI=234 | Expre:Total=1096 & PFI=328 | miRNA:Total=1069 & PFI=321 | RPPA:Total=875 & PFI=264 | SM:Total=785 & PFI=250 | ,153
+TCGA_BRCA,SPFI,Class:82, | Clini:Total=954 & PFI=69 | CNV:Total=1069 & PFI=80 | Covar:Total=1098 & PFI=82 | DNA_M:Total=793 & PFI=62 | Expre:Total=1096 & PFI=82 | miRNA:Total=1069 & PFI=78 | RPPA:Total=875 & PFI=67 | SM:Total=785 & PFI=54 | ,29
+
+TCGA_HNSC,LPFI,Class:153, | Clini:Total=454 & PFI=134 | CNV:Total=518 & PFI=147 | Covar:Total=529 & PFI=153 | DNA_M:Total=529 & PFI=153 | Expre:Total=503 & PFI=141 | miRNA:Total=520 & PFI=151 | RPPA:Total=347 & PFI=95 | SM:Total=506 & PFI=140 | ,82
+TCGA_HNSC,SPFI,Class:160, | Clini:Total=454 & PFI=138 | CNV:Total=518 & PFI=157 | Covar:Total=529 & PFI=160 | DNA_M:Total=529 & PFI=160 | Expre:Total=503 & PFI=156 | miRNA:Total=520 & PFI=158 | RPPA:Total=347 & PFI=110 | SM:Total=506 & PFI=159 | ,97
+
+TCGA_KIRC,LPFI,Class:212, | Clini:Total=508 & PFI=206 | CNV:Total=507 & PFI=198 | Covar:Total=538 & PFI=212 | DNA_M:Total=320 & PFI=118 | Expre:Total=534 & PFI=211 | miRNA:Total=500 & PFI=195 | RPPA:Total=446 & PFI=179 | SM:Total=369 & PFI=141 | ,91
+TCGA_KIRC,SPFI,Class:121, | Clini:Total=508 & PFI=119 | CNV:Total=507 & PFI=118 | Covar:Total=538 & PFI=121 | DNA_M:Total=320 & PFI=80 | Expre:Total=534 & PFI=120 | miRNA:Total=500 & PFI=117 | RPPA:Total=446 & PFI=111 | SM:Total=369 & PFI=70 | ,51
+
+TCGA_LGG,LPFI,Class:141, | Clini:Total=428 & PFI=114 | CNV:Total=512 & PFI=139 | Covar:Total=516 & PFI=141 | DNA_M:Total=517 & PFI=141 | Expre:Total=515 & PFI=140 | miRNA:Total=511 & PFI=139 | RPPA:Total=428 & PFI=113 | SM:Total=507 & PFI=137 | ,86
+TCGA_LGG,SPFI,Class:117, | Clini:Total=428 & PFI=99 | CNV:Total=512 & PFI=117 | Covar:Total=516 & PFI=117 | DNA_M:Total=517 & PFI=117 | Expre:Total=515 & PFI=116 | miRNA:Total=511 & PFI=117 | RPPA:Total=428 & PFI=88 | SM:Total=507 & PFI=117 | ,74
+
+TCGA_LUAD,LPFI,Class:121, | Clini:Total=502 & PFI=119 | CNV:Total=501 & PFI=118 | Covar:Total=523 & PFI=121 | DNA_M:Total=462 & PFI=102 | Expre:Total=517 & PFI=121 | miRNA:Total=509 & PFI=119 | RPPA:Total=363 & PFI=94 | SM:Total=510 & PFI=118 | ,74
+TCGA_LUAD,SPFI,Class:140, | Clini:Total=502 & PFI=131 | CNV:Total=501 & PFI=129 | Covar:Total=523 & PFI=140 | DNA_M:Total=462 & PFI=124 | Expre:Total=517 & PFI=138 | miRNA:Total=509 & PFI=132 | RPPA:Total=363 & PFI=93 | SM:Total=510 & PFI=135 | ,75
+
+TCGA_PRAD,LPFI,Class:162, | Clini:Total=485 & PFI=160 | CNV:Total=490 & PFI=159 | Covar:Total=501 & PFI=162 | DNA_M:Total=499 & PFI=160 | Expre:Total=498 & PFI=160 | miRNA:Total=492 & PFI=157 | RPPA:Total=352 & PFI=124 | SM:Total=478 & PFI=154 | ,118
+TCGA_PRAD,SPFI,Class:60, | Clini:Total=485 & PFI=56 | CNV:Total=490 & PFI=58 | Covar:Total=501 & PFI=60 | DNA_M:Total=499 & PFI=60 | Expre:Total=498 & PFI=60 | miRNA:Total=492 & PFI=59 | RPPA:Total=352 & PFI=43 | SM:Total=478 & PFI=57 | ,37
+
+TCGA_STAD,LPFI,Class:102, | Clini:Total=397 & PFI=96 | CNV:Total=439 & PFI=102 | Covar:Total=444 & PFI=102 | DNA_M:Total=397 & PFI=97 | Expre:Total=421 & PFI=98 | miRNA:Total=434 & PFI=98 | RPPA:Total=393 & PFI=79 | SM:Total=435 & PFI=99 | ,67
+TCGA_STAD,SPFI,Class:79, | Clini:Total=397 & PFI=71 | CNV:Total=439 & PFI=78 | Covar:Total=444 & PFI=79 | DNA_M:Total=397 & PFI=76 | Expre:Total=421 & PFI=75 | miRNA:Total=434 & PFI=77 | RPPA:Total=393 & PFI=57 | SM:Total=435 & PFI=78 | ,51
+
+TCGA_THCA,LPFI,Class:143, | Clini:Total=473 & PFI=139 | CNV:Total=498 & PFI=140 | Covar:Total=508 & PFI=143 | DNA_M:Total=508 & PFI=143 | Expre:Total=506 & PFI=142 | miRNA:Total=503 & PFI=139 | RPPA:Total=373 & PFI=117 | SM:Total=479 & PFI=135 | ,102
+TCGA_THCA,SPFI,Class:43, | Clini:Total=473 & PFI=40 | CNV:Total=498 & PFI=42 | Covar:Total=508 & PFI=43 | DNA_M:Total=508 & PFI=43 | Expre:Total=506 & PFI=43 | miRNA:Total=503 & PFI=42 | RPPA:Total=373 & PFI=32 | SM:Total=479 & PFI=39 | ,27
+
+TCGA_UCEC,LPFI,Class:160, | Clini:Total=531 & PFI=155 | CNV:Total=520 & PFI=152 | Covar:Total=549 & PFI=160 | DNA_M:Total=445 & PFI=96 | Expre:Total=546 & PFI=159 | miRNA:Total=524 & PFI=152 | RPPA:Total=405 & PFI=119 | SM:Total=447 & PFI=111 | ,59
+TCGA_UCEC,SPFI,Class:99, | Clini:Total=531 & PFI=97 | CNV:Total=520 & PFI=91 | Covar:Total=549 & PFI=99 | DNA_M:Total=445 & PFI=81 | Expre:Total=546 & PFI=99 | miRNA:Total=524 & PFI=92 | RPPA:Total=405 & PFI=76 | SM:Total=447 & PFI=80 | ,51
+

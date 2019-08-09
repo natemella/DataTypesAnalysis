@@ -4,10 +4,6 @@ from DataStandardization.util import *
 
 parser = argparse.ArgumentParser(description="Create bash scripts for running ShinyLearner with docker.")
 parser.add_argument(
-    "analysis",
-    help="Output name of the analysis."
-)
-parser.add_argument(
     "data_path",
     help=(
         "Path to a tab-separated file that gives paths for the data to be processed. " 
@@ -111,7 +107,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-analysis = args.analysis
 startIteration = args.start_iteration
 stopIteration = args.stop_iteration
 algorithmsFilePath = args.algorithms_path
@@ -123,18 +118,15 @@ current_working_dir = os.path.dirname(os.path.realpath(__file__))
 
 dockerCommandFilePaths = []
 
+analysis = path_to_list(dataToProcessFilePath)[-1].split('.')[0]
+algoName = path_to_list(dataToProcessFilePath)[-2]
+
 def line_end(num_of_tabs=0):
     my_string = "\\\n"
     for x in range(num_of_tabs):
         my_string += ' '*4
     return my_string
 
-# Parse the algorithms file to find all possible algorithms
-with open(algorithmsFilePath, 'r') as f:
-    allAlgorithms = f.read().splitlines()
-allAlgorithms = [x.replace('AlgorithmScripts/Classification/', '') for x in allAlgorithms if not x.startswith("#")]
-allAlgorithms = [x.split("__")[0] for x in allAlgorithms]
-allAlgorithms = set(allAlgorithms)
 
 # Find all possible data combinations to process
 with open(dataToProcessFilePath, 'r') as g:
@@ -142,8 +134,7 @@ with open(dataToProcessFilePath, 'r') as g:
 
 # Remove directory that contains the bash scripts that need to be executed
 #   for each combination of dataset, algorithm, and iteration.
-if os.path.exists(f'{analysis}_Commands{path_delimiter()}'):
-    shutil.rmtree(f'{analysis}_Commands{path_delimiter()}')
+
 
 for c in allDataToProcess:
     datasetID = c.split('\t')[0]
@@ -172,18 +163,13 @@ for c in allDataToProcess:
     not_executed_algos = set()
 
     for i in range(startIteration, 1+stopIteration):
-        path = ['Analysis_Results',analysis, datasetID, classVar, f'iteration{i}', '*' ,outFileToCheck]
+        path = ['Analysis_Results', algoName, analysis, datasetID, classVar, f'iteration{i}', '*' , outFileToCheck]
         path = os.path.join(*path)
         executed_algos = glob.glob(path)
         executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
-        executed_algos = set(executed_algos)
 
-        not_executed_algos = allAlgorithms - executed_algos
-
-
-        for algo in not_executed_algos:
-            algoName = algo.replace('/','__')
-
+        if algoName.replace('__','/') not in executed_algos:
+            algo = f"AlgorithmScripts/Classification/{algoName.replace('__','/')}"
             # Build the part of the command that tells ShinyLearner which data files to parse
             data_all = ''
             for d in input_data:
@@ -197,7 +183,7 @@ for c in allDataToProcess:
             # Where will the output files be stored?
 
 
-            out_dir = os.path.join(*[current_working_dir, "Analysis_Results", analysis, datasetID, classVar, f'iteration{i}', algoName]) + _
+            out_dir = os.path.join(*[current_working_dir, "Analysis_Results", algoName, analysis, datasetID, classVar, f'iteration{i}']) + _
 
             
             bash_args = {

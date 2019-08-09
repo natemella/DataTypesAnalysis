@@ -108,11 +108,11 @@ search_dir=Data_To_Process_Files
 dockerCommandsFile=${1-Docker_Commands.sh}
 slurm_environment=${2:-True}
 number_of_cores=${3:-24}
-for file in `ls $search_dir`; do
-	IFS='.' read -ra Analysis <<< "$file"
-	datafile=${search_dir}/${file}
-	analysis="${Analysis[0]}"
-	python3 create_temporary_bash_scripts.py $analysis $datafile -z ${slurm_environment} -c ${number_of_cores}
+for dir in `ls $search_dir`; do
+    for file in $(ls $search_dir/$dir); do
+        datafile=${search_dir}/${dir}/${file}
+        python3 create_temporary_bash_scripts.py $datafile -z ${slurm_environment} -c ${number_of_cores}
+    done
 done
 }
 
@@ -123,25 +123,29 @@ new_predictions=${experiment_name}"_Predictions.tsv.gz"
 search_dir=Data_To_Process_Files
 
 ARRAY=()
-for file in `ls $search_dir`; do
-    ARRAY+=(${file})
+for dir in $(ls $search_dir); do
+    for file in $(ls $search_dir/$dir); do
+        ARRAY+=(${dir}"_"${file})
+    done
 done
 
-for file in `ls $search_dir`; do
-    IFS='.' read -ra Analysis <<< "$file"
-	datafile=${search_dir}/${file}
-	analysis="${Analysis[0]}"
-	IFS='+' read -ra trial <<< "$analysis"
-    python3 get_metrics.py $analysis $datafile
-    output=${analysis}".tsv"
-	cd Analysis_Results
-	if [[ ${file} == "${ARRAY[0]}" ]];
-	then
-	    cat $output >> $new_output
-	else
-	    tail -n +2 $output >> $new_output
-	fi
-	cd ../
+for dir in `ls $search_dir`; do
+    for file in $(ls $search_dir/$dir); do
+        IFS='.' read -ra Analysis <<< "$file"
+        datafile=${search_dir}/${dir}/${file}
+        analysis="${Analysis[0]}"
+        IFS='+' read -ra trial <<< "$analysis"
+        python3 get_metrics.py $datafile
+        output=${dir}_${analysis}".tsv"
+        cd Analysis_Results
+        if [[ ${dir}"_"${file} == "${ARRAY[0]}" ]];
+        then
+            cat $output >> $new_output
+        else
+            tail -n +2 $output >> $new_output
+        fi
+        cd ../
+    done
 done
 
 cd Analysis_Results
@@ -156,6 +160,9 @@ else
     mkdir Permanent_Results
     mv $new_output $new_predictions Permanent_Results/
 fi
+cd Analysis_Results
+rm *__*.*
+cd ../
 }
 
 replace_last_line() {
