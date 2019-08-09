@@ -160,13 +160,13 @@ for c in allDataToProcess:
 
     input_data.append(class_path)
 
-    not_executed_algos = set()
+
 
     for i in range(startIteration, 1+stopIteration):
-        path = ['Analysis_Results', algoName, analysis, datasetID, classVar, f'iteration{i}', '*' , outFileToCheck]
-        path = os.path.join(*path)
+        path = os.path.join(*['Analysis_Results', '*', analysis, datasetID, classVar, 'iteration' + str(i), outFileToCheck])
         executed_algos = glob.glob(path)
-        executed_algos = [path_to_list(x)[5].replace('__', path_delimiter(), 3) for x in executed_algos]
+        executed_algos = [x.split(path_delimiter())[1] for x in executed_algos]
+        executed_algos = set(executed_algos)
 
         if algoName.replace('__','/') not in executed_algos:
             algo = f"AlgorithmScripts/Classification/{algoName.replace('__','/')}"
