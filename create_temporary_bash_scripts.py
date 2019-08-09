@@ -167,8 +167,7 @@ for c in allDataToProcess:
         executed_algos = glob.glob(path)
         executed_algos = [x.split(path_delimiter())[1] for x in executed_algos]
         executed_algos = set(executed_algos)
-
-        if algoName.replace('__','/') not in executed_algos:
+        if algoName not in executed_algos:
             algo = f"AlgorithmScripts/Classification/{algoName.replace('__','/')}"
             # Build the part of the command that tells ShinyLearner which data files to parse
             data_all = ''
