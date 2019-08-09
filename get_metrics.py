@@ -1,11 +1,8 @@
 import glob, gzip, os, shutil
 import argparse
+from DataStandardization.util import *
 
 parser = argparse.ArgumentParser(description="Create bash scripts for running ShinyLearner with docker.")
-parser.add_argument(
-    "analysis",
-    help="Output name of the analysis."
-)
 parser.add_argument(
     "data_path",
     help=(
@@ -30,12 +27,6 @@ parser.add_argument(
     help="Iteration to end on."
 )
 parser.add_argument(
-    "-a",
-    "--algorithms-path",
-    default="Algorithms.txt",
-    help="Path to a newline-separated list of algorithms to run."
-)
-parser.add_argument(
     "-x",
     "--check-file",
     default="Predictions.tsv",
@@ -58,10 +49,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-analysis = args.analysis
 startIteration = args.start_iteration
 stopIteration = args.stop_iteration
-algorithmsFilePath = args.algorithms_path
 dataToProcessFilePath = args.data_path
 outFileToCheck = args.check_file
 dockerOutFilePath = args.outfile
@@ -71,12 +60,8 @@ currentWorkingDir = os.path.dirname(os.path.realpath(__file__))
 
 aurocCommandFilePaths = []
 
-# Parse the algorithms file to find all possible algorithms
-with open(algorithmsFilePath, 'r') as f:
-    allAlgorithms = f.read().splitlines()
-allAlgorithms = [x.replace('AlgorithmScripts/Classification/', '') for x in allAlgorithms if not x.startswith("#")]
-allAlgorithms = [x.split("__")[0] for x in allAlgorithms]
-allAlgorithms = set(allAlgorithms)
+analysis = path_to_list(dataToProcessFilePath)[-1].split('.')[0]
+algo = path_to_list(dataToProcessFilePath)[-2]
 
 # Find all possible data combinations to process
 with open(dataToProcessFilePath, 'r') as g:
@@ -118,19 +103,20 @@ for c in allDataToProcess:
 
 
     for i in range(startIteration, 1 + stopIteration):
-        path = 'Analysis_Results/' + analysis + '/' + datasetID + '/' + classVar + '/iteration' + str(i) + '/*/' + outFileToCheck
+        path = os.path.join(*['Analysis_Results', '*', analysis, datasetID, classVar,'iteration' + str(i), outFileToCheck])
         executed_algos = glob.glob(path)
-        executed_algos = [x.split('/')[5].replace('__', '/', 3) for x in executed_algos]
+        executed_algos = [x.split(path_delimiter())[1] for x in executed_algos]
         executed_algos = set(executed_algos)
 
-        for algo in executed_algos:
+        if algo in executed_algos:
             needs_header = False
-            rootAlgo = algo.split('/')
+            rootAlgo = algo.split('__')
+
             default_bool = 0
             if rootAlgo[-1].startswith("default"):
                 default_bool = 1
-            rootAlgo = rootAlgo[-2]
-            algoName = algo.replace('/', '__')
+            rootAlgo = rootAlgo[-1]
+            algoName = algo
 
             # Build the part of the command that tells ShinyLearner which data files to parse
             data_all = ''
@@ -138,8 +124,8 @@ for c in allDataToProcess:
                 data_all = data_all + '--data "' + d + '" \\\n\t\t'
 
             # Where will the output files be stored?
-            metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Metrics.tsv'])
-            predictions_file = os.path.join(*[currentWorkingDir,'Analysis_Results',analysis,datasetID,classVar,f'iteration{str(i)}',algoName,'Predictions.tsv'])
+            metrics_file = os.path.join(*[currentWorkingDir,'Analysis_Results',algoName, analysis,datasetID,classVar,f'iteration{str(i)}','Metrics.tsv'])
+            predictions_file = os.path.join(*[currentWorkingDir,'Analysis_Results', algoName, analysis,datasetID,classVar,f'iteration{str(i)}','Predictions.tsv'])
             with open(metrics_file) as metrics_data:
                 title_line = metrics_data.readline()
                 for line in metrics_data:
@@ -161,7 +147,7 @@ for c in allDataToProcess:
                         output.writelines(content[1:])
 
 
-resultsFilePath = 'Analysis_Results/{}'.format(analysis) + '.tsv'
+resultsFilePath = 'Analysis_Results/{}_{}'.format(algo, analysis) + '.tsv'
 
 if not os.path.exists(os.path.dirname(resultsFilePath)):
     os.makedirs(os.path.dirname(resultsFilePath))
