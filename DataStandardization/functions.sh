@@ -107,7 +107,7 @@ execute_analysis() {
 search_dir=Data_To_Process_Files
 dockerCommandsFile=${1-Docker_Commands.sh}
 slurm_environment=${2:-True}
-number_of_cores=${3:-24}
+number_of_cores=${3:-5}
 for dir in `ls $search_dir`; do
     for file in $(ls $search_dir/$dir); do
         datafile=${search_dir}/${dir}/${file}
