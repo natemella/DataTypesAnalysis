@@ -4,11 +4,11 @@ bash_args = {
     "numCommands": sys.argv[1],
 }
 out = """#!/bin/bash
-#SBATCH -N 1 -n 5 --mem=32G -C rhel7
+#SBATCH -N 1 -n 2 --mem=64G -C rhel7
 #SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=16:00:00   # walltime
+#SBATCH --time=20:00:00   # walltime
 
 module load jdk/1.8
 

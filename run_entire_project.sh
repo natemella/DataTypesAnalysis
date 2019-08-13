@@ -4,7 +4,7 @@ set -u
 
 endpoint=${1:-PFI}
 slurm_environment=${2:-True}
-number_of_cores=${3:-5}
+number_of_cores=${3:-2}
 
 echo Parameters are:
 echo endpoint = $endpoint

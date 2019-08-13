@@ -51,7 +51,7 @@ parser.add_argument(
     "-c",
     "--cores",
     type=int,
-    default=5,
+    default=2,
     help="Number of cores to allocate to docker."
 )
 parser.add_argument(
@@ -206,10 +206,10 @@ for c in allDataToProcess:
             out = """#!/bin/bash
 
 #SBATCH --time=20:00:00   # walltime
-#SBATCH --ntasks=5   # number of processor cores (i.e. tasks)
+#SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
-#SBATCH --mem=32G   # memory 
+#SBATCH --mem=64G   # memory 
 
 
 cd ../
