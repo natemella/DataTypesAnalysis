@@ -8,7 +8,7 @@ out = """#!/bin/bash
 #SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=20:00:00   # walltime
+#SBATCH --time=36:00:00   # walltime
 
 module load jdk/1.8
 
