@@ -26,6 +26,7 @@ algo = sys.argv[1]
 algo_nick_name = algo.split("__")[-1]
 #calculate winning combination
 input_file = get_analysis_file(results_dir, analysis)
+print(f"Reading in input file {input_file}")
 df = pd.read_csv(input_file, sep="\t")
 df.AUROC = pd.to_numeric(df.AUROC)
 "PRINTING ALGORITHM"
