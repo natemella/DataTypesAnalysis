@@ -15,7 +15,7 @@ new_combo() {
 counter=$1
 algorithm=$2
 if [ $counter -eq 0 ] ; then
-    echo ${algorithm} ${counter} ${endpoint}
+    echo ${algorithm} ${endpoint}
 else
     echo $(python3 get_combo.py $(new_combo $(($counter-1)) $algorithm))
 fi
