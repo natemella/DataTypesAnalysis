@@ -22,6 +22,7 @@ cwd = os.getcwd()
 results_dir = os.path.join(*[cwd,"Permanent_Results"])
 previous_combo = ' '.join(sys.argv[2:])
 analysis = get_name(sys.argv[2:])
+print(analysis)
 algo = sys.argv[1]
 algo_nick_name = algo.split("__")[-1]
 #calculate winning combination
