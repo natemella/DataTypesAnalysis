@@ -30,6 +30,7 @@ df = pd.read_csv(input_file, sep="\t")
 df.AUROC = pd.to_numeric(df.AUROC)
 df = df.loc[df.Algorithm == algo_nick_name]
 # Use double groupby in order to get the average for each iterations
+print(df)
 df = df.groupby(['CancerType','Algorithm','Description', 'Iteration'], sort=True).mean()
 df = df.groupby(['CancerType','Algorithm','Description'], sort=True).mean()
 df["Rank"] = df.groupby(['CancerType','Algorithm'])["AUROC"].rank()
