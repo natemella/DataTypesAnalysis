@@ -1,13 +1,7 @@
 import sys
 import os
 import pandas as pd
-from get_analysis_name import get_name
-
-def get_analysis_file(ouput_dir, my_analysis):
-    for file in os.listdir(ouput_dir):
-        if file.replace(".tsv", "") == my_analysis:
-            file = os.path.join(*[results_dir, file])
-            return file
+# from get_analysis_name import get_name
 
 data_type_to_command = {}
 data_type_to_command["Expression"] = " -e True"
@@ -21,13 +15,13 @@ data_type_to_command["RPPA"] = " -p True"
 cwd = os.getcwd()
 results_dir = os.path.join(*[cwd,"Permanent_Results"])
 previous_combo = ' '.join(sys.argv[2:])
-analysis = get_name(sys.argv[2:])
+# analysis = get_name(sys.argv[2:])
 algo = sys.argv[1]
 count = len([item for item in sys.argv[2:] if item != "True" and item != sys.argv[2]])
 algo_nick_name = algo.split("__")[-1]
 #calculate winning combination
 # input_file = get_analysis_file(results_dir, analysis)
-input_file = f'combination_of_{count}.tsv'
+input_file = os.path.join(*[results_dir, f'combination_of_{count}.tsv'])
 df = pd.read_csv(input_file, sep="\t")
 df.AUROC = pd.to_numeric(df.AUROC)
 df = df.loc[df.Algorithm == algo_nick_name]
