@@ -47,7 +47,6 @@ for algorithm_path in $(cat Algorithms.txt); do
     algorithm_path="${algorithm_path/\//__}"
     algorithm_path="${algorithm_path/\//}"
     algorithm=${algorithm_path}
-    echo $(new_combo $i $algorithm)
     python3 create_data_to_process_files.py $(new_combo $i $algorithm)
 done
 }
