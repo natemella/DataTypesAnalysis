@@ -148,6 +148,7 @@ for c in allDataToProcess:
 
 
 resultsFilePath = 'Analysis_Results/{}_{}'.format(algo, analysis) + '.tsv'
+print(resultsFilePath)
 
 if not os.path.exists(os.path.dirname(resultsFilePath)):
     os.makedirs(os.path.dirname(resultsFilePath))
