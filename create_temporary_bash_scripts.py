@@ -245,6 +245,8 @@ done
                 out = out.replace("#!/bin/bash\n\n","")
                 out = "#!/bin/bash\n\n#SBATCH --gres=gpu:4\n" + out
 
+            if s_environment == "True":
+                out = out.replace("OutputData", "/tmp/OutputData")
             # This is where the bash script will be stored
             commandFilePath = [f'{analysis}_Commands',datasetID,classVar,f'iteration{i}',f'{algoName}.sh']
             commandFilePath = os.path.join(*commandFilePath)
