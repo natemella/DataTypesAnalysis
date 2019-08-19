@@ -111,7 +111,6 @@ for i in ${index_array[@]}; do
     echo "########################################"
     if [ -e $dockerCommandsFile ]; then
         if [[ $slurm_environment == "True" ]]; then
-            mkdir -p /tmp/OutputData/
             num_of_commands=$(wc -l < $dockerCommandsFile)
             python3 build_job_array.py $num_of_commands
             if [ $num_of_commands -ne 0 ]; then
