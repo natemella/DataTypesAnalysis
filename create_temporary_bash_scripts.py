@@ -209,7 +209,7 @@ for c in allDataToProcess:
 #SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
-#SBATCH --mem=64G   # memory 
+#SBATCH --mem=128G   # memory 
 
 
 cd ../
