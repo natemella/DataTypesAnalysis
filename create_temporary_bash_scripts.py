@@ -260,9 +260,7 @@ done
 
             dockerCommandFilePaths.append(commandFilePath)
 
-if len(dockerCommandFilePaths) == 0:
-    print('All commands have been executed!')
-else:
+if len(dockerCommandFilePaths) != 0:
     dnn_commands = find_dnn_algorithms(dockerCommandFilePaths)
     # Create a file that indicates the location of all the bash scripts that need to be executed
     with open(dockerOutFilePath, 'a') as dockerOutFile:
