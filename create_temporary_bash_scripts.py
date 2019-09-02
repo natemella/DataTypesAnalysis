@@ -205,11 +205,11 @@ for c in allDataToProcess:
             }
             out = """#!/bin/bash
 
-#SBATCH --time=36:00:00   # walltime
+#SBATCH --time=60:00:00   # walltime
 #SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
-#SBATCH --mem=128G   # memory 
+#SBATCH --mem=64G   # memory 
 
 
 cd ../
