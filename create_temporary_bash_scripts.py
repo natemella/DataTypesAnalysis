@@ -205,7 +205,7 @@ for c in allDataToProcess:
             }
             out = """#!/bin/bash
 
-#SBATCH --time=60:00:00   # walltime
+#SBATCH --time=120:00:00   # walltime
 #SBATCH --ntasks=2   # number of processor cores (i.e. tasks)
 #SBATCH --nodes=1   # number of nodes
 #SBATCH -C 'rhel7'   # features syntax (use quotes): -C 'a&b&c&d'
@@ -241,7 +241,7 @@ done
             # Build the bash script for this combination of dataset, algorithm, and iteration
             if args.scale_mode != "True":
                 out = out.replace(f'--scale robust {line_end(2)}','')
-            if algo == "tsv/keras/dnn/" or algo == "tsv/mlr/h2o.deeplearning/" or algo == "tsv/sklearn/logistic_regression/":
+            if algo == "tsv/keras/dnn/" or algo == "tsv/mlr/h2o.deeplearning/":
                 out = out.replace("#!/bin/bash\n\n","")
                 out = "#!/bin/bash\n\n#SBATCH --gres=gpu:4\n" + out
 
