@@ -133,6 +133,6 @@ def get_paths_to_data_type(data_type):
 def find_dnn_algorithms(Commands):
     dnn_algorithms = []
     for command in Commands:
-        if command.split(path_delimiter())[-1] == "tsv__keras__dnn__.sh" or command.split(path_delimiter())[-1] == "tsv__sklearn__logistic_regression.sh":
+        if command.split(path_delimiter())[-1] == "tsv__keras__dnn__.sh":
             dnn_algorithms.append(command)
     return dnn_algorithms

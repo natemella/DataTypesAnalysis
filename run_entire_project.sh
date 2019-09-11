@@ -105,7 +105,6 @@ for i in ${index_array[@]}; do
     echo MAKING TEMPORARY COMMAND FILES
     echo "########################################"
     execute_analysis $dockerCommandsFile $slurm_environment
-    echo
     echo "########################################"
     echo RUNNING COMBINATIONS OF $i ANALYSIS COMMANDS
     echo "########################################"
@@ -115,6 +114,12 @@ for i in ${index_array[@]}; do
             python3 build_job_array.py $num_of_commands
             if [ $num_of_commands -ne 0 ]; then
                 sbatch --wait job_array.sh $dockerCommandsFile
+                count=2
+                while [ -e "job_array$count.sh" ]
+                do
+                    sbatch --wait "job_array$count.sh" $dockerCommandsFile
+                    count=$((count+1))
+                done
             fi
         else
             delay=1
