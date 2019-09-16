@@ -12,11 +12,11 @@ bash_args = {
 }
 
 out = """#!/bin/bash
-#SBATCH -N 1 -n 2 --mem=64G -C rhel7
+#SBATCH -N 1 -n 1 --mem=90G -C rhel7
 #SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=40:00:00   # walltime
+#SBATCH --time=80:00:00   # walltime
 
 module load jdk/1.8
 
@@ -50,11 +50,11 @@ while True:
 
     bash_args["numCommands"] = numCommands
     out2 = ("#!/bin/bash\n"
-            "#SBATCH -N 1 -n 2 --mem=64G -C rhel7\n"
+            "#SBATCH -N 1 -n 1 --mem=90G -C rhel7\n"
             "#SBATCH --array=0-{numCommands}\n"
             "#SBATCH --mail-user=nathanmell@gmail.com   # email address\n"
             "#SBATCH --mail-type=END\n"
-            "#SBATCH --time=40:00:00   # walltime\n"
+            "#SBATCH --time=80:00:00   # walltime\n"
             "\n"
             "module load jdk/1.8\n"
             "\n"
