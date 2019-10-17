@@ -12,7 +12,7 @@ bash_args = {
 }
 
 out = """#!/bin/bash
-#SBATCH -N 2 -n 1 --mem=120G -C rhel7
+#SBATCH -N 1 -n 1 --mem=60G -C rhel7
 #SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
@@ -50,7 +50,7 @@ while True:
 
     bash_args["numCommands"] = numCommands
     out2 = ("#!/bin/bash\n"
-            "#SBATCH -N 2 -n 1 --mem=120G -C rhel7\n"
+            "#SBATCH -N 1 -n 1 --mem=60G -C rhel7\n"
             "#SBATCH --array=0-{numCommands}\n"
             "#SBATCH --mail-user=nathanmell@gmail.com   # email address\n"
             "#SBATCH --mail-type=END\n"
