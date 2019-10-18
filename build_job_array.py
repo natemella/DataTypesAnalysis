@@ -16,7 +16,7 @@ out = """#!/bin/bash
 #SBATCH --array=0-{numCommands}
 #SBATCH --mail-user=nathanmell@gmail.com   # email address
 #SBATCH --mail-type=END
-#SBATCH --time=80:00:00   # walltime
+#SBATCH --time=20:00:00   # walltime
 
 module load jdk/1.8
 
@@ -54,7 +54,7 @@ while True:
             "#SBATCH --array=0-{numCommands}\n"
             "#SBATCH --mail-user=nathanmell@gmail.com   # email address\n"
             "#SBATCH --mail-type=END\n"
-            "#SBATCH --time=80:00:00   # walltime\n"
+            "#SBATCH --time=20:00:00   # walltime\n"
             "\n"
             "module load jdk/1.8\n"
             "\n"
