@@ -98,6 +98,7 @@ _=path_delimiter()
 
 all_data_types = ["RPPA", "DNA_Methylation", "CNV", "Clinical", "SM", "Expression", "miRNA"]
 
+cut_files = "True"
 
 all_combos = list(itertools.combinations(all_data_types, number_of_combinations))
 for combination_list in all_combos:
