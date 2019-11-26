@@ -7,12 +7,19 @@ library(tidyverse)
 library(readr)
 library(stringr)
 
+setwd("/Users/nathanmella/PycharmProjects/DataAnalysis/DataTypesAnalysis/Graph_Scripts")
 
 ### download data set
 
 list_of_dfs = list()
+mpath = str_replace(getwd(), "Graph_Scripts", "")
+mpath = str_c(mpath,  "Permanent_Results/")
+
+setwd(mpath)
+print(mpath)
+
 i <- 1
-for (file in list.files(path = getwd() + "/Permanenet_Results")) {
+for (file in list.files(path = mpath)) {
   if ((startsWith(file, "combination")) &(endsWith(file, "tsv"))) {
     df <- read_tsv(file)
     df = df %>% group_by(Algorithm, CancerType, Description, Iteration) %>% summarise(AUROC= mean(AUROC))
@@ -35,15 +42,14 @@ cbPalette <- c("#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b",
 i = 1
 df %>% ggplot(aes(x = Combination, y = AUROC, color = Algorithm, fill = Algorithm, shape = Algorithm)) +
   scale_shape_manual(values=c(3,4,7,8,11,15,17,18,19,6)) +
-  theme_bw() +
+  theme_bw(base_size = 18) +
   geom_point() +
   geom_line(aes(group=df$Algorithm)) +
   scale_color_manual(values = cbPalette) +
-  theme() +
   # facet_grid(rows = vars(Algorithm)) +
   scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) +
   xlab("Number of Combinations")
 
-ggsave("../Graphs/combination_diff_median.png", height = 5, width =7 )
+ggsave("../Graphs/combination_diff_median.png", height = 5, width =10 )
 
 

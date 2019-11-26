@@ -17,7 +17,9 @@ df <- read_tsv(args[1])
 ### average AUROC grouped by cancer type, algorithm and description(data type)
 
 
-dfmean = df %>% group_by(CancerType, Algorithm, Description) %>% summarise(AUROC = mean(AUROC))
+dfmean = df %>%
+  mutate(Algorithm = str_replace(Algorithm, "_","\n")) %>%
+  group_by(CancerType, Algorithm, Description) %>% summarise(AUROC = mean(AUROC))
 
 
 ### assign ranks to each algorithm grouped by cancer type and description(data type)
@@ -37,7 +39,7 @@ print(dfAveragedRanks)
 
 cbPalette <- c("#8c510a", "#d8b365", "#f6e8c3", "gray50", "#c7eae5", "#5ab4ac", "#01665e")
 dfAveragedRanks %>%
-  ggplot(aes(x = Description, y = avg_alg_rank, color = Description, fill = Description)) +
+  ggplot(aes(x = Description, y = avg_alg_rank, color = Description)) +
   scale_y_reverse() +
   theme_bw() +
   geom_jitter() +
@@ -45,6 +47,9 @@ dfAveragedRanks %>%
   coord_flip() +
   facet_grid(rows = vars(Algorithm), scales='free') +
   scale_color_manual(values = cbPalette) +
+  ylab("Average Algorithm's Rank") +
+  xlab("") +
+  labs(color = "Data Type") +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
-ggsave("../Graphs/algorithm_fact.png", height = 7, width = 10, dpi = 300)
+ggsave("../Graphs/algorithm_fact.png", height = 7, width = 7, dpi = 300)

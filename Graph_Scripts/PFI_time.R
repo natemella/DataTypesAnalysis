@@ -52,4 +52,4 @@ df %>%
   facet_grid(rows = vars(type)) +
   scale_fill_manual(values = cbPalette)
 
-ggsave("../Graphs/PFI.time.png", height = 10, width = 10, dpi = 300)
+ggsave("../Graphs/PFI.time.png", height = 7, width = 7, dpi = 300)
