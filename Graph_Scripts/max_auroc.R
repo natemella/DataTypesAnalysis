@@ -19,10 +19,10 @@ df2 <- read_tsv(args[1]) %>%
 cbPalette <- c("#8c510a", "#d8b365", "#f6e8c3", "gray50", "#c7eae5", "#5ab4ac", "#01665e", "black")
 df2 %>%
   ggplot(aes(x = Algorithm, y = AUROC, color = Algorithm, shape = Algorithm)) +
-  theme_bw(base_size=18) +
+  theme_bw(base_size=16) +
   scale_shape_manual(values=c(3,4,7,8,11,15,17,18,19,6)) +
   geom_jitter() +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 5)) +
   coord_flip() +
   geom_hline(yintercept = 0.5, color = "red", linetype = "dashed") +
   facet_grid(rows = vars(CancerType)) +
@@ -32,6 +32,6 @@ df2 %>%
   # ylim(0.15, 0.9) +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
-ggsave("../Graphs/cancer_type_max.png", height = 6, width = 10, dpi = 300)
+ggsave("../Graphs/cancer_type_max.png", height = 5, width = 10)
 
 

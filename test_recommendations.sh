@@ -141,7 +141,7 @@ else
     cd DataTypesAnalysis
 fi
 
-index_array=(0 1 2 3 4 5 6)
+index_array=(1 2 3 4 5 6 7)
 
 delay=0
 jobLogFile=Analysis.job.log

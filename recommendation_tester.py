@@ -6,16 +6,17 @@ import random
 import itertools
 
 
-def checkfile(dtype, to_combine):
+def checkfile(to_combine):
     # write_dir(output_directory, INPUT_DATA, "PFI", list_of_dTypes, os.listdir(d_type_directory), Covariate_dir)
 
-    file_name = f'{output_directory}{dtype}'
+    file_name = f'{output_directory}'
     File1 = open(f'{file_name}.txt', 'a')
     myFiles = [File1]
-    if dtype in to_combine:
-        return myFiles
+
     for i in range(0, len(to_combine)):
-        file_name += f'+{to_combine[i]}'
+        if (i > 0):
+            file_name += "+"
+        file_name += f'{to_combine[i]}'
         additional_file = open(f'{file_name}.txt', 'a')
         myFiles.append(additional_file)
     return myFiles
@@ -107,58 +108,46 @@ for combination_list in all_combos:
             continue
         for list_of_dTypes in next(os.walk(os.path.join(*[currentWorkingDir,"InputData",CancerType]))):
             if len(list_of_dTypes) > 1 and isinstance(list_of_dTypes, list):
-                for DataType in list_of_dTypes:
-                    list_of_dtype_dirs = [f"{currentWorkingDir}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
-                    d_type_directory = f"{currentWorkingDir}{_}InputData{_}{CancerType}{_}{DataType}"
-                    if DataType != "Class" and DataType != "Covariate":
-                        myFiles = checkfile(DataType, combination_list)
-                        for x in endpoints:
-                            names_of_input_files = ""
-                            header = f'{CancerType}\t{x}\t{DataType}'
-                            myFiles[0].write(f'{header}\t')
-                            for input_file in os.listdir(d_type_directory):
-                                if quick_analysis == "True" and not is_temp_file(input_file):
+
+                list_of_dtype_dirs = [f"{currentWorkingDir}{_}InputData{_}{CancerType}{_}{data}" for data in combination_list]
+                myFiles = checkfile(combination_list)
+                # myFiles = [combination_list]
+                for x in endpoints:
+                    names_of_input_files = ""
+                    header = f'{CancerType}\t{x}\t'
+
+                    for i in range(1, len(myFiles)):
+                        if i > 1:
+                            header += ","
+                        header += f'{combination_list[i-1]}'
+                        myFiles[i].write(f'{header}\t')
+                        for input_file in os.listdir(list_of_dtype_dirs[i-1]):
+                            if quick_analysis == "True" and not is_temp_file(input_file):
+                                continue
+                            if cut_files == "True" and not is_cut_file(input_file):
+                                continue
+                            if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
+                                continue
+                            if quick_analysis == "True" or cut_files == "True":
+                                if not match_endpoint(input_file, x):
                                     continue
-                                if cut_files == "True" and not is_cut_file(input_file):
-                                    continue
-                                if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
-                                    continue
-                                if quick_analysis == "True" or cut_files == "True":
-                                    if not match_endpoint(input_file, x):
-                                        continue
-                                names_of_input_files += f'{input_file},'
-                            myFiles[0].write(names_of_input_files[:-1])
-                            names_of_input_files = names_of_input_files[:-1] + '\t'
-                            for i in range(1, len(myFiles)):
-                                header += f',{combination_list[i-1]}'
-                                myFiles[i].write(f'{header}\t')
-                                for input_file in os.listdir(list_of_dtype_dirs[i-1]):
-                                    if quick_analysis == "True" and not is_temp_file(input_file):
-                                        continue
-                                    if cut_files == "True" and not is_cut_file(input_file):
-                                        continue
-                                    if quick_analysis == "False" and cut_files == "False" and is_cut_or_tempfile(input_file):
-                                        continue
-                                    if quick_analysis == "True" or cut_files == "True":
-                                        if not match_endpoint(input_file, x):
-                                            continue
-                                    names_of_input_files += f'{input_file},'
-                                myFiles[i].write(names_of_input_files[:-1])
-                                names_of_input_files = names_of_input_files[:-1] + '\t'
-                            for file in myFiles:
-                                file.write('\n')
-                        for x in myFiles:
-                            x.close()
+                            names_of_input_files += f'{input_file},'
+                        myFiles[i].write(names_of_input_files[:-1])
+                        names_of_input_files = names_of_input_files[:-1] + '\t'
+                    for file in myFiles:
+                        file.write('\n')
+                    for x in myFiles:
+                        x.close()
     if len(combination_list) == 0:
         remove = "False"
     if remove == "True":
         for input_file in os.listdir(output_directory):
-            if len(input_file.split('+')) < 2:
+            if len(input_file.split('+')) < number_of_combinations:
                 os.remove(os.path.join(*[output_directory, input_file]))
                 continue
-            last_dtype = input_file.split('+')[-1]
-            if last_dtype.split('.')[0] != combination_list[-1]:
-                os.remove(os.path.join(*[output_directory, input_file]))
+    #         # last_dtype = input_file.split('+')[-1]
+    #         # if last_dtype.split('.')[0] != combination_list[-1]:
+    #         #     os.remove(os.path.join(*[output_directory, input_file]))
 
 
 
